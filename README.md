@@ -1,0 +1,2 @@
+# slider
+jQuery plugin
