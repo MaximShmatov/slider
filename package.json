@@ -1,0 +1,55 @@
+{
+  "name": "slider",
+  "version": "1.0.0",
+  "description": "jQuery plugin",
+  "main": "index.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.config.js",
+    "test": "karma start karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaximShmatov/slider.git"
+  },
+  "keywords": [
+    "jQuery",
+    "plugin",
+    "TypeScript",
+    "slider"
+  ],
+  "author": "Maxim Shmatov",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/MaximShmatov/slider/issues"
+  },
+  "homepage": "https://github.com/MaximShmatov/slider#readme",
+  "devDependencies": {
+    "@types/jasmine": "^3.5.11",
+    "css-loader": "^3.6.0",
+    "html-webpack-plugin": "^4.3.0",
+    "karma": "^5.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-cli": "^2.0.0",
+    "karma-jasmine": "^3.3.1",
+    "karma-jquery": "^0.2.4",
+    "karma-spec-reporter": "0.0.32",
+    "karma-webpack": "^4.0.2",
+    "pug": "^3.0.0",
+    "pug-loader": "^2.4.0",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.2",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^8.0.0",
+    "typescript": "^3.9.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "@types/jquery": "^3.5.0",
+    "jquery": "^3.5.1"
+  }
+}
