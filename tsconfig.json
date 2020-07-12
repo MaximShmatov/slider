@@ -3,13 +3,7 @@
     "sourceMap": true,
     "target": "esnext",
     "removeComments": false,
-    "strict": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "strict": true
   },
   "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules"],
