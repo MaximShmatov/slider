@@ -24,12 +24,13 @@ class SliderModel {
         this.tooltip = config.tooltip;
     }
 
+
     get minValue(): number | string {
         return this.min;
     }
 
     set minValue(min: number | string) {
-        this.minValue = min;
+        this.min = min;
     }
 
     get maxValue(): number | string {
@@ -37,7 +38,7 @@ class SliderModel {
     }
 
     set maxValue(max: number | string) {
-        this.maxValue = max;
+        this.max = max;
     }
 
     get stepSizeValue(): number | string {

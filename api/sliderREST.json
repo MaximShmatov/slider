@@ -1,0 +1,26 @@
+[
+  {
+    "minValue": 1,
+    "maxValue": 10,
+    "stepSizeValue": 1,
+    "position": "v",
+    "range": false,
+    "tooltip": false
+  },
+  {
+    "minValue": 1,
+    "maxValue": 10,
+    "stepSizeValue": 1,
+    "position": "h",
+    "range": false,
+    "tooltip": false
+  },
+  {
+    "minValue": 1,
+    "maxValue": 100,
+    "stepSizeValue": 10,
+    "position": "v",
+    "range": true,
+    "tooltip": true
+  }
+]

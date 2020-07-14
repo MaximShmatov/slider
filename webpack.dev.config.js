@@ -1,7 +1,10 @@
 'use strict'
 
+const webpack = require('webpack');
+
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
 
 module.exports = {
@@ -23,6 +26,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.pug'),
       filename: 'index.html'
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery'
     })
   ],
   module: {
@@ -61,6 +67,7 @@ module.exports = {
     ]
   },
   devServer: {
+    allowedHosts: ['0.0.0.0:9876'],
     contentBase: path.resolve(__dirname, 'dist'),
     port: 9000,
     progress: true,

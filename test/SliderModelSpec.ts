@@ -1,16 +1,47 @@
 import {ISliderModel, SliderModel} from '../src/slider/SliderModel';
+// async function getConfigSlider(): Promise <ISliderModel | null> {
+//     let form: FormData = new FormData();
+//     form.append('variant', '0');
+//
+//     try {
+//         let response = await fetch('http://localhost:9000/slider', {method: 'POST', body: form});
+//         console.log(response.status);
+//         return await response.json();
+//     } catch(err) {
+//         console.log(err.name);
+//         console.log(err.message);
+//     }
+//     console.log('222222222');
+//     return null;
+// }
+
 
 describe('Slider model tests', () => {
-    let config: ISliderModel = {
-        minValue: 1,
-        maxValue: 10,
-        stepSizeValue: 1,
-        position: 'h',
-        range: false,
-        tooltip: false
+    let model: SliderModel;
+    let head = {
+        //"Authorization": "Basic YWxhZGRpbjpvcGVuc2VzYW1l",
+        "Access-Control-Allow-Origin": "*"
     };
-    const model = new SliderModel(config);
+
+
+    beforeAll( async () => {
+        console.log('111111111');
+        let form: FormData = new FormData();
+        form.append('variant', '0');
+        let res = await fetch('http://localhost:9000/slider', {
+            method: 'POST',
+            //headers: head,
+            mode: "no-cors",
+            body: form
+        });
+        console.log(res.ok);
+        console.log(res.status);
+
+        console.log('333333333');
+    });
+
     it('Should assign an minValue property', () => {
+        console.log(model);
         expect(model.minValue).toBeDefined('should be defined');
     });
     it('Should assign an maxValue property', () => {
@@ -21,7 +52,7 @@ describe('Slider model tests', () => {
     });
     it('Should assign an position property', () => {
         expect(model.position).toBeDefined('should be defined');
-        expect(model.position).toMatch(/(h|v)/, 'Must be "h" or "v"');
+        expect(model.position).toMatch(/(v|h)/, 'Must be "h" or "v"');
     });
     it('Should assign an range property', () => {
         expect(model.rangeOn).toBeDefined('should be defined');
