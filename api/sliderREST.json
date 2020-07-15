@@ -2,24 +2,27 @@
   {
     "minValue": 1,
     "maxValue": 10,
+    "currentValue": 1,
     "stepSizeValue": 1,
-    "position": "v",
+    "position": false,
     "range": false,
     "tooltip": false
   },
   {
     "minValue": 1,
     "maxValue": 10,
+    "currentValue": 3,
     "stepSizeValue": 1,
-    "position": "h",
+    "position": true,
     "range": false,
     "tooltip": false
   },
   {
     "minValue": 1,
     "maxValue": 100,
+    "currentValue": 8,
     "stepSizeValue": 10,
-    "position": "v",
+    "position": false,
     "range": true,
     "tooltip": true
   }

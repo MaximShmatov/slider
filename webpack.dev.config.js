@@ -67,7 +67,6 @@ module.exports = {
     ]
   },
   devServer: {
-    allowedHosts: ['0.0.0.0:9876'],
     contentBase: path.resolve(__dirname, 'dist'),
     port: 9000,
     progress: true,
