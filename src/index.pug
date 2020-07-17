@@ -1,8 +1,11 @@
 doctype html
 html(lang="ru" dir="ltr")
-	head
-		meta(charset="utf-8")
-		title Slider demo
-	body
-		div.container
-			button(type="button").container__send send
+  head
+    meta(charset="utf-8")
+    title Slider demo
+    //link(rel="stylesheet" href = require('./index.sass'))
+  body
+    div.container
+      slider-element.container__slider
+    button(type="button").container__send send
+    input(type="range")

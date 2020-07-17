@@ -1,82 +1,91 @@
-import { ISliderModel } from './ISliderModel';
+import {ISliderModel} from './ISliderModel';
 
 class SliderModel implements ISliderModel {
-  min: number | string = 1;
-  max: number | string = 10;
-  value: number | string = 5;
-  stepSize: number | string = 1;
-  pos: boolean = false;
+  min: number = 1;
+  max: number = 10;
+  value: number = 5;
+  stepSize: number = 1;
+  vertical: boolean = false;
   range: boolean = false;
   tooltip: boolean = false;
 
-  constructor(config: ISliderModel | null) {
-    if (config !== null) {
-      this.min = config.minValue;
-      this.max = config.maxValue;
-      this.value = config.maxValue;
-      this.stepSize = config.stepSizeValue;
-      this.pos = config.position;
-      this.range = config.range;
-      this.tooltip = config.tooltip;
+  constructor() {
+    let form: FormData = new FormData();
+    form.append('variant', '0');
+    try {
+      fetch('http://localhost:9000/slider', {method: 'POST', body: form})
+        .then((res: Response) => res.json())
+        .then((model: ISliderModel) => this.setDataModel(model));
+    } catch (e) {
+      console.log('Error connection', e)
     }
   }
 
+  setDataModel(model: ISliderModel) {
+    this.minValue = model.minValue;
+    this.maxValue = model.maxValue;
+    this.currentValue = model.maxValue;
+    this.stepSizeValue = model.stepSizeValue;
+    this.onVertical = model.vertical;
+    this.onRange = model.range;
+    this.onTooltip = model.tooltip;
+  }
 
-  get minValue(): number | string {
+  get minValue(): number {
     return this.min;
   }
 
-  set minValue(min: number | string) {
+  set minValue(min: number) {
     this.min = min;
   }
 
-  get maxValue(): number | string {
+  get maxValue(): number {
     return this.max;
   }
 
-  set maxValue(max: number | string) {
+  set maxValue(max: number) {
     this.max = max;
   }
 
-  get currentValue(): number | string {
+  get currentValue(): number {
     return this.value;
   }
 
-  set currentValue(value: number | string) {
+  set currentValue(value: number) {
     this.value = value;
   }
 
-  get stepSizeValue(): number | string {
+  get stepSizeValue(): number {
     return this.stepSize;
   }
 
-  set stepSizeValue(stepSize: number | string) {
+  set stepSizeValue(stepSize: number) {
     this.stepSize = stepSize;
   }
 
-  get position(): boolean {
-    return this.pos;
+  get onVertical(): boolean {
+    return this.vertical;
   }
 
-  set position(pos: boolean) {
-    this.pos = pos;
+  set onVertical(vertical: boolean) {
+    this.vertical = vertical;
   }
 
-  get rangeOn(): boolean {
+  get onRange(): boolean {
     return this.range;
   }
 
-  set rangeOn(range: boolean) {
+  set onRange(range: boolean) {
     this.range = range;
   }
 
-  get tooltipOn(): boolean {
+  get onTooltip(): boolean {
     return this.tooltip;
   }
 
-  set tooltipOn(tooltip: boolean) {
+  set onTooltip(tooltip: boolean) {
     this.tooltip = tooltip;
   }
 }
 
-export {SliderModel};
+export { SliderModel };

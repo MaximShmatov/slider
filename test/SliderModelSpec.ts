@@ -1,16 +1,11 @@
 import {SliderModel} from '../src/slider/SliderModel';
-import {ISliderModel} from '../src/slider/ISliderModel';
 
 
 describe('Slider model tests', () => {
   let model: SliderModel;
 
-  beforeAll(async () => {
-    let form: FormData = new FormData();
-    form.append('variant', '0');
-    let res: Response = await fetch('http://localhost:9000/slider', {method: 'POST', body: form});
-    let conf: ISliderModel = await res.json();
-    model = new SliderModel(conf);
+  beforeEach(() => {
+    model = new SliderModel();
   });
 
   it('Should assign an minValue property', () => {
@@ -26,12 +21,12 @@ describe('Slider model tests', () => {
     expect(model.stepSizeValue).toBeDefined('should be defined');
   });
   it('Should assign an position property', () => {
-    expect(model.position).toBeDefined('should be defined');
+    expect(model.onVertical).toBeDefined('should be defined');
   });
   it('Should assign an range property', () => {
-    expect(model.rangeOn).toBeDefined('should be defined');
+    expect(model.onRange).toBeDefined('should be defined');
   });
   it('Should assign an tooltip property', () => {
-    expect(model.tooltipOn).toBeDefined('should be defined');
+    expect(model.onTooltip).toBeDefined('should be defined');
   });
 });

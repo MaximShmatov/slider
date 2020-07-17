@@ -4,7 +4,7 @@
     "maxValue": 10,
     "currentValue": 1,
     "stepSizeValue": 1,
-    "position": false,
+    "vertical": false,
     "range": false,
     "tooltip": false
   },
@@ -13,7 +13,7 @@
     "maxValue": 10,
     "currentValue": 3,
     "stepSizeValue": 1,
-    "position": true,
+    "vertical": true,
     "range": false,
     "tooltip": false
   },
@@ -22,7 +22,7 @@
     "maxValue": 100,
     "currentValue": 8,
     "stepSizeValue": 10,
-    "position": false,
+    "vertical": false,
     "range": true,
     "tooltip": true
   }

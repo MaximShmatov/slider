@@ -1,9 +1,9 @@
 interface ISliderModel {
-    minValue: number | string;
-    maxValue: number | string;
-    currentValue: number | string;
-    stepSizeValue: number | string;
-    position: boolean;
+    minValue: number
+    maxValue: number;
+    currentValue: number;
+    stepSizeValue: number;
+    vertical: boolean;
     range: boolean;
     tooltip: boolean;
 }

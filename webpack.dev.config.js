@@ -24,8 +24,7 @@ module.exports = {
   devtool: 'inline-source-map',
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/index.pug'),
-      filename: 'index.html'
+      template: path.resolve(__dirname, 'src/index.pug')
     }),
     new webpack.ProvidePlugin({
       $: 'jquery'
@@ -34,21 +33,20 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(sass|css)$/,
-        use: [
+        test: /\.(css)$/,
+        use:
+          [
+            'to-string-loader',
+            'css-loader'
+          ]
+      },
+      {
+        test: /\.(sass)$/,
+        use:
+        [
           'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
-          }
+          'css-loader',
+          'sass-loader'
         ]
       },
       {
@@ -67,7 +65,8 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
+    //contentBase: path.resolve(__dirname, 'dist'),
+    watchContentBase: true,
     port: 9000,
     progress: true,
     hot: true,
