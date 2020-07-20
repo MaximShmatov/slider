@@ -52,6 +52,9 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@webcomponents/custom-elements": "^1.4.1",
+    "@webcomponents/shadydom": "^1.7.3",
+    "@webcomponents/webcomponentsjs": "^2.4.3",
     "jquery": "^3.5.1"
   }
 }

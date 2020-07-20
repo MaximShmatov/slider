@@ -34,6 +34,7 @@ module.exports = {
     rules: [
       {
         test: /\.(css)$/,
+        exclude: /node_modules/,
         use:
           [
             'to-string-loader',
@@ -60,7 +61,10 @@ module.exports = {
       },
       {
         test: /\.ts$/,
-        use: 'ts-loader',
+        exclude: /node_modules/,
+        use: [
+          'ts-loader'
+        ]
       }
     ]
   },
