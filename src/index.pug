@@ -3,12 +3,6 @@ html(lang="ru" dir="ltr")
   head
     meta(charset="utf-8")
     title Slider demo
-    //script(src="./node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js")
-    //script(src="./node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce.js")
-    //script(src="./node_modules/@webcomponents/shadydom/shadydom.min.js")
-    //link(rel="stylesheet" href = require('./index.sass'))
   body
     div.container
-      slider-element.container__slider
-    button(type="button").container__send send
-    input(type="range" style="width: 50%;")
+      slider-element(min="0" max="100" step="1" start-value="0" end-value="100").container__slider

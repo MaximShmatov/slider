@@ -1,7 +1,7 @@
 [
   {
     "minValue": 1,
-    "maxValue": 10,
+    "maxValue": 100,
     "valueStart": 1,
     "valueEnd": 1,
     "stepSizeValue": 1,
@@ -11,7 +11,7 @@
   },
   {
     "minValue": 1,
-    "maxValue": 10,
+    "maxValue": 100,
     "valueStart": 3,
     "valueEnd": 7,
     "stepSizeValue": 1,
