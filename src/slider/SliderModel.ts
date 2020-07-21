@@ -3,7 +3,8 @@ import {ISliderModel} from './ISliderModel';
 class SliderModel implements ISliderModel {
   min: number = 1;
   max: number = 10;
-  value: number = 5;
+  valueStart: number = 5;
+  valueEnd: number = 5;
   stepSize: number = 1;
   vertical: boolean = false;
   range: boolean = false;
@@ -24,7 +25,8 @@ class SliderModel implements ISliderModel {
   setDataModel(model: ISliderModel) {
     this.minValue = model.minValue;
     this.maxValue = model.maxValue;
-    this.currentValue = model.maxValue;
+    this.valueStart = model.valueStart;
+    this.valueEnd = model.valueEnd;
     this.stepSizeValue = model.stepSizeValue;
     this.onVertical = model.vertical;
     this.onRange = model.range;
@@ -47,12 +49,20 @@ class SliderModel implements ISliderModel {
     this.max = max;
   }
 
-  get currentValue(): number {
-    return this.value;
+  get valueFrom(): number {
+    return this.valueStart;
   }
 
-  set currentValue(value: number) {
-    this.value = value;
+  set valueFrom(value: number) {
+    this.valueStart = value;
+  }
+
+  get valueTo(): number {
+    return this.valueEnd;
+  }
+
+  set valueTo(value: number) {
+    this.valueEnd = value;
   }
 
   get stepSizeValue(): number {
@@ -88,4 +98,4 @@ class SliderModel implements ISliderModel {
   }
 }
 
-export { SliderModel };
+export {SliderModel};

@@ -14,8 +14,11 @@ describe('Slider model tests', () => {
   it('Should assign an maxValue property', () => {
     expect(model.maxValue).toBeDefined('should be defined');
   });
-  it('Should assign an currentValue property', () => {
-    expect(model.currentValue).toBeDefined('should be defined');
+  it('Should assign an valueStart property', () => {
+    expect(model.valueFrom).toBeDefined('should be defined');
+  });
+  it('Should assign an valueEnd property', () => {
+    expect(model.valueTo).toBeDefined('should be defined');
   });
   it('Should assign an stepSizeValue property', () => {
     expect(model.stepSizeValue).toBeDefined('should be defined');

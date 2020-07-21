@@ -2,7 +2,8 @@
   {
     "minValue": 1,
     "maxValue": 10,
-    "currentValue": 1,
+    "valueStart": 1,
+    "valueEnd": 1,
     "stepSizeValue": 1,
     "vertical": false,
     "range": false,
@@ -11,7 +12,8 @@
   {
     "minValue": 1,
     "maxValue": 10,
-    "currentValue": 3,
+    "valueStart": 3,
+    "valueEnd": 7,
     "stepSizeValue": 1,
     "vertical": true,
     "range": false,
@@ -20,7 +22,8 @@
   {
     "minValue": 1,
     "maxValue": 100,
-    "currentValue": 8,
+    "valueStart": 5,
+    "valueEnd": 8,
     "stepSizeValue": 10,
     "vertical": false,
     "range": true,

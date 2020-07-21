@@ -1,7 +1,8 @@
 interface ISliderModel {
     minValue: number
     maxValue: number;
-    currentValue: number;
+    valueStart: number,
+    valueEnd: number,
     stepSizeValue: number;
     vertical: boolean;
     range: boolean;

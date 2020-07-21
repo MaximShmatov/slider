@@ -1,9 +1,6 @@
-//import '../../node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce';
 import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-//import '../../node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-ce';
-//window.WebComponents = {};
-//window.WebComponents.root = 'node_modules/@webcomponents/webcomponentsjs/'
+
 
 class SliderView extends HTMLElement {
   rail: HTMLElement = document.createElement('slider-element-rail');
@@ -40,83 +37,67 @@ class Rail extends HTMLElement {
   constructor() {
     super();
     //console.log('constructor rail');
-
   }
 
   connectedCallback() {
     this.setAttribute('class', 'rail');
     //console.log('connection rail');
-    //this.setAttribute('class', 'rail');
   }
 
   adoptedCallback() {
-    //console.log('adopted rail');
+    console.log('adopted rail');
   }
 }
 
 class Thumb extends HTMLElement {
   private posXorY: boolean;
+  private posWidthOrHeight: number = 0;
   private pos: number = 0;
-  private movement: number = 0;
-
-  //private readonly thumb: Element;
-  private mousemove: any;
-  private mouseup: any;
-  //private readonly onmouseup: any;
+  private mousemove: (evt: MouseEventInit) => void = () => {
+  };
+  private mouseup: (evt: MouseEvent) => void = () => {
+  };
 
   constructor(pos: boolean) {
     super();
-    //console.log('constructor thumb');
     this.posXorY = pos;
     this.onmousedown = this.onMouseDown
-    //document.onmouseout = this.onMouseUp;
-    //console.log(this.onmousemove);
-    //this.addEventListener('mousedown', this.onMouseDown.bind(this));
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.setAttribute('class', 'thumb');
     //console.log('connection thumb');
-
-    //this.setAttribute('class', 'rail');
   }
 
-  adoptedCallback() {
+  adoptedCallback(): void {
     //console.log('adopted thumb');
   }
 
-  private onMouseDown(evt: MouseEvent) {
-    evt.preventDefault()
-    this.pos = evt.screenX;
+  private onMouseDown(evt: MouseEvent): void {
+    evt.preventDefault();
+    let paddingRight = this.parentElement ? window.getComputedStyle(this.parentElement).getPropertyValue('padding-right').slice(0, -2): 0;
+    this.posWidthOrHeight = this.parentElement ? (this.parentElement.clientWidth - Number(paddingRight)) / 100 : 0;
+    this.pos = this.offsetLeft + (evt.clientX - this.offsetLeft) - Number(this.style.left.slice(0, -1)) * this.posWidthOrHeight;
     this.mousemove = this.onMouseMove.bind(this);
     this.mouseup = this.onMouseUp.bind(this);
     document.addEventListener('mousemove', this.mousemove);
     document.addEventListener('mouseup', this.mouseup);
   }
 
-  private onMouseMove(evt: MouseEventInit) {
-    //console.log(evt);
-    //console.log(this.pos);
-    //this.style.left = '150px';
-    if(evt.screenX) {
-      this.movement = evt.screenX - this.pos;
+  private onMouseMove(evt: MouseEventInit): void {
+    if (evt.clientX) {
+      let indent: number = (evt.clientX - this.pos) / this.posWidthOrHeight;
+      if(indent < 0) {
+        indent = 0;
+      }
+      if(indent > 100) {
+        indent = 100;
+      }
+      this.style.left = `${indent}%`;
     }
-    console.log(this.movement);
-    this.style.left = `${this.movement}px`;
-    //this.draggable = true;
-    //this.offsetLeft = evt.clientX;
-    //let shiftX = evt.clientX - this.getBoundingClientRect().left;
-    //this.scrollLeft = 10;
-    //console.log(this.offsetLeft);
-    //console.log(this.offsetWidth);
-    //console.log(this.offsetHeight);
-    //console.log(this.style.left.slice(0,-2));
   }
 
-  private onMouseUp() {
-    //this.onmousemove = null;
-    //this.onmouseup = null;
-    //console.log('remove listeners', this.onMouseUp);
+  private onMouseUp(): void {
     document.removeEventListener('mousemove', this.mousemove);
     document.removeEventListener('mouseup', this.mouseup);
   }
@@ -126,7 +107,6 @@ class Thumb extends HTMLElement {
 customElements.define("slider-element", SliderView);
 customElements.define('slider-element-rail', Rail);
 customElements.define('slider-element-thumb', Thumb);
-
 
 
 export {SliderView};
