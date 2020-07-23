@@ -1,32 +1,38 @@
-import {ISliderModel} from './ISliderModel';
-
 class SliderModel implements ISliderModel {
-  min: number = 1;
-  max: number = 10;
-  valueStart: number = 5;
-  valueEnd: number = 5;
-  stepSize: number = 1;
-  vertical: boolean = false;
-  range: boolean = false;
-  tooltip: boolean = false;
+  private min: number = 1;
+  private max: number = 10;
+  private valueStart: number = 5;
+  private valueEnd: number = 5;
+  private stepSize: number = 1;
+  private vertical: boolean = false;
+  private range: boolean = false;
+  private tooltip: boolean = false;
 
-  constructor() {
-    let form: FormData = new FormData();
-    form.append('variant', '0');
-    try {
-      fetch('http://localhost:9000/slider', {method: 'POST', body: form})
-        .then((res: Response) => res.json())
-        .then((model: ISliderModel) => this.setDataModel(model));
-    } catch (e) {
-      console.log('Error connection', e)
+  constructor(model: ISliderModelData | null) {
+    if (model) {
+      this.setDataModel(model);
     }
   }
 
-  setDataModel(model: ISliderModel) {
+  setDataModelFromServer(variant: string) {
+    let form: FormData = new FormData();
+    form.append('variant', variant);
+    try {
+      fetch('http://localhost:9000/slider', {method: 'POST', body: form})
+        .then((res: Response) => res.json())
+        .then((model: ISliderModelData) => this.setDataModel(model));
+      return true;
+    } catch (e) {
+      console.log('Error connection', e)
+      return false;
+    }
+  }
+
+  setDataModel(model: ISliderModelData) {
     this.minValue = model.minValue;
     this.maxValue = model.maxValue;
-    this.valueStart = model.valueStart;
-    this.valueEnd = model.valueEnd;
+    this.valueFrom = model.valueStart;
+    this.valueTo = model.valueEnd;
     this.stepSizeValue = model.stepSizeValue;
     this.onVertical = model.vertical;
     this.onRange = model.range;
@@ -38,7 +44,9 @@ class SliderModel implements ISliderModel {
   }
 
   set minValue(min: number) {
-    this.min = min;
+    if (min !== undefined) {
+      this.min = min;
+    }
   }
 
   get maxValue(): number {

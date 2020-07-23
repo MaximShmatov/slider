@@ -14,6 +14,7 @@
   border-radius: 3px;
   box-sizing: border-box;
 }
+
 .rail div {
   width: 100%;
   height: 100%;
@@ -29,15 +30,16 @@
 }
 
 .scale {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin: 25px 3px 0 3px;
-   height: 4px;
-   background-color: #66D2EA;
- }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 3px 0 3px;
+  height: 4px;
+  background-color: #66D2EA;
+}
 
 .scale span {
+  display: inline-block;
   color: #6FCF97;
   padding: 2px;
   background: white;

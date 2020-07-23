@@ -5,7 +5,7 @@ describe('Slider model tests', () => {
   let model: SliderModel;
 
   beforeEach(() => {
-    model = new SliderModel();
+    model = new SliderModel(null);
   });
 
   it('Should assign an minValue property', () => {

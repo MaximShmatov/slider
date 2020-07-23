@@ -1,6 +1,4 @@
 import './index.sass';
+import './slider/SliderPlugin';
 
-import { SliderView } from './slider/SliderView';
-
-
-new SliderView();
+$('.slider-plugin').sliderPlugin(null);

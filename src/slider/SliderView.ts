@@ -1,36 +1,32 @@
 import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-import {ISliderModel} from "./ISliderModel";
 
 
-class SliderView extends HTMLElement {
-  rail: HTMLElement = document.createElement('slider-element-rail');
-  thumb: HTMLElement = document.createElement('slider-element-thumb');
-  scale: HTMLElement = document.createElement('slider-element-scale');
+class SliderView extends HTMLElement implements ISliderView{
+  //private model: ISliderModel;
+  private rail: HTMLElement = document.createElement('slider-view-rail');
+  private thumb: HTMLElement = document.createElement('slider-view-thumb');
+  private scale: HTMLElement = document.createElement('slider-view-scale');
 
-  //attributes: ISliderModel;
-
-  constructor() {
+  constructor(...model: any) {
     super();
+    //console.log(model);
   }
 
 
   private render() {
+    //console.log(this.parentElement)
     this.rail.appendChild(this.thumb);
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.rail);
       this.shadowRoot.appendChild(this.scale);
     }
-
-    console.log(this.shadowRoot);
   }
 
   connectedCallback() {
     this.attachShadow({mode: 'open'}).innerHTML = `<style>${require('./slider.css')}</style>`;
     this.scale.setAttribute('max', <string>this.getAttribute('max'));
     this.scale.setAttribute('min', <string>this.getAttribute('min'));
-    console.log(this.getAttribute('max'));
-    console.log(this.getAttribute('min'));
     this.render();
   }
 
@@ -39,25 +35,18 @@ class SliderView extends HTMLElement {
   }
 
   attributeChangedCallback() {
-    //console.log('Set attribute');
+
   }
 }
 
 class Rail extends HTMLElement {
   constructor() {
     super();
-    //console.log('constructor rail');
   }
 
   connectedCallback() {
     this.setAttribute('class', 'rail');
     this.appendChild(document.createElement('div'));
-
-    //console.log('connection rail');
-  }
-
-  adoptedCallback() {
-    console.log('adopted rail');
   }
 }
 
@@ -77,10 +66,6 @@ class Thumb extends HTMLElement {
   connectedCallback(): void {
     this.setAttribute('class', 'thumb');
 
-  }
-
-  adoptedCallback(): void {
-    //console.log('adopted thumb');
   }
 
   private onMouseDown(evt: MouseEvent): void {
@@ -127,7 +112,7 @@ class Scale extends HTMLElement {
     super();
   }
 
-  render() {
+  private render() {
     let min: number = Number(this.getAttribute('min'));
     let max: number = Number(this.getAttribute('max'));
     let valuesScale = Math.round((max - min) / 4);
@@ -141,24 +126,23 @@ class Scale extends HTMLElement {
     }
   }
 
-  connectedCallback() {
+  private connectedCallback() {
     this.setAttribute('class', 'scale');
     this.render();
   }
 
-  static get observedAttributes(): string[] {
+  private static get observedAttributes(): string[] {
     return ['min', 'max'];
   }
 
-  attributeChangedCallback(arg: string) {
+  private attributeChangedCallback(arg: string) {
     this.render();
   }
 }
 
-customElements.define("slider-element", SliderView);
-customElements.define('slider-element-rail', Rail);
-customElements.define('slider-element-thumb', Thumb);
-customElements.define('slider-element-scale', Scale);
-
+customElements.define('slider-view', SliderView);
+customElements.define('slider-view-rail', Rail);
+customElements.define('slider-view-thumb', Thumb);
+customElements.define('slider-view-scale', Scale);
 
 export {SliderView};

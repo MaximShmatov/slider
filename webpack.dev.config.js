@@ -1,10 +1,8 @@
 'use strict'
 
 const webpack = require('webpack');
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
 
 module.exports = {
