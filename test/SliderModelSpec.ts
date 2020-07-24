@@ -21,7 +21,7 @@ describe('Slider model tests', () => {
     expect(model.valueTo).toBeDefined('should be defined');
   });
   it('Should assign an stepSizeValue property', () => {
-    expect(model.stepSizeValue).toBeDefined('should be defined');
+    expect(model.stepValue).toBeDefined('should be defined');
   });
   it('Should assign an position property', () => {
     expect(model.onVertical).toBeDefined('should be defined');

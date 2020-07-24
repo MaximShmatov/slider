@@ -30,17 +30,21 @@
 }
 
 .scale {
+  margin-top: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.scale div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 25px 3px 0 3px;
-  height: 4px;
+  height: 2px;
   background-color: #66D2EA;
 }
 
 .scale span {
-  display: inline-block;
   color: #6FCF97;
-  padding: 2px;
+  padding: 0 2px;
   background: white;
 }

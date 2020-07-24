@@ -3,13 +3,13 @@ interface ISliderModelData {
   maxValue: number;
   valueStart: number;
   valueEnd: number;
-  stepSizeValue: number;
+  stepValue: number;
   vertical: boolean;
   range: boolean;
   tooltip: boolean;
 }
 interface ISliderModel {
-
+  setDataModelFromElement(el: HTMLElement): void;
 }
 
 interface ISliderView {

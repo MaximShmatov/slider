@@ -1,4 +1,5 @@
 import './index.sass';
 import './slider/SliderPlugin';
 
-$('.slider-plugin').sliderPlugin(null);
+let plugin = $('.slider-plugin').sliderPlugin(null);
+//console.dir(plugin[0]);

@@ -2,16 +2,21 @@ class SliderModel implements ISliderModel {
   private min: number = 1;
   private max: number = 10;
   private valueStart: number = 5;
-  private valueEnd: number = 5;
+  private valueEnd: number = 6;
   private stepSize: number = 1;
   private vertical: boolean = false;
   private range: boolean = false;
   private tooltip: boolean = false;
 
-  constructor(model: ISliderModelData | null) {
-    if (model) {
-      this.setDataModel(model);
+  constructor(data: ISliderModelData | null) {
+    if (data) {
+      this.setDataModelFromObject(data);
     }
+  }
+
+  setDataModelFromElement(element: HTMLElement) {
+    Object.assign(this, element.dataset);
+    console.log(this);
   }
 
   setDataModelFromServer(variant: string) {
@@ -20,7 +25,7 @@ class SliderModel implements ISliderModel {
     try {
       fetch('http://localhost:9000/slider', {method: 'POST', body: form})
         .then((res: Response) => res.json())
-        .then((model: ISliderModelData) => this.setDataModel(model));
+        .then((model: ISliderModelData) => this.setDataModelFromObject(model));
       return true;
     } catch (e) {
       console.log('Error connection', e)
@@ -28,15 +33,8 @@ class SliderModel implements ISliderModel {
     }
   }
 
-  setDataModel(model: ISliderModelData) {
-    this.minValue = model.minValue;
-    this.maxValue = model.maxValue;
-    this.valueFrom = model.valueStart;
-    this.valueTo = model.valueEnd;
-    this.stepSizeValue = model.stepSizeValue;
-    this.onVertical = model.vertical;
-    this.onRange = model.range;
-    this.onTooltip = model.tooltip;
+  setDataModelFromObject(model: ISliderModelData) {
+    Object.assign(this, model);
   }
 
   get minValue(): number {
@@ -44,9 +42,7 @@ class SliderModel implements ISliderModel {
   }
 
   set minValue(min: number) {
-    if (min !== undefined) {
-      this.min = min;
-    }
+    this.min = min;
   }
 
   get maxValue(): number {
@@ -73,11 +69,11 @@ class SliderModel implements ISliderModel {
     this.valueEnd = value;
   }
 
-  get stepSizeValue(): number {
+  get stepValue(): number {
     return this.stepSize;
   }
 
-  set stepSizeValue(stepSize: number) {
+  set stepValue(stepSize: number) {
     this.stepSize = stepSize;
   }
 

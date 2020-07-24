@@ -2,31 +2,29 @@ import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-ad
 import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 
 
-class SliderView extends HTMLElement implements ISliderView{
-  //private model: ISliderModel;
+class SliderView extends HTMLElement implements ISliderView {
   private rail: HTMLElement = document.createElement('slider-view-rail');
   private thumb: HTMLElement = document.createElement('slider-view-thumb');
-  private scale: HTMLElement = document.createElement('slider-view-scale');
+  private scale: Scale = new Scale();
 
-  constructor(...model: any) {
+  constructor() {
     super();
     //console.log(model);
   }
 
 
   private render() {
-    //console.log(this.parentElement)
+    console.log($);
     this.rail.appendChild(this.thumb);
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.rail);
-      this.shadowRoot.appendChild(this.scale);
+      this.shadowRoot.appendChild(this.scale.scale);
     }
   }
 
   connectedCallback() {
+    this.scale.render(Number(this.dataset.min), Number(this.dataset.max));
     this.attachShadow({mode: 'open'}).innerHTML = `<style>${require('./slider.css')}</style>`;
-    this.scale.setAttribute('max', <string>this.getAttribute('max'));
-    this.scale.setAttribute('min', <string>this.getAttribute('min'));
     this.render();
   }
 
@@ -65,7 +63,6 @@ class Thumb extends HTMLElement {
 
   connectedCallback(): void {
     this.setAttribute('class', 'thumb');
-
   }
 
   private onMouseDown(evt: MouseEvent): void {
@@ -99,8 +96,9 @@ class Thumb extends HTMLElement {
 
 }
 
-class Scale extends HTMLElement {
-  private spansTag: [HTMLSpanElement, HTMLSpanElement, HTMLSpanElement, HTMLSpanElement, HTMLSpanElement] = [
+class Scale {
+  scale: HTMLElement = document.createElement('div');
+  private spansTags: [HTMLSpanElement, HTMLSpanElement, HTMLSpanElement, HTMLSpanElement, HTMLSpanElement] = [
     document.createElement('span'),
     document.createElement('span'),
     document.createElement('span'),
@@ -109,40 +107,30 @@ class Scale extends HTMLElement {
   ];
 
   constructor() {
-    super();
-  }
-
-  private render() {
-    let min: number = Number(this.getAttribute('min'));
-    let max: number = Number(this.getAttribute('max'));
-    let valuesScale = Math.round((max - min) / 4);
-    this.spansTag[0].textContent = min.toString();
-    this.spansTag[1].textContent = Math.round(valuesScale).toString();
-    this.spansTag[2].textContent = Math.round(valuesScale * 2).toString();
-    this.spansTag[3].textContent = Math.round(valuesScale * 3).toString();
-    this.spansTag[4].textContent = Math.round(max).toString();
-    for (let i = 0; i < 5; i++) {
-      this.appendChild(this.spansTag[i]);
+    let div = document.createElement('div');
+    for (let span of this.spansTags) {
+      div.appendChild(span);
     }
+    this.scale.appendChild(div);
+    this.scale.className = 'scale';
+    this.scale.addEventListener('click', (evt) => {
+      console.log(evt);
+    })
   }
 
-  private connectedCallback() {
-    this.setAttribute('class', 'scale');
-    this.render();
-  }
-
-  private static get observedAttributes(): string[] {
-    return ['min', 'max'];
-  }
-
-  private attributeChangedCallback(arg: string) {
-    this.render();
+  render(min: number, max: number) {
+    let valuesScale = Math.round((max - min) / 4);
+    this.spansTags[0].textContent = min.toString();
+    this.spansTags[1].textContent = Math.round(valuesScale).toString();
+    this.spansTags[2].textContent = Math.round(valuesScale * 2).toString();
+    this.spansTags[3].textContent = Math.round(valuesScale * 3).toString();
+    this.spansTags[4].textContent = Math.round(max).toString();
   }
 }
 
 customElements.define('slider-view', SliderView);
 customElements.define('slider-view-rail', Rail);
 customElements.define('slider-view-thumb', Thumb);
-customElements.define('slider-view-scale', Scale);
+
 
 export {SliderView};

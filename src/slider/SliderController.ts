@@ -1,10 +1,21 @@
+import {SliderModel} from './SliderModel';
+import './SliderView';
+
 class SliderController implements ISliderController {
   private model: ISliderModel;
-  private view: ISliderView;
+  private readonly view: HTMLElement;
 
-  constructor(model: ISliderModel, view: ISliderView) {
-    this.model = model;
-    this.view = view;
+  constructor(element: HTMLElement) {
+    this.model = new SliderModel(null);
+    this.view = document.createElement('slider-view');
+    this.model.setDataModelFromElement(element);
+    this.initView(element);
+  }
+
+  initView(element: HTMLElement) {
+    Object.assign(this.view.dataset, element.dataset);
+    element.before(this.view);
+    element.remove();
   }
 }
 
