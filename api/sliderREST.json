@@ -2,51 +2,51 @@
   {
     "minValue": 1,
     "maxValue": 100,
-    "valueStart": 1,
-    "valueEnd": 1,
-    "stepValue": 1,
-    "vertical": false,
-    "range": false,
-    "tooltip": false
+    "valueFrom": 1,
+    "valueTo": 1,
+    "stepSize": 1,
+    "onVertical": false,
+    "onRange": false,
+    "onTooltip": false
   },
   {
     "minValue": 1,
     "maxValue": 100,
-    "valueStart": 3,
-    "valueEnd": 7,
-    "stepValue": 1,
-    "vertical": true,
-    "range": false,
-    "tooltip": false
+    "valueFrom": 3,
+    "valueTo": 7,
+    "stepSize": 1,
+    "onVertical": true,
+    "onRange": false,
+    "onTooltip": false
   },
   {
     "minValue": 1,
     "maxValue": 100,
-    "valueStart": 5,
-    "valueEnd": 8,
-    "stepValue": 10,
-    "vertical": false,
-    "range": true,
-    "tooltip": true
+    "valueFrom": 5,
+    "valueTo": 8,
+    "stepSize": 10,
+    "onVertical": false,
+    "onRange": true,
+    "onTooltip": true
   },
   {
     "minValue": 1,
     "maxValue": 100,
-    "valueStart": 3,
-    "valueEnd": 7,
-    "stepValue": 1,
-    "vertical": true,
-    "range": false,
-    "tooltip": false
+    "valueFrom": 3,
+    "valueTo": 7,
+    "stepSize": 1,
+    "onVertical": true,
+    "onRange": false,
+    "onTooltip": false
   },
   {
     "minValue": 10,
     "maxValue": 1000,
-    "valueStart": 50,
-    "valueEnd": 800,
-    "stepValue": 10,
-    "vertical": false,
-    "range": true,
-    "tooltip": true
+    "valueFrom": 50,
+    "valueTo": 800,
+    "stepSize": 10,
+    "onVertical": false,
+    "onRange": true,
+    "onTooltip": true
   }
 ]

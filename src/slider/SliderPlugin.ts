@@ -1,6 +1,6 @@
 import {SliderController} from './SliderController';
 
-$.fn.sliderPlugin = function () {
+$.fn.slider = function () {
   this.each((index: number, element: HTMLElement) => {
     new SliderController(element);
   })

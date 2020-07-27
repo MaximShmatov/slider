@@ -1,21 +1,37 @@
 import {SliderModel} from './SliderModel';
-import './SliderView';
+import {SliderView} from './SliderView';
+
 
 class SliderController implements ISliderController {
-  private model: ISliderModel;
-  private readonly view: HTMLElement;
+  private readonly model: ISliderModel;
+  private readonly view: ISliderView;
 
   constructor(element: HTMLElement) {
     this.model = new SliderModel(null);
-    this.view = document.createElement('slider-view');
-    this.model.setDataModelFromElement(element);
-    this.initView(element);
+    this.view = new SliderView();
+    this.view.className = element.className;
+    this.initModel(element);
+    this.initView();
+    $(element).before(this.view);
+    $(element).remove();
+    this.view.addEventListener('slider-pos', this.calculateValue.bind(this));
+    //this.view.addEventListener('slider-pos', (evt) => {console.log(evt);});
   }
 
-  initView(element: HTMLElement) {
-    Object.assign(this.view.dataset, element.dataset);
-    element.before(this.view);
-    element.remove();
+  initModel(element: HTMLElement): void {
+    this.model.setDataModelFromElement(element);
+    console.log(this.model);
+  }
+
+  initView(): void {
+    Object.assign(this.view.dataset, this.model);
+    //console.log(this.view.dataset);
+  }
+
+  private calculateValue(evt: CustomEvent): void {
+    //console.log(evt.detail.valueFrom);
+    let val = this.model.getMaxValue() - this.model.getMinValue() / 100 * evt.detail.valueFrom;
+    console.log(val);
   }
 }
 

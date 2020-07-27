@@ -1,12 +1,12 @@
 class SliderModel implements ISliderModel {
-  private min: number = 1;
-  private max: number = 10;
-  private valueStart: number = 5;
-  private valueEnd: number = 6;
+  private minValue: number = 1;
+  private maxValue: number = 10;
+  private valueFrom: number = 5;
+  private valueTo: number = 6;
   private stepSize: number = 1;
-  private vertical: boolean = false;
-  private range: boolean = false;
-  private tooltip: boolean = false;
+  private onVertical: boolean = false;
+  private onRange: boolean = false;
+  private onTooltip: boolean = false;
 
   constructor(data: ISliderModelData | null) {
     if (data) {
@@ -15,8 +15,15 @@ class SliderModel implements ISliderModel {
   }
 
   setDataModelFromElement(element: HTMLElement) {
-    Object.assign(this, element.dataset);
-    console.log(this);
+    this
+      .setMinValue(Number(element.dataset.minValue))
+      .setMaxValue(Number(element.dataset.maxValue))
+      .setValueFrom(Number(element.dataset.valueFrom))
+      .setValueTo(Number(element.dataset.valueTo))
+      .setStepSize(Number(element.dataset.stepSize))
+      .setVertical(Boolean(element.dataset.onVertical))
+      .setRange(Boolean(element.dataset.onRange))
+      .setTooltip(Boolean(element.dataset.onTooltip));
   }
 
   setDataModelFromServer(variant: string) {
@@ -33,72 +40,97 @@ class SliderModel implements ISliderModel {
     }
   }
 
-  setDataModelFromObject(model: ISliderModelData) {
-    Object.assign(this, model);
+  setDataModelFromObject(data: ISliderModelData) {
+    Object.assign(this, data);
   }
 
-  get minValue(): number {
-    return this.min;
+  getMinValue(): number {
+    return this.minValue;
   }
 
-  set minValue(min: number) {
-    this.min = min;
+  setMinValue(minValue: number): this {
+    if(minValue) {
+      this.minValue = minValue;
+    }
+    this.minValue = minValue;
+    return this;
   }
 
-  get maxValue(): number {
-    return this.max;
+  getMaxValue(): number {
+    return this.maxValue;
   }
 
-  set maxValue(max: number) {
-    this.max = max;
+  setMaxValue(maxValue: number): this {
+    if(maxValue) {
+      this.maxValue = maxValue;
+    }
+    return this;
   }
 
-  get valueFrom(): number {
-    return this.valueStart;
+  getValueFrom(): number {
+    return this.valueFrom;
   }
 
-  set valueFrom(value: number) {
-    this.valueStart = value;
+  setValueFrom(valueFrom: number): this {
+    if(valueFrom) {
+      this.valueFrom = valueFrom;
+    }
+    return this;
   }
 
-  get valueTo(): number {
-    return this.valueEnd;
+  getValueTo(): number {
+    return this.valueTo;
   }
 
-  set valueTo(value: number) {
-    this.valueEnd = value;
+  setValueTo(valueTo: number): this {
+    if(valueTo) {
+      this.valueTo = valueTo;
+    }
+    return this;
   }
 
-  get stepValue(): number {
+  getStepSize(): number {
     return this.stepSize;
   }
 
-  set stepValue(stepSize: number) {
-    this.stepSize = stepSize;
+  setStepSize(stepSize: number): this {
+    if(stepSize) {
+      this.stepSize = stepSize;
+    }
+    return this;
   }
 
-  get onVertical(): boolean {
-    return this.vertical;
+  isVertical(): boolean {
+    return this.onVertical;
   }
 
-  set onVertical(vertical: boolean) {
-    this.vertical = vertical;
+  setVertical(onVertical: boolean): this {
+    if(onVertical) {
+      this.onVertical = onVertical;
+    }
+    return this;
   }
 
-  get onRange(): boolean {
-    return this.range;
+  isRange(): boolean {
+    return this.onRange;
   }
 
-  set onRange(range: boolean) {
-    this.range = range;
+  setRange(onRange: boolean): this {
+    if(onRange) {
+      this.onRange = onRange;
+    }
+    return this;
   }
 
-  get onTooltip(): boolean {
-    return this.tooltip;
+  isTooltip(): boolean {
+    return this.onTooltip;
   }
 
-  set onTooltip(tooltip: boolean) {
-    this.tooltip = tooltip;
+  setTooltip(onTooltip: boolean): this {
+    if(onTooltip) {
+      this.onTooltip = onTooltip;
+    }
+    return this;
   }
 }
 
