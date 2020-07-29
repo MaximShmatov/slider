@@ -49,10 +49,7 @@ class SliderModel implements ISliderModel {
   }
 
   setMinValue(minValue: number): this {
-    if(minValue) {
-      this.minValue = minValue;
-    }
-    this.minValue = minValue;
+    this.minValue = minValue ? minValue : 0;
     return this;
   }
 
@@ -61,9 +58,7 @@ class SliderModel implements ISliderModel {
   }
 
   setMaxValue(maxValue: number): this {
-    if(maxValue) {
-      this.maxValue = maxValue;
-    }
+    this.maxValue = maxValue ? maxValue : 0;
     return this;
   }
 
@@ -72,9 +67,7 @@ class SliderModel implements ISliderModel {
   }
 
   setValueFrom(valueFrom: number): this {
-    if(valueFrom) {
-      this.valueFrom = valueFrom;
-    }
+    this.valueFrom = valueFrom ? valueFrom : 0;
     return this;
   }
 
@@ -83,9 +76,7 @@ class SliderModel implements ISliderModel {
   }
 
   setValueTo(valueTo: number): this {
-    if(valueTo) {
-      this.valueTo = valueTo;
-    }
+    this.valueTo = valueTo ? valueTo : 0;
     return this;
   }
 
@@ -94,9 +85,7 @@ class SliderModel implements ISliderModel {
   }
 
   setStepSize(stepSize: number): this {
-    if(stepSize) {
-      this.stepSize = stepSize;
-    }
+    this.stepSize = stepSize ? stepSize : 0;
     return this;
   }
 
@@ -105,9 +94,7 @@ class SliderModel implements ISliderModel {
   }
 
   setVertical(onVertical: boolean): this {
-    if(onVertical) {
-      this.onVertical = onVertical;
-    }
+    this.onVertical = onVertical;
     return this;
   }
 
@@ -116,9 +103,7 @@ class SliderModel implements ISliderModel {
   }
 
   setRange(onRange: boolean): this {
-    if(onRange) {
-      this.onRange = onRange;
-    }
+    this.onRange = onRange;
     return this;
   }
 
@@ -127,9 +112,7 @@ class SliderModel implements ISliderModel {
   }
 
   setTooltip(onTooltip: boolean): this {
-    if(onTooltip) {
-      this.onTooltip = onTooltip;
-    }
+    this.onTooltip = onTooltip;
     return this;
   }
 }

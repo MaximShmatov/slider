@@ -10,37 +10,44 @@ class SliderView extends HTMLElement implements ISliderView {
     super();
     this.rail = new Rail();
     this.scale = new Scale();
-    this.attachShadow({mode: 'open'}).innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
+    this.attachShadow({mode: 'open'});
+  }
+
+  private setPosition(evt: Event) {
+    //console.log(evt.target);
+  }
+
+  connectedCallback() {
     if (this.shadowRoot) {
+      Object.assign(this.rail.dataset, this.dataset);
+      Object.assign(this.scale.dataset, this.dataset);
+      this.shadowRoot.innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
+      this.shadowRoot.appendChild(this.rail);
+      this.shadowRoot.appendChild(this.scale);
       this.shadowRoot.addEventListener('click', this.setPosition);
     }
   }
 
-  private setPosition(evt: Event) {
-    console.log(evt.target);
-  }
-
-  connectedCallback() {
-    Object.assign(this.rail.dataset, this.dataset);
-    this.scale.dataset.minValue = this.dataset.minValue;
-    this.scale.dataset.maxValue = this.dataset.maxValue;
-    if (this.shadowRoot) {
-      this.shadowRoot.appendChild(this.rail);
-      this.shadowRoot.appendChild(this.scale);
-    }
-    console.log('connected callback view');
-  }
-
   static get observedAttributes(): string[] {
-    return ['data-min-value', 'data-max-value', 'data-step-size', 'data-value-from', 'data-value-to', 'data-on-vertical', 'data-on-range', 'data-on-tooltip'];
+    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-vertical', 'data-on-range', 'data-on-tooltip'];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-value-from':
-        this.rail.dataset.valueFrom = this.dataset.valueFrom;
+        break;
+      case 'data-value-to':
+        break;
+      case 'data-min-value':
+        break;
+      case 'data-max-value':
+        break;
+      case 'data-on-vertical':
+        break;
+      case 'data-on-range':
+        break;
+      case 'data-on-tooltip':
     }
-
   }
 }
 
@@ -52,36 +59,45 @@ class Rail extends HTMLElement {
     super();
     this.thumb = new Thumb();
     this.progress = document.createElement('div');
-    this.className = 'rail';
-    this.thumb.className = 'thumb';
-    this.progress.className = 'progress';
   }
 
   connectedCallback() {
-    this.calculatePositionToPercent();
-    this.thumb.dataset.positionToPercent = this.calculatePositionToPercent();
-    this.thumb.dataset.onVertical = this.dataset.onVertical;
-    this.thumb.dataset.value = this.dataset.valueFrom;
-    this.thumb.dataset.onTooltip = this.dataset.onTooltip;
+    Object.assign(this.thumb.dataset, this.dataset);
+    this.className = 'rail';
+    this.progress.className = 'progress';
+    this.setThumbPosition(Number(this.dataset.valueFrom));
     this.appendChild(this.thumb);
     this.appendChild(this.progress);
   }
 
   static get observedAttributes(): string[] {
-    return ['min-value', 'max-value', 'step-value', 'data-value-from', 'value-to', 'on-vertical', 'on-range', 'on-tooltip'];
+    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-vertical', 'data-on-range', 'data-on-tooltip'];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-value-from':
-        this.thumb.dataset.value = this.dataset.valueFrom;
-        console.log(this.dataset.valueFrom);
+        //this.thumb.dataset.currentValue = this.dataset.valueFrom;
+        break;
+      case 'data-value-to':
+        break;
+      case 'data-min-value':
+        break;
+      case 'data-max-value':
+        break;
+      case 'data-on-vertical':
+        //this.thumb.dataset.onVertical = this.dataset.onVertical;
+        break;
+      case 'data-on-range':
+        break;
+      case 'data-on-tooltip':
+        //this.thumb.dataset.onTooltip = this.dataset.onTooltip;
     }
   }
 
-  private calculatePositionToPercent() {
-    let valueInPercent = (Number(this.dataset.maxValue) - Number(this.dataset.minValue)) / 100;
-    return (Number(this.dataset.valueFrom) / valueInPercent).toString();
+  private setThumbPosition(currentValue: number): void {
+    //console.log(this.dataset.valueFrom);
+    this.thumb.dataset.thumbPosition = String(currentValue / ((Number(this.dataset.maxValue) - Number(this.dataset.minValue)) / 100));
   }
 }
 
@@ -89,45 +105,41 @@ class Thumb extends HTMLElement {
   private tooltip: HTMLElement;
   private mousemove: (evt: MouseEventInit) => void;
   private mouseup: (evt: MouseEvent) => void;
-  private pxInPercent: number = 1;
-  private startOffsetToPercent: number = 1;
-  private endOffsetToPercent: number = 1;
+  private pxInPercent: number = 0;
+  private startOffsetToPercent: number = 0;
+  private endOffsetToPercent: number = 0;
   private currentOffsetToPercent: number = 0;
-  private parentOffset: number = 1
+  private parentOffset: number = 0;
 
   constructor() {
     super();
-    this.className = 'thumb';
     this.tooltip = document.createElement('div');
-    this.tooltip.className = 'tooltip';
-    this.tooltip.textContent = String(this.dataset.value);
     this.mousemove = this.onMouseMove.bind(this);
     this.mouseup = this.onMouseUp.bind(this);
     this.onmousedown = this.onMouseDown;
   }
 
   connectedCallback() {
-    this.toggleTooltip();
+    this.className = 'thumb';
+    this.tooltip.className = 'tooltip';
     this.appendChild(this.tooltip);
     this.calculatePositions();
-    this.currentOffsetToPercent = Number(this.dataset.positionToPercent) + this.startOffsetToPercent;
     this.moveToPosition();
   }
 
   static get observedAttributes(): string[] {
-    return ['data-value', 'position-to-percent', 'data-on-tooltip', 'data-on-vertical'];
+    return ['data-current-value', 'data-thumb-position', 'data-on-tooltip', 'data-on-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
-      case 'data-value':
-        this.tooltip.textContent = String(this.dataset.value);
+      case 'data-current-value':
+        this.tooltip.textContent = String(this.dataset.currentValue);
         break;
-      case 'data-position-to-percent':
-        this.currentOffsetToPercent = Number(this.dataset.positionToPercent) + this.startOffsetToPercent;
-        this.moveToPosition();
+      case 'data-thumb-position':
         break;
       case 'data-on-tooltip':
+        this.toggleTooltip();
         break;
       case 'data-on-vertical':
     }
@@ -151,9 +163,11 @@ class Thumb extends HTMLElement {
     if (this.parentElement) {
       this.pxInPercent = this.parentElement.offsetWidth / 100;
       this.parentOffset = this.parentElement.offsetLeft + this.offsetWidth / 2;
+      this.startOffsetToPercent = 0 - this.offsetWidth / 2 / this.pxInPercent;
+      this.endOffsetToPercent = 100 + this.startOffsetToPercent;
+      this.currentOffsetToPercent = Number(this.dataset.thumbPosition) + this.startOffsetToPercent;
+      //console.log(this.currentOffsetToPercent)
     }
-    this.startOffsetToPercent = 0 - this.offsetWidth / 2 / this.pxInPercent;
-    this.endOffsetToPercent = 100 + this.startOffsetToPercent;
   }
 
   private moveToPosition(): void{
@@ -164,6 +178,7 @@ class Thumb extends HTMLElement {
       this.currentOffsetToPercent = this.endOffsetToPercent;
     }
     this.style.marginLeft = `${this.currentOffsetToPercent}%`;
+
     this.dispatchEvent(new CustomEvent('slider-pos', {
       bubbles: true,
       cancelable: true,
@@ -210,7 +225,7 @@ class Scale extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ['min-value', 'max-value'];
+    return ['data-min-value', 'data-max-value'];
   }
 
   attributeChangedCallback(): void {

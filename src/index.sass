@@ -1,11 +1,22 @@
 .container
-  max-width: 300px
-  height: 300px
+  display: flex
+  align-items: center
+  justify-content: space-between
+  max-width: 800px
   border: 1px solid black
   margin: 30px auto
   padding: 10px
 
+  & .control-panel
+
+
+    & label
+      display: flex
+      flex-direction: row-reverse
+      justify-content: space-between
+
 .input-slider-plugin
   display: block
+  width: 100%
   border: 1px solid red
   padding: 10px
