@@ -20,7 +20,7 @@ class SliderController implements ISliderController {
 
   initModel(element: HTMLElement): void {
     this.model.setDataModelFromElement(element);
-    console.log(this.model);
+    //console.log(this.model);
   }
 
   initView(): void {
@@ -30,8 +30,10 @@ class SliderController implements ISliderController {
 
   private calculateValue(evt: CustomEvent): void {
     //console.log(evt.detail.valueFrom);
-    let val = this.model.getMaxValue() - this.model.getMinValue() / 100 * evt.detail.valueFrom;
-    console.log(val);
+    let val = ((this.model.getMaxValue() - this.model.getMinValue()) / 100 * evt.detail.valueFrom) + this.model.getMinValue();
+    val = Math.round(val / this.model.getStepSize()) * this.model.getStepSize();
+    this.view.dataset.valueFrom = val.toString();
+    //console.log(val);
   }
 }
 
