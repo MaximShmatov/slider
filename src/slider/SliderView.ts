@@ -25,6 +25,7 @@ class SliderView extends HTMLElement implements ISliderView {
       this.shadowRoot.appendChild(this.rail);
       this.shadowRoot.appendChild(this.scale);
       this.shadowRoot.addEventListener('click', this.setPosition);
+      console.log('slider connected callback');
     }
   }
 
@@ -35,6 +36,7 @@ class SliderView extends HTMLElement implements ISliderView {
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-value-from':
+        this.rail.dataset.valueFrom = this.dataset.valueFrom;
         break;
       case 'data-value-to':
         break;
@@ -65,9 +67,9 @@ class Rail extends HTMLElement {
     Object.assign(this.thumb.dataset, this.dataset);
     this.className = 'rail';
     this.progress.className = 'progress';
-    this.setThumbPosition(Number(this.dataset.valueFrom));
     this.appendChild(this.thumb);
     this.appendChild(this.progress);
+    this.setThumbPosition(Number(this.dataset.valueFrom));
   }
 
   static get observedAttributes(): string[] {
@@ -77,7 +79,7 @@ class Rail extends HTMLElement {
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-value-from':
-        //this.thumb.dataset.currentValue = this.dataset.valueFrom;
+        this.thumb.dataset.currentValue = this.dataset.valueFrom;
         break;
       case 'data-value-to':
         break;
@@ -91,25 +93,21 @@ class Rail extends HTMLElement {
       case 'data-on-range':
         break;
       case 'data-on-tooltip':
-        //this.thumb.dataset.onTooltip = this.dataset.onTooltip;
+
+      //this.thumb.dataset.onTooltip = this.dataset.onTooltip;
     }
   }
 
   private setThumbPosition(currentValue: number): void {
-    //console.log(this.dataset.valueFrom);
     this.thumb.dataset.thumbPosition = String(currentValue / ((Number(this.dataset.maxValue) - Number(this.dataset.minValue)) / 100));
   }
 }
 
 class Thumb extends HTMLElement {
-  private tooltip: HTMLElement;
-  private mousemove: (evt: MouseEventInit) => void;
-  private mouseup: (evt: MouseEvent) => void;
-  private pxInPercent: number = 0;
-  private startOffsetToPercent: number = 0;
-  private endOffsetToPercent: number = 0;
+  private readonly tooltip: HTMLElement;
+  private readonly mousemove: (evt: MouseEventInit) => void;
+  private readonly mouseup: (evt: MouseEvent) => void;
   private currentOffsetToPercent: number = 0;
-  private parentOffset: number = 0;
 
   constructor() {
     super();
@@ -117,26 +115,31 @@ class Thumb extends HTMLElement {
     this.mousemove = this.onMouseMove.bind(this);
     this.mouseup = this.onMouseUp.bind(this);
     this.onmousedown = this.onMouseDown;
+    document.addEventListener('DOMContentLoaded', () => {
+      this.currentOffsetToPercent = Number(this.dataset.thumbPosition);
+      this.moveToPosition();
+    });
   }
 
   connectedCallback() {
     this.className = 'thumb';
     this.tooltip.className = 'tooltip';
+    this.appendChild(document.createElement('div'));
     this.appendChild(this.tooltip);
-    this.calculatePositions();
-    this.moveToPosition();
   }
 
   static get observedAttributes(): string[] {
-    return ['data-current-value', 'data-thumb-position', 'data-on-tooltip', 'data-on-vertical'];
+    return ['data-tooltip-value', 'data-thumb-position', 'data-on-tooltip', 'data-on-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
-      case 'data-current-value':
+      case 'data-tooltip-value':
         this.tooltip.textContent = String(this.dataset.currentValue);
         break;
       case 'data-thumb-position':
+        this.currentOffsetToPercent = Number(this.dataset.thumbPosition);
+        this.moveToPosition();
         break;
       case 'data-on-tooltip':
         this.toggleTooltip();
@@ -147,35 +150,23 @@ class Thumb extends HTMLElement {
 
   private onMouseDown(evt: MouseEvent): void {
     evt.preventDefault();
-    this.calculatePositions();
     document.addEventListener('mousemove', this.mousemove);
     document.addEventListener('mouseup', this.mouseup);
   }
 
   private onMouseMove(evt: MouseEventInit): void {
-    if (evt.clientX) {
-      this.currentOffsetToPercent = (evt.clientX - this.parentOffset) / this.pxInPercent;
+    if (evt.clientX && this.parentElement) {
+      this.currentOffsetToPercent = (evt.clientX - this.parentElement.offsetLeft) / (this.parentElement.offsetWidth / 100);
       this.moveToPosition();
     }
   }
 
-  private calculatePositions(): void {
-    if (this.parentElement) {
-      this.pxInPercent = this.parentElement.offsetWidth / 100;
-      this.parentOffset = this.parentElement.offsetLeft + this.offsetWidth / 2;
-      this.startOffsetToPercent = 0 - this.offsetWidth / 2 / this.pxInPercent;
-      this.endOffsetToPercent = 100 + this.startOffsetToPercent;
-      this.currentOffsetToPercent = Number(this.dataset.thumbPosition) + this.startOffsetToPercent;
-      //console.log(this.currentOffsetToPercent)
+  private moveToPosition(): void {
+    if (this.currentOffsetToPercent < 0) {
+      this.currentOffsetToPercent = 0;
     }
-  }
-
-  private moveToPosition(): void{
-    if (this.currentOffsetToPercent < this.startOffsetToPercent) {
-      this.currentOffsetToPercent = this.startOffsetToPercent;
-    }
-    if (this.currentOffsetToPercent > this.endOffsetToPercent) {
-      this.currentOffsetToPercent = this.endOffsetToPercent;
+    if (this.currentOffsetToPercent > 100) {
+      this.currentOffsetToPercent = 100;
     }
     this.style.marginLeft = `${this.currentOffsetToPercent}%`;
 
@@ -184,13 +175,13 @@ class Thumb extends HTMLElement {
       cancelable: true,
       composed: true,
       detail: {
-        valueFrom: this.currentOffsetToPercent - this.startOffsetToPercent
+        valueFrom: this.currentOffsetToPercent
       }
     }));
   }
 
   private toggleTooltip() {
-    if(this.dataset.onTooltip === 'true') {
+    if (this.dataset.onTooltip === 'true') {
       this.tooltip.style.display = 'flex';
     } else {
       this.tooltip.style.display = 'none';

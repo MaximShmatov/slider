@@ -17,10 +17,17 @@
 
 .thumb {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb div {
+  position: absolute;
   background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
-  padding: 6px;
   border: 2px solid white;
   border-radius: 10px;
+  padding: 6px;
 }
 
 .tooltip {
@@ -31,8 +38,7 @@
   justify-content: center;
   width: 30px;
   height: 20px;
-  top: -30px;
-  left: -12px;
+  top: -50px;
   border: 2px solid #66D2EA;
   background-color: #6FCF97;
   opacity: 0.5;

@@ -85,7 +85,7 @@ class SliderModel implements ISliderModel {
   }
 
   setStepSize(stepSize: number): this {
-    this.stepSize = stepSize ? stepSize : 0;
+    this.stepSize = stepSize ? stepSize : 1;
     return this;
   }
 

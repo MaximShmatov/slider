@@ -20,7 +20,7 @@ class SliderController implements ISliderController {
 
   initModel(element: HTMLElement): void {
     this.model.setDataModelFromElement(element);
-    console.log(this.model);
+    //console.log(this.model);
   }
 
   initView(): void {
