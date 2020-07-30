@@ -13,10 +13,6 @@ class SliderView extends HTMLElement implements ISliderView {
     this.attachShadow({mode: 'open'});
   }
 
-  private setPosition(evt: Event) {
-    //console.log(evt.target);
-  }
-
   connectedCallback() {
     if (this.shadowRoot) {
       Object.assign(this.rail.dataset, this.dataset);
@@ -24,8 +20,7 @@ class SliderView extends HTMLElement implements ISliderView {
       this.shadowRoot.innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
       this.shadowRoot.appendChild(this.rail);
       this.shadowRoot.appendChild(this.scale);
-      this.shadowRoot.addEventListener('click', this.setPosition);
-      console.log('slider connected callback');
+      this.shadowRoot.addEventListener('click', this.setThumbPosition.bind(this));
     }
   }
 
@@ -50,6 +45,10 @@ class SliderView extends HTMLElement implements ISliderView {
         break;
       case 'data-on-tooltip':
     }
+  }
+
+  private setThumbPosition(evt: Event) {
+    console.log(evt.target);
   }
 }
 
@@ -79,7 +78,8 @@ class Rail extends HTMLElement {
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-value-from':
-        this.thumb.dataset.currentValue = this.dataset.valueFrom;
+        this.thumb.dataset.tooltipValue = this.dataset.valueFrom;
+        console.log(this.dataset.valueFrom)
         break;
       case 'data-value-to':
         break;
@@ -115,10 +115,6 @@ class Thumb extends HTMLElement {
     this.mousemove = this.onMouseMove.bind(this);
     this.mouseup = this.onMouseUp.bind(this);
     this.onmousedown = this.onMouseDown;
-    document.addEventListener('DOMContentLoaded', () => {
-      this.currentOffsetToPercent = Number(this.dataset.thumbPosition);
-      this.moveToPosition();
-    });
   }
 
   connectedCallback() {
@@ -128,14 +124,14 @@ class Thumb extends HTMLElement {
     this.appendChild(this.tooltip);
   }
 
-  static get observedAttributes(): string[] {
+  static get observedAttributes() {
     return ['data-tooltip-value', 'data-thumb-position', 'data-on-tooltip', 'data-on-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-tooltip-value':
-        this.tooltip.textContent = String(this.dataset.currentValue);
+        this.tooltip.textContent = String(this.dataset.tooltipValue);
         break;
       case 'data-thumb-position':
         this.currentOffsetToPercent = Number(this.dataset.thumbPosition);
@@ -180,7 +176,7 @@ class Thumb extends HTMLElement {
     }));
   }
 
-  private toggleTooltip() {
+  private toggleTooltip(): void {
     if (this.dataset.onTooltip === 'true') {
       this.tooltip.style.display = 'flex';
     } else {
@@ -195,28 +191,55 @@ class Thumb extends HTMLElement {
 }
 
 class Scale extends HTMLElement {
-  private scaleValue: HTMLSpanElement[] = [];
-  private container: HTMLDivElement;
+  private scaleValueItems: HTMLSpanElement[] = [];
+  private readonly scaleValues: HTMLDivElement;
 
   constructor() {
     super();
     this.className = 'scale';
-    for (let i = 0; i < 5; i++) {
-      this.scaleValue[i] = document.createElement('span');
+    this.innerHTML = `      
+      <div class="scale__wrapper">
+        <div class="scale__division">
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+        </div>
+        <div class="scale__division">
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+        </div>
+        <div class="scale__division">
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+          <span class="scale__subdivision"></span>
+        </div>
+      </div>`;
+
+    for (let i = 0; i < 4; i++) {
+      this.scaleValueItems[i] = document.createElement('span');
+      this.scaleValueItems[i].className = 'scale__values-item';
     }
-    this.container = document.createElement('div');
-    for (let span of this.scaleValue) {
-      this.container.appendChild(span);
+    this.scaleValues = document.createElement('div');
+    this.scaleValues.className = 'scale__values'
+    for (let span of this.scaleValueItems) {
+      this.scaleValues.appendChild(span);
     }
   }
 
   connectedCallback(): void {
-    this.appendChild(this.container);
+    this.appendChild(this.scaleValues);
     this.render();
   }
 
   static get observedAttributes(): string[] {
-    return ['data-min-value', 'data-max-value'];
+    return ['data-min-value', 'data-max-value', 'data-step-size'];
   }
 
   attributeChangedCallback(): void {
@@ -226,12 +249,11 @@ class Scale extends HTMLElement {
   private render(): void {
     let min = Number(this.dataset.minValue);
     let max = Number(this.dataset.maxValue);
-    let scaleValue = Math.round((max - min) / 4);
-    this.scaleValue[0].textContent = min.toString();
-    this.scaleValue[1].textContent = Math.round(scaleValue).toString();
-    this.scaleValue[2].textContent = Math.round(scaleValue * 2).toString();
-    this.scaleValue[3].textContent = Math.round(scaleValue * 3).toString();
-    this.scaleValue[4].textContent = Math.round(max).toString();
+    let scaleValue = (max - min) / 3;
+    this.scaleValueItems[0].textContent = min.toFixed();
+    this.scaleValueItems[1].textContent = (min + scaleValue).toFixed();
+    this.scaleValueItems[2].textContent = (min + scaleValue + scaleValue).toFixed();
+    this.scaleValueItems[3].textContent = max.toFixed();
   }
 }
 
