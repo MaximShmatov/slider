@@ -18,10 +18,6 @@ interface ISliderController {
 }
 
 
-interface ISliderView {
-  setThumbPosition(minValue: number, maxValue: number, currentValue: number): void;
-}
-
 interface IThumb {
   setTooltipValue(value: number): void;
 
@@ -30,11 +26,11 @@ interface IThumb {
   toggleTooltip(): void;
 }
 
-interface IRail {
+interface IRailView {
   thumb: IThumb;
 }
 
-interface IScale {
+interface IScaleView {
   render(min: number, max: number): void;
 }
 

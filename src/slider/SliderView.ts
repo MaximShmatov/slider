@@ -1,26 +1,4 @@
-class SliderView extends HTMLElement implements ISliderView {
-  private readonly rail: Rail;
-  private readonly scale: Scale;
-
-  constructor() {
-    super();
-    this.className = 'view';
-    this.rail = new Rail();
-    this.scale = new Scale();
-    this.innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
-    this.appendChild(this.rail);
-    this.appendChild(this.scale);
-  }
-
-  setThumbPosition(minValue: number, maxValue: number, currentValue: number): void {
-    this.rail.thumb.moveToPosition(currentValue / ((maxValue - minValue) / 100));
-  }
-  setScaleValues(minValue:number, maxValue: number) {
-    this.scale.render(minValue, maxValue);
-  }
-}
-
-class Rail extends HTMLElement implements IRail{
+class RailView extends HTMLElement implements IRailView{
   thumb: Thumb;
 
   constructor() {
@@ -102,7 +80,7 @@ class Thumb extends HTMLElement implements IThumb {
   }
 }
 
-class Scale extends HTMLElement implements IScale{
+class ScaleView extends HTMLElement implements IScaleView{
   private scaleValueItems: HTMLSpanElement[] = [];
 
   constructor() {
@@ -156,9 +134,8 @@ class Scale extends HTMLElement implements IScale{
   }
 }
 
-customElements.define('input-slider-view', SliderView);
 customElements.define('input-slider-view-thumb', Thumb);
-customElements.define('input-slider-view-rail', Rail);
-customElements.define('input-slider-view-scale', Scale);
+customElements.define('input-slider-view-rail', RailView);
+customElements.define('input-slider-view-scale', ScaleView);
 
-export {SliderView};
+export {RailView, ScaleView};
