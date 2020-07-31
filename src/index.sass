@@ -1,22 +1,30 @@
 .container
   display: flex
   align-items: center
-  justify-content: space-between
+  justify-content: space-around
   max-width: 800px
-  border: 1px solid black
-  margin: 30px auto
+  border: 1px solid #9F9F9F
+  margin: 10px auto
   padding: 10px
+  background-color: #EFEFEF
 
-  & .control-panel
-
-
-    & label
-      display: flex
-      flex-direction: row-reverse
-      justify-content: space-between
-
-.input-slider-plugin
+input-slider-plugin
   display: block
+  max-width: 300px
   width: 100%
   border: 1px solid red
   padding: 20px
+
+.control
+  display: flex
+  flex-direction: column
+
+  & label
+    display: flex
+    flex-direction: row-reverse
+    justify-content: flex-end
+    margin-bottom: 5px
+
+  & input
+    max-width: 60px
+    margin-right: 10px

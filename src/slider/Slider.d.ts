@@ -1,4 +1,4 @@
-interface ISliderModelData {
+interface ISliderModel {
   minValue: number;
   maxValue: number;
   valueFrom: number;
@@ -7,54 +7,35 @@ interface ISliderModelData {
   onVertical: boolean;
   onRange: boolean;
   onTooltip: boolean;
-}
 
-interface ISliderModel {
-  setDataModelFromElement(el: HTMLElement): void;
-
-  setDataModelFromObject(data: ISliderModelData): void;
+  setDataModelFromObject(data: ISliderModel): void;
 
   setDataModelFromServer(variant: string): void;
-
-  getMinValue(): number;
-
-  setMinValue(val: number): this;
-
-  getMaxValue(): number;
-
-  setMaxValue(val: number): this;
-
-  getValueFrom(): number;
-
-  setValueFrom(val: number): this;
-
-  getValueTo(): number;
-
-  setValueTo(val: number): this;
-
-  getStepSize(): number;
-
-  setStepSize(val: number): this;
-
-  isVertical(): boolean;
-
-  setVertical(val: boolean): this;
-
-  isRange(): boolean;
-
-  setRange(val: boolean): this;
-
-  isTooltip(): boolean;
-
-  setTooltip(val: boolean): this;
-}
-
-interface ISliderView extends HTMLElement {
-
 }
 
 interface ISliderController {
+  initView(): void;
+}
 
+
+interface ISliderView {
+  setThumbPosition(minValue: number, maxValue: number, currentValue: number): void;
+}
+
+interface IThumb {
+  setTooltipValue(value: number): void;
+
+  moveToPosition(position: number): void;
+
+  toggleTooltip(): void;
+}
+
+interface IRail {
+  thumb: IThumb;
+}
+
+interface IScale {
+  render(min: number, max: number): void;
 }
 
 interface HTMLElementEventMap {
@@ -62,5 +43,5 @@ interface HTMLElementEventMap {
 }
 
 interface JQuery {
-  slider(data: ISliderModelData | null): this;
+  slider(data: ISliderModel | null): this;
 }

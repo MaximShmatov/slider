@@ -1,146 +1,86 @@
-import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-
-
 class SliderView extends HTMLElement implements ISliderView {
-  private rail: HTMLElement;
-  private scale: HTMLElement;
+  private readonly rail: Rail;
+  private readonly scale: Scale;
 
   constructor() {
     super();
+    this.className = 'view';
     this.rail = new Rail();
     this.scale = new Scale();
-    this.attachShadow({mode: 'open'});
+    this.innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
+    this.appendChild(this.rail);
+    this.appendChild(this.scale);
   }
 
-  connectedCallback() {
-    if (this.shadowRoot) {
-      Object.assign(this.rail.dataset, this.dataset);
-      Object.assign(this.scale.dataset, this.dataset);
-      this.shadowRoot.innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
-      this.shadowRoot.appendChild(this.rail);
-      this.shadowRoot.appendChild(this.scale);
-      this.shadowRoot.addEventListener('click', this.setThumbPosition.bind(this));
-    }
+  setThumbPosition(minValue: number, maxValue: number, currentValue: number): void {
+    this.rail.thumb.moveToPosition(currentValue / ((maxValue - minValue) / 100));
   }
-
-  static get observedAttributes(): string[] {
-    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-vertical', 'data-on-range', 'data-on-tooltip'];
-  }
-
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-value-from':
-        this.rail.dataset.valueFrom = this.dataset.valueFrom;
-        break;
-      case 'data-value-to':
-        break;
-      case 'data-min-value':
-        break;
-      case 'data-max-value':
-        break;
-      case 'data-on-vertical':
-        break;
-      case 'data-on-range':
-        break;
-      case 'data-on-tooltip':
-    }
-  }
-
-  private setThumbPosition(evt: Event) {
-    console.log(evt.target);
+  setScaleValues(minValue:number, maxValue: number) {
+    this.scale.render(minValue, maxValue);
   }
 }
 
-class Rail extends HTMLElement {
-  private thumb: HTMLElement;
-  private progress: HTMLElement;
+class Rail extends HTMLElement implements IRail{
+  thumb: Thumb;
 
   constructor() {
     super();
-    this.thumb = new Thumb();
-    this.progress = document.createElement('div');
-  }
-
-  connectedCallback() {
-    Object.assign(this.thumb.dataset, this.dataset);
     this.className = 'rail';
-    this.progress.className = 'progress';
+    this.thumb = new Thumb();
+    let progress = document.createElement('div');
+    progress.className = 'rail__progress';
     this.appendChild(this.thumb);
-    this.appendChild(this.progress);
-    this.setThumbPosition(Number(this.dataset.valueFrom));
-  }
-
-  static get observedAttributes(): string[] {
-    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-vertical', 'data-on-range', 'data-on-tooltip'];
-  }
-
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-value-from':
-        this.thumb.dataset.tooltipValue = this.dataset.valueFrom;
-        console.log(this.dataset.valueFrom)
-        break;
-      case 'data-value-to':
-        break;
-      case 'data-min-value':
-        break;
-      case 'data-max-value':
-        break;
-      case 'data-on-vertical':
-        //this.thumb.dataset.onVertical = this.dataset.onVertical;
-        break;
-      case 'data-on-range':
-        break;
-      case 'data-on-tooltip':
-
-      //this.thumb.dataset.onTooltip = this.dataset.onTooltip;
-    }
-  }
-
-  private setThumbPosition(currentValue: number): void {
-    this.thumb.dataset.thumbPosition = String(currentValue / ((Number(this.dataset.maxValue) - Number(this.dataset.minValue)) / 100));
+    this.appendChild(progress);
   }
 }
 
-class Thumb extends HTMLElement {
-  private readonly tooltip: HTMLElement;
+class Thumb extends HTMLElement implements IThumb {
   private readonly mousemove: (evt: MouseEventInit) => void;
   private readonly mouseup: (evt: MouseEvent) => void;
-  private currentOffsetToPercent: number = 0;
+  private readonly tooltip: HTMLElement;
 
   constructor() {
     super();
+    this.className = 'thumb';
     this.tooltip = document.createElement('div');
+    this.tooltip.className = 'thumb__tooltip';
+    let point = document.createElement('div');
+    point.className = 'thumb__point';
+    this.appendChild(point);
+    this.appendChild(this.tooltip);
     this.mousemove = this.onMouseMove.bind(this);
     this.mouseup = this.onMouseUp.bind(this);
     this.onmousedown = this.onMouseDown;
   }
 
-  connectedCallback() {
-    this.className = 'thumb';
-    this.tooltip.className = 'tooltip';
-    this.appendChild(document.createElement('div'));
-    this.appendChild(this.tooltip);
+  setTooltipValue(value: number) {
+    this.tooltip.textContent = value.toFixed();
   }
 
-  static get observedAttributes() {
-    return ['data-tooltip-value', 'data-thumb-position', 'data-on-tooltip', 'data-on-vertical'];
+  moveToPosition(position: number): void {
+    if (position < 0) {
+      position = 0;
+    }
+    if (position > 100) {
+      position = 100;
+    }
+    this.style.marginLeft = `${position}%`;
+
+    this.dispatchEvent(new CustomEvent('slider-pos', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {
+        valueFrom: position
+      }
+    }));
   }
 
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-tooltip-value':
-        this.tooltip.textContent = String(this.dataset.tooltipValue);
-        break;
-      case 'data-thumb-position':
-        this.currentOffsetToPercent = Number(this.dataset.thumbPosition);
-        this.moveToPosition();
-        break;
-      case 'data-on-tooltip':
-        this.toggleTooltip();
-        break;
-      case 'data-on-vertical':
+  toggleTooltip(): void {
+    if (this.dataset.onTooltip === 'true') {
+      this.tooltip.style.display = 'flex';
+    } else {
+      this.tooltip.style.display = 'none';
     }
   }
 
@@ -152,35 +92,7 @@ class Thumb extends HTMLElement {
 
   private onMouseMove(evt: MouseEventInit): void {
     if (evt.clientX && this.parentElement) {
-      this.currentOffsetToPercent = (evt.clientX - this.parentElement.offsetLeft) / (this.parentElement.offsetWidth / 100);
-      this.moveToPosition();
-    }
-  }
-
-  private moveToPosition(): void {
-    if (this.currentOffsetToPercent < 0) {
-      this.currentOffsetToPercent = 0;
-    }
-    if (this.currentOffsetToPercent > 100) {
-      this.currentOffsetToPercent = 100;
-    }
-    this.style.marginLeft = `${this.currentOffsetToPercent}%`;
-
-    this.dispatchEvent(new CustomEvent('slider-pos', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: {
-        valueFrom: this.currentOffsetToPercent
-      }
-    }));
-  }
-
-  private toggleTooltip(): void {
-    if (this.dataset.onTooltip === 'true') {
-      this.tooltip.style.display = 'flex';
-    } else {
-      this.tooltip.style.display = 'none';
+      this.moveToPosition((evt.clientX - this.parentElement.offsetLeft) / (this.parentElement.offsetWidth / 100));
     }
   }
 
@@ -190,9 +102,8 @@ class Thumb extends HTMLElement {
   }
 }
 
-class Scale extends HTMLElement {
+class Scale extends HTMLElement implements IScale{
   private scaleValueItems: HTMLSpanElement[] = [];
-  private readonly scaleValues: HTMLDivElement;
 
   constructor() {
     super();
@@ -226,29 +137,17 @@ class Scale extends HTMLElement {
       this.scaleValueItems[i] = document.createElement('span');
       this.scaleValueItems[i].className = 'scale__values-item';
     }
-    this.scaleValues = document.createElement('div');
-    this.scaleValues.className = 'scale__values'
+
+    let scaleValues: HTMLElement = document.createElement('div');
+
+    scaleValues.className = 'scale__values'
     for (let span of this.scaleValueItems) {
-      this.scaleValues.appendChild(span);
+      scaleValues.appendChild(span);
     }
+    this.appendChild(scaleValues);
   }
 
-  connectedCallback(): void {
-    this.appendChild(this.scaleValues);
-    this.render();
-  }
-
-  static get observedAttributes(): string[] {
-    return ['data-min-value', 'data-max-value', 'data-step-size'];
-  }
-
-  attributeChangedCallback(): void {
-    this.render();
-  }
-
-  private render(): void {
-    let min = Number(this.dataset.minValue);
-    let max = Number(this.dataset.maxValue);
+  render(min: number, max: number): void {
     let scaleValue = (max - min) / 3;
     this.scaleValueItems[0].textContent = min.toFixed();
     this.scaleValueItems[1].textContent = (min + scaleValue).toFixed();

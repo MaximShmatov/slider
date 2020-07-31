@@ -1,32 +1,29 @@
+import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
+import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import {SliderModel} from './SliderModel';
 import {SliderView} from './SliderView';
 
 
-class SliderController implements ISliderController {
-  private readonly model: ISliderModel;
-  private readonly view: ISliderView;
+class SliderController extends HTMLElement implements ISliderController {
+  private readonly model: SliderModel;
+  private readonly view: SliderView;
 
-  constructor(element: HTMLElement) {
+  constructor() {
+    super();
     this.model = new SliderModel(null);
     this.view = new SliderView();
-    this.view.className = element.className;
-    this.initModel(element);
-    this.initView();
-    $(element).before(this.view);
-    $(element).remove();
     this.view.addEventListener('slider-pos', this.calculateValue.bind(this));
-    //this.view.addEventListener('slider-pos', (evt) => {console.log(evt);});
-  }
-
-  initModel(element: HTMLElement): void {
-    this.model.setDataModelFromElement(element);
-    //console.log(this.model);
+    this.attachShadow({mode: 'open'});
+    if(this.shadowRoot) {
+      this.shadowRoot.appendChild(this.view);
+    }
   }
 
   initView(): void {
-    Object.assign(this.view.dataset, this.model);
-    //console.log(this.view.dataset);
+    this.view.setScaleValues(this.model.getMinValue(), this.model.getMaxValue());
   }
+
+
 
   private calculateValue(evt: CustomEvent): void {
     //console.log(evt.detail.valueFrom);

@@ -1,29 +1,34 @@
-class SliderModel implements ISliderModel {
-  private minValue: number = 1;
-  private maxValue: number = 10;
-  private valueFrom: number = 5;
-  private valueTo: number = 6;
-  private stepSize: number = 1;
-  private onVertical: boolean = false;
-  private onRange: boolean = false;
-  private onTooltip: boolean = false;
-
-  constructor(data: ISliderModelData | null) {
+class SliderModel extends HTMLElement implements ISliderModel {
+  constructor(data: ISliderModel | null) {
+    super();
     if (data) {
       this.setDataModelFromObject(data);
     }
   }
 
-  setDataModelFromElement(element: HTMLElement) {
-    this
-      .setMinValue(Number(element.dataset.minValue))
-      .setMaxValue(Number(element.dataset.maxValue))
-      .setValueFrom(Number(element.dataset.valueFrom))
-      .setValueTo(Number(element.dataset.valueTo))
-      .setStepSize(Number(element.dataset.stepSize))
-      .setVertical(Boolean(element.dataset.onVertical))
-      .setRange(Boolean(element.dataset.onRange))
-      .setTooltip(Boolean(element.dataset.onTooltip));
+  connectedCallback() {
+  }
+
+  static get observedAttributes() {
+    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-vertical', 'data-on-range', 'data-on-tooltip', 'data-on-scale'];
+  }
+
+  attributeChangedCallback(prop: string) {
+    switch (prop) {
+      case 'data-value-from':
+        break;
+      case 'data-value-to':
+        break;
+      case 'data-min-value':
+        break;
+      case 'data-max-value':
+        break;
+      case 'data-on-vertical':
+        break;
+      case 'data-on-range':
+        break;
+      case 'data-on-tooltip':
+    }
   }
 
   setDataModelFromServer(variant: string) {
@@ -32,7 +37,7 @@ class SliderModel implements ISliderModel {
     try {
       fetch('http://localhost:9000/slider', {method: 'POST', body: form})
         .then((res: Response) => res.json())
-        .then((model: ISliderModelData) => this.setDataModelFromObject(model));
+        .then((model: ISliderModel) => this.setDataModelFromObject(model));
       return true;
     } catch (e) {
       console.log('Error connection', e)
@@ -40,81 +45,75 @@ class SliderModel implements ISliderModel {
     }
   }
 
-  setDataModelFromObject(data: ISliderModelData) {
+  setDataModelFromObject(data: ISliderModel) {
     Object.assign(this, data);
   }
 
-  getMinValue(): number {
-    return this.minValue;
+  get minValue(): number {
+    return Number(this.dataset.minValue);
   }
 
-  setMinValue(minValue: number): this {
-    this.minValue = minValue ? minValue : 0;
-    return this;
+  set minValue(minValue: number) {
+    this.dataset.minValue = (minValue ? minValue : 0).toString();
   }
 
-  getMaxValue(): number {
-    return this.maxValue;
+  get maxValue(): number {
+    return Number(this.dataset.maxValue);
   }
 
-  setMaxValue(maxValue: number): this {
-    this.maxValue = maxValue ? maxValue : 0;
-    return this;
+  set maxValue(maxValue: number) {
+    this.dataset.maxValue = (maxValue ? maxValue : 0).toString();
   }
 
-  getValueFrom(): number {
-    return this.valueFrom;
+  get valueFrom(): number {
+    return Number(this.dataset.valueFrom);
   }
 
-  setValueFrom(valueFrom: number): this {
-    this.valueFrom = valueFrom ? valueFrom : 0;
-    return this;
+  set valueFrom(valueFrom: number) {
+    this.dataset.valueFrom = (valueFrom ? valueFrom : 0).toString();
   }
 
-  getValueTo(): number {
-    return this.valueTo;
+  get valueTo(): number {
+    return Number(this.dataset.valueTo);
   }
 
-  setValueTo(valueTo: number): this {
-    this.valueTo = valueTo ? valueTo : 0;
-    return this;
+  set valueTo(valueTo: number) {
+    this.dataset.valueTo = (valueTo ? valueTo : 0).toString();
   }
 
-  getStepSize(): number {
-    return this.stepSize;
+  get stepSize(): number {
+    return Number(this.dataset.stepSize);
   }
 
-  setStepSize(stepSize: number): this {
-    this.stepSize = stepSize ? stepSize : 1;
-    return this;
+  set stepSize(stepSize: number) {
+    this.dataset.stepSize = (stepSize ? stepSize : 1).toString();
   }
 
-  isVertical(): boolean {
-    return this.onVertical;
+  get onVertical(): boolean {
+    return (this.dataset.onVertical === 'true');
   }
 
-  setVertical(onVertical: boolean): this {
-    this.onVertical = onVertical;
-    return this;
+  set onVertical(onVertical: boolean) {
+    this.dataset.onVertical = String(onVertical);
   }
 
-  isRange(): boolean {
-    return this.onRange;
+  get onRange(): boolean {
+    return (this.dataset.onRange === 'true');
   }
 
-  setRange(onRange: boolean): this {
-    this.onRange = onRange;
-    return this;
+  set onRange(onRange: boolean) {
+    this.dataset.onRange = String(onRange);
   }
 
-  isTooltip(): boolean {
-    return this.onTooltip;
+  get onTooltip(): boolean {
+    return (this.dataset.onTooltip === 'true');
   }
 
-  setTooltip(onTooltip: boolean): this {
-    this.onTooltip = onTooltip;
-    return this;
+  set onTooltip(onTooltip: boolean) {
+    this.dataset.onTooltip = String(onTooltip);
   }
 }
+
+customElements.define('input-slider-model', SliderModel);
 
 export {SliderModel};
