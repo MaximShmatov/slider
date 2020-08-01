@@ -1,12 +1,10 @@
 class SliderModel extends HTMLElement implements ISliderModel {
-  constructor(data: ISliderModel | null) {
+  constructor(element: HTMLElement | null) {
     super();
-    if (data) {
-      this.setDataModelFromObject(data);
-    }
-  }
-
-  connectedCallback() {
+    if (element) {
+      this.className = element.className;
+      this.initModelFromElement(element);
+    } else this.className = 'input-slider-model';
   }
 
   static get observedAttributes() {
@@ -14,30 +12,23 @@ class SliderModel extends HTMLElement implements ISliderModel {
   }
 
   attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-value-from':
-        break;
-      case 'data-value-to':
-        break;
-      case 'data-min-value':
-        break;
-      case 'data-max-value':
-        break;
-      case 'data-on-vertical':
-        break;
-      case 'data-on-range':
-        break;
-      case 'data-on-tooltip':
-    }
+    this.dispatchEvent(new CustomEvent('slider-data', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {
+        data: prop
+      }
+    }));
   }
 
-  setDataModelFromServer(variant: string) {
+  initModelFromServer(variant: string) {
     let form: FormData = new FormData();
     form.append('variant', variant);
     try {
       fetch('http://localhost:9000/slider', {method: 'POST', body: form})
         .then((res: Response) => res.json())
-        .then((model: ISliderModel) => this.setDataModelFromObject(model));
+        .then((model: ISliderModel) => this.initModelFromObject(model));
       return true;
     } catch (e) {
       console.log('Error connection', e)
@@ -45,7 +36,7 @@ class SliderModel extends HTMLElement implements ISliderModel {
     }
   }
 
-  setDataModelFromObject(data: ISliderModel) {
+  initModelFromObject(data: ISliderModel) {
     Object.assign(this, data);
   }
 
@@ -111,6 +102,17 @@ class SliderModel extends HTMLElement implements ISliderModel {
 
   set onTooltip(onTooltip: boolean) {
     this.dataset.onTooltip = String(onTooltip);
+  }
+
+  private initModelFromElement(element: HTMLElement) {
+    this.minValue = Number(element.dataset.minValue);
+    this.maxValue = Number(element.dataset.maxValue);
+    this.valueFrom = Number(element.dataset.valueFrom);
+    this.valueTo = Number(element.dataset.valueTo);
+    this.stepSize = Number(element.dataset.stepSize);
+    this.onVertical = Boolean(element.dataset.onVertical);
+    this.onRange = Boolean(element.dataset.onRange);
+    this.onTooltip = Boolean(element.dataset.onTooltip);
   }
 }
 

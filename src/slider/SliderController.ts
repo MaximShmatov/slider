@@ -8,26 +8,34 @@ class SliderController implements ISliderController {
   private readonly model: SliderModel;
   private readonly railView: RailView;
   private readonly scaleView: ScaleView;
+  private currentValue: number;
 
   constructor(element: HTMLElement) {
-    this.model = new SliderModel(null);
+    this.model = new SliderModel(element);
     this.railView = new RailView();
     this.scaleView = new ScaleView();
-    this.model.className = element.className;
+    if(this.model.onRange) {
+      this.currentValue = this.model.minValue - this.model.maxValue;
+    } else {
+      this.currentValue = this.model.minValue;
+    }
     this.model.attachShadow({mode: 'open'});
     if(this.model.shadowRoot) {
       this.model.shadowRoot.innerHTML = `<style>${require('./SliderPlugin.css')}</style>`;
       this.model.shadowRoot.appendChild(this.railView);
       this.model.shadowRoot.appendChild(this.scaleView);
     }
-    this.scaleView.addEventListener('slider-pos', this.calculateValue.bind(this));
-    Object.assign(this.model.dataset, element.dataset);
+    this.model.addEventListener('slider-data', this.handleModelEvents.bind(this));
+    this.railView.addEventListener('slider-pos', this.handleRailEvents.bind(this));
+    this.scaleView.addEventListener('scale-pos', this.handleScaleEvents.bind(this));
     $(element).before(this.model);
     $(element).remove();
+    this.initView();
   }
 
   initView(): void {
-    //this.view.setScaleValues(this.model.minValue, this.model.maxValue);
+    this.scaleView.setValues(this.model.minValue, this.model.maxValue);
+    this.railView.thumb.onTooltip(this.model.onTooltip);
   }
 
   setThumbPosition(minValue: number, maxValue: number, currentValue: number): void {
@@ -36,13 +44,42 @@ class SliderController implements ISliderController {
   setScaleValues(minValue:number, maxValue: number) {
     //this.scale.render(minValue, maxValue);
   }
+  private handleScaleEvents(evt: CustomEvent) {
+    console.log('handle scale events');
+    this.model.valueFrom = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.from) + this.model.minValue;
+    this.railView.thumb.moveToPosition(evt.detail.from);
 
-  private calculateValue(evt: CustomEvent): void {
-    //console.log(evt.detail.valueFrom);
-    let val = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.valueFrom) + this.model.minValue;
-    val = Math.round(val / this.model.stepSize) * this.model.stepSize;
-    //this.model.dataset.valueFrom = val.toString();
-    //console.log(val);
+  }
+  private handleRailEvents(evt: CustomEvent): void {
+    this.calculateValue(evt.detail.pos);
+    this.model.valueFrom = this.currentValue;
+    this.railView.thumb.setTooltipValue(this.currentValue);
+  }
+
+  private calculateValue(pos: number) {
+    this.currentValue = ((this.model.maxValue - this.model.minValue) / 100 * pos) + this.model.minValue;
+    this.currentValue = Math.round(this.currentValue / this.model.stepSize) * this.model.stepSize;
+
+  }
+  private handleModelEvents(evt: CustomEvent) {
+    switch (evt.detail.data) {
+      case 'data-value-from':
+        break;
+      case 'data-value-to':
+        break;
+      case 'data-min-value':
+        this.scaleView.setValues(this.model.minValue, this.model.maxValue);
+        break;
+      case 'data-max-value':
+        this.scaleView.setValues(this.model.minValue, this.model.maxValue);
+        break;
+      case 'data-on-vertical':
+        break;
+      case 'data-on-range':
+        break;
+      case 'data-on-tooltip':
+        this.railView.thumb.onTooltip(this.model.onTooltip);
+    }
   }
 }
 

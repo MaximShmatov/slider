@@ -30,7 +30,7 @@
   padding: 6px;
 }
 
-.thump__tooltip {
+.thumb__tooltip {
   position: absolute;
   z-index: 10;
   display: flex;
@@ -38,7 +38,7 @@
   justify-content: center;
   width: 30px;
   height: 20px;
-  top: -50px;
+  top: -35px;
   border: 2px solid #66D2EA;
   background-color: #6FCF97;
   opacity: 0.5;

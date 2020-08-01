@@ -8,9 +8,9 @@ interface ISliderModel {
   onRange: boolean;
   onTooltip: boolean;
 
-  setDataModelFromObject(data: ISliderModel): void;
+  initModelFromObject(data: ISliderModel): void;
 
-  setDataModelFromServer(variant: string): void;
+  initModelFromServer(variant: string): void;
 }
 
 interface ISliderController {
@@ -23,7 +23,7 @@ interface IThumb {
 
   moveToPosition(position: number): void;
 
-  toggleTooltip(): void;
+  onTooltip(on: boolean): void;
 }
 
 interface IRailView {
@@ -31,13 +31,17 @@ interface IRailView {
 }
 
 interface IScaleView {
-  render(min: number, max: number): void;
+  setValues(min: number, max: number): void;
 }
 
 interface HTMLElementEventMap {
   'slider-pos': CustomEvent;
+  'scale-pos': CustomEvent;
+  'slider-data': CustomEvent;
 }
-
+interface TypeEventHandlers {
+  'slider-data': CustomEvent;
+}
 interface JQuery {
   slider(data: ISliderModel | null): this;
 }

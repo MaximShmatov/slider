@@ -1,4 +1,4 @@
-class RailView extends HTMLElement implements IRailView{
+class RailView extends HTMLElement implements IRailView {
   thumb: Thumb;
 
   constructor() {
@@ -16,9 +16,14 @@ class Thumb extends HTMLElement implements IThumb {
   private readonly mousemove: (evt: MouseEventInit) => void;
   private readonly mouseup: (evt: MouseEvent) => void;
   private readonly tooltip: HTMLElement;
+  private margin: string;
 
   constructor() {
     super();
+    this.mousemove = this.onMouseMove.bind(this);
+    this.mouseup = this.onMouseUp.bind(this);
+    this.onmousedown = this.onMouseDown;
+    this.margin = 'marginLeft';
     this.className = 'thumb';
     this.tooltip = document.createElement('div');
     this.tooltip.className = 'thumb__tooltip';
@@ -26,13 +31,7 @@ class Thumb extends HTMLElement implements IThumb {
     point.className = 'thumb__point';
     this.appendChild(point);
     this.appendChild(this.tooltip);
-    this.mousemove = this.onMouseMove.bind(this);
-    this.mouseup = this.onMouseUp.bind(this);
-    this.onmousedown = this.onMouseDown;
-  }
 
-  setTooltipValue(value: number) {
-    this.tooltip.textContent = value.toFixed();
   }
 
   moveToPosition(position: number): void {
@@ -42,20 +41,24 @@ class Thumb extends HTMLElement implements IThumb {
     if (position > 100) {
       position = 100;
     }
-    this.style.marginLeft = `${position}%`;
+    this.style[<any>this.margin] = `${position}%`;
 
     this.dispatchEvent(new CustomEvent('slider-pos', {
       bubbles: true,
       cancelable: true,
       composed: true,
       detail: {
-        valueFrom: position
+        pos: position
       }
     }));
   }
 
-  toggleTooltip(): void {
-    if (this.dataset.onTooltip === 'true') {
+  setTooltipValue(value: number) {
+    this.tooltip.textContent = value.toFixed();
+  }
+
+  onTooltip(on: boolean): void {
+    if (on) {
       this.tooltip.style.display = 'flex';
     } else {
       this.tooltip.style.display = 'none';
@@ -80,7 +83,7 @@ class Thumb extends HTMLElement implements IThumb {
   }
 }
 
-class ScaleView extends HTMLElement implements IScaleView{
+class ScaleView extends HTMLElement implements IScaleView {
   private scaleValueItems: HTMLSpanElement[] = [];
 
   constructor() {
@@ -123,14 +126,30 @@ class ScaleView extends HTMLElement implements IScaleView{
       scaleValues.appendChild(span);
     }
     this.appendChild(scaleValues);
+    this.onmousedown = this.handleMouseDown;
   }
 
-  render(min: number, max: number): void {
+  setValues(min: number, max: number): void {
     let scaleValue = (max - min) / 3;
     this.scaleValueItems[0].textContent = min.toFixed();
     this.scaleValueItems[1].textContent = (min + scaleValue).toFixed();
     this.scaleValueItems[2].textContent = (min + scaleValue + scaleValue).toFixed();
     this.scaleValueItems[3].textContent = max.toFixed();
+  }
+
+  private handleMouseDown(evt: MouseEventInit) {
+    let position = 0;
+    if(evt.clientX) {
+      position = (evt.clientX - this.offsetLeft) / (this.offsetWidth / 100);
+    }
+    this.dispatchEvent(new CustomEvent('scale-pos', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {
+        from: position
+      }
+    }));
   }
 }
 
