@@ -4,8 +4,7 @@
     "target": "es5",
     "module": "esnext",
     "removeComments": false,
-    "strict": true,
-    "allowSyntheticDefaultImports": true
+    "strict": true
   },
   "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules"],

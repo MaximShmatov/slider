@@ -32,4 +32,10 @@ describe('Slider model tests', () => {
   it('Should assign an tooltip property', () => {
     expect(model.onTooltip).toBeDefined('should be defined');
   });
+  it('Should assign an tooltip property', () => {
+    expect(model.onScale).toBeDefined('should be defined');
+  });
+  it('Should assign an tooltip property', () => {
+    expect(model.serverURL).toBeDefined('should be defined');
+  });
 });
