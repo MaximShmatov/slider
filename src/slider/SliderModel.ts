@@ -1,4 +1,5 @@
 class SliderModel implements ISliderModel {
+  private readonly _id: number = 0;
   private _minValue: number = 0;
   private _maxValue: number = 100;
   private _valueFrom: number = 10;
@@ -11,6 +12,7 @@ class SliderModel implements ISliderModel {
   private _serverURL: URL = new URL('http://localhost:9000/slider');
 
   constructor(data: HTMLElement | SliderModel | FormData | null) {
+    this._id = Math.random();
     if (data) this.init(data);
   }
 
@@ -53,6 +55,10 @@ class SliderModel implements ISliderModel {
     this.onVertical = Boolean(element.dataset.onVertical);
     this.onRange = Boolean(element.dataset.onRange);
     this.onTooltip = Boolean(element.dataset.onTooltip);
+  }
+
+  get id(): number {
+    return this._id;
   }
 
   get minValue(): number {

@@ -9,6 +9,9 @@ describe('Slider model tests', () => {
   });
 
   it('Should assign an minValue property', () => {
+    expect(model.id).toBeDefined('should be defined');
+  });
+  it('Should assign an minValue property', () => {
     expect(model.minValue).toBeDefined('should be defined');
   });
   it('Should assign an maxValue property', () => {

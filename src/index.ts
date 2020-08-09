@@ -1,5 +1,5 @@
 import './index.sass';
-import './slider/SliderPresenter';
+import './slider/SliderPlugin';
 
 class ControlPanel {
   private readonly $element: JQuery;
@@ -90,8 +90,13 @@ class ControlPanel {
 
 
 let s = $('.input-slider-plugin').slider();
-
-//console.log($(s).slider);
+s.slider('setMinValue', '0');
+s.slider('setMaxValue', '100');
+//let s = $.slider($('.input-slider-plugin'));
+//console.log(s.slider.getControl(0));
+//console.log($('.input-slider-plugin').sliderAPI.initial());
+console.log(s);
+//s.sliderAPI.initial();
 
 $('.container').each((index: number, element: HTMLElement) => {
   new ControlPanel(element);

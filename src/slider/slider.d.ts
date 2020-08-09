@@ -1,4 +1,5 @@
 interface ISliderModel {
+  id: number;
   minValue: number;
   maxValue: number;
   valueFrom: number;
@@ -18,7 +19,9 @@ interface ISliderView {
 }
 
 interface ISliderPresenter {
-  initFromDataset(): void;
+  init(obj: JQuery): JQuery;
+  setMinValue(obj: JQuery, value: number): JQuery;
+  setMaxValue(obj: JQuery, value: number): JQuery;
 }
 
 interface IThumb {
@@ -32,7 +35,7 @@ interface IRail {
 }
 
 interface IScale {
-  setValues(min: number, max: number): void;
+  render(): void;
 }
 
 interface HTMLElementEventMap {
@@ -42,7 +45,9 @@ interface HTMLElementEventMap {
   'view-events': CustomEvent;
 }
 
-
 interface JQuery {
-  slider(): ISliderPresenter;
+  slider(method?: string, prop?: string): JQuery;
+}
+interface JQueryStatic {
+  slider: ISliderPresenter;
 }

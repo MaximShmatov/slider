@@ -1,17 +1,20 @@
-import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import {SliderModel} from './SliderModel';
-import {SliderView} from "./SliderView";
+import {SliderView} from './SliderView';
 
 
 class SliderPresenter implements ISliderPresenter {
-  private model: SliderModel[] = [];
-  private view: SliderView[] = [];
+  private readonly model: SliderModel[] = [];
+  private readonly view: SliderView[] = [];
   private value: number = 0;
 
-  constructor($obj: JQuery) {
-    $obj.each(this.init.bind(this));
-    console.log($obj);
+  constructor() {
+    //this.model = new SliderModel(null);
+    //this.view = new SliderView();
+    //$(element).replaceWith(this.view);
+    //element.before(this.view);
+    //element.remove();
+    //if($obj) $obj.each(this.init.bind(this));
+    //console.log($obj);
     //this.view.addEventListener('slider-pos', this.handleViewEvents.bind(this));
     //this.view.addEventListener('scale-pos', this.handleScaleEvents.bind(this));
     //this.view.addEventListener('view-events', this.handleViewEvents.bind(this));
@@ -27,15 +30,51 @@ class SliderPresenter implements ISliderPresenter {
   //   this.model.valueFrom = this.value;
   // }
 
-  initFromDataset(): void {
+  initFromElement(element: HTMLElement): void {
+    let index: number | undefined = Number(element.dataset.index);
+    if (index === undefined) {
+
+    }
     //this.model.initModelFromElement();
     //Object.assign(this.view.dataset, this.model);
-    console.log(this);
+    //console.log(this);
   }
-  private init(index: number, element: HTMLElement): void {
-    this.model[index] = new SliderModel(new SliderModel(element));
-    this.view[index] = new SliderView(this.model[index]);
+
+  init(obj: JQuery): JQuery {
+    let model: SliderModel;
+    let view: SliderView;
+    obj.each((index: number, element: HTMLElement) => {
+      if (!$(element).attr('data-_id')) {
+        model = new SliderModel(element);
+        view = new SliderView();
+        Object.assign(view.dataset, model);
+        this.model.push(model);
+        this.view.push(view);
+        $(element).replaceWith(view);
+      }
+    });
+    return $().pushStack(this.view);
   }
+
+  setMinValue(obj: JQuery, value: number): JQuery {
+    obj = this.init(obj);
+    obj.each(function () {
+      $(this).attr('data-_min-value', value);
+    })
+    return obj;
+  }
+
+  setMaxValue(obj: JQuery, value: number): JQuery {
+    obj = this.init(obj);
+    obj.each(function () {
+      $(this).attr('data-_max-value', value);
+    })
+    return obj;
+  }
+
+  // private init(element: HTMLElement): void {
+  //
+  // }
   // private calculateValue(pos: number) {
   //   this.value = ((this.model.maxValue - this.model.minValue) / 100 * pos) + this.model.minValue;
   //   this.value = Math.round(this.value / this.model.stepSize) * this.model.stepSize;
@@ -67,6 +106,5 @@ class SliderPresenter implements ISliderPresenter {
   // }
 }
 
-$.fn.slider = function () {
-  return new SliderPresenter(this);
-}
+export {SliderPresenter}
+

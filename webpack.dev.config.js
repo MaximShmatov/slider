@@ -25,7 +25,8 @@ module.exports = {
       template: path.resolve(__dirname, 'src/index.pug')
     }),
     new webpack.ProvidePlugin({
-      $: 'jquery'
+      $: 'jquery',
+      jQuery: 'jquery'
     })
   ],
   module: {

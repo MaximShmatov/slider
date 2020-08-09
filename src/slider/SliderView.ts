@@ -4,7 +4,7 @@ class SliderView extends HTMLElement implements ISliderView {
 
   constructor() {
     super();
-    this.className = 'view';
+    this.className = 'input-slider-view';
     this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
       this.shadowRoot.innerHTML = `
@@ -17,8 +17,8 @@ class SliderView extends HTMLElement implements ISliderView {
 
   static get observedAttributes() {
     return [
-      'data-min-value',
-      'data-max-value',
+      'data-_min-value',
+      'data-_max-value',
       'data-value-from',
       'data-value-to',
       'data-on-vertical',
@@ -28,14 +28,32 @@ class SliderView extends HTMLElement implements ISliderView {
     ];
   }
 
-  attributeChangedCallback(prop: string, oldValue: number, newValue:number) {
+  attributeChangedCallback(prop: string, oldValue: string, newValue: string) {
+    switch (prop) {
+      case 'data-_min-value':
+        console.log('view data-min-value')
+        this.scale.dataset._minValue = newValue;
+        break;
+      case 'data-_max-value':
+        this.scale.dataset._maxValue = newValue;
+        break;
+      case 'data-value-from':
+        break;
+      case 'data-value-to':
+        break;
+      case 'data-on-vertical':
+        break;
+      case 'data-on-range':
+        break;
+      case 'data-on-tooltip':
+        break;
+      case 'data-on-scale':
+    }
+
     this.fireEvent(prop, oldValue, newValue);
-    console.log(prop);
-    console.log(oldValue);
-    console.log(newValue);
   }
 
-  private fireEvent(name: string, oldValue:number, newValue:number) {
+  private fireEvent(name: string, oldValue: string, newValue: string) {
     this.dispatchEvent(new CustomEvent('view-events', {
       bubbles: true,
       cancelable: true,
@@ -197,7 +215,6 @@ class Thumb extends HTMLElement implements IThumb {
 
 class Scale extends HTMLElement implements IScale {
   private scaleValueItems: HTMLSpanElement[] = [];
-  private vertical: boolean = false;
   private position: number = 0;
 
   constructor() {
@@ -240,16 +257,40 @@ class Scale extends HTMLElement implements IScale {
     this.addEventListener('mousedown', this.handleMouseDown.bind(this));
   }
 
+  static get observedAttributes() {
+    return [
+      'data-_min-value',
+      'data-_max-value',
+      'data-_value-from',
+      'data-_value-to',
+      'data-_on-vertical',
+      'data-_on-range',
+      'data-_on-scale'
+    ];
+  }
+
+  attributeChangedCallback(prop: string) {
+    switch (prop) {
+      case 'data-_min-value':
+        this.render();
+        break;
+      case 'data-_max-value':
+        this.render();
+        break;
+    }
+  }
+
   onVertical(on: boolean) {
-    this.vertical = on;
-    if (on) {
+    if (this.dataset._onVertical === 'true') {
       this.className = this.className + ' scale_vertical';
     } else {
       this.className = 'scale';
     }
   }
 
-  setValues(min: number, max: number): void {
+  render(): void {
+    let min = Number(this.dataset._minValue);
+    let max = Number(this.dataset._maxValue);
     let scaleValue = (max - min) / 3;
     this.scaleValueItems[0].textContent = min.toFixed();
     this.scaleValueItems[1].textContent = (min + scaleValue).toFixed();
@@ -260,7 +301,7 @@ class Scale extends HTMLElement implements IScale {
   private handleMouseDown(evt: MouseEventInit) {
     let rect = this.getBoundingClientRect();
     if (evt.clientX && evt.clientY) {
-      if (this.vertical) {
+      if (this.dataset._onVertical === 'true') {
         this.position = (rect.height - (evt.clientY - rect.y)) / (rect.height / 100);
       } else {
         this.position = (evt.clientX - rect.x) / (rect.width / 100);
@@ -277,9 +318,9 @@ class Scale extends HTMLElement implements IScale {
   }
 }
 
+export {SliderView}
+
 customElements.define('input-slider-view', SliderView);
 customElements.define('input-slider-view-thumb', Thumb);
 customElements.define('input-slider-view-rail', Rail);
 customElements.define('input-slider-view-scale', Scale);
-
-export {SliderView};
