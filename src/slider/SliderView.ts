@@ -1,10 +1,12 @@
 class SliderView extends HTMLElement implements ISliderView {
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
+  readonly index: number;
 
-  constructor() {
+  constructor(id: number) {
     super();
     this.className = 'input-slider-view';
+    this.index = id;
     this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
       this.shadowRoot.innerHTML = `
@@ -14,56 +16,14 @@ class SliderView extends HTMLElement implements ISliderView {
       this.shadowRoot.appendChild(this.scale);
     }
   }
-
-  static get observedAttributes() {
-    return [
-      'data-_min-value',
-      'data-_max-value',
-      'data-value-from',
-      'data-value-to',
-      'data-on-vertical',
-      'data-on-range',
-      'data-on-tooltip',
-      'data-on-scale'
-    ];
+  setModelData(data: ISliderModel): void {
+    this.setScaleData(data);
   }
 
-  attributeChangedCallback(prop: string, oldValue: string, newValue: string) {
-    switch (prop) {
-      case 'data-_min-value':
-        console.log('view data-min-value')
-        this.scale.dataset._minValue = newValue;
-        break;
-      case 'data-_max-value':
-        this.scale.dataset._maxValue = newValue;
-        break;
-      case 'data-value-from':
-        break;
-      case 'data-value-to':
-        break;
-      case 'data-on-vertical':
-        break;
-      case 'data-on-range':
-        break;
-      case 'data-on-tooltip':
-        break;
-      case 'data-on-scale':
-    }
-
-    this.fireEvent(prop, oldValue, newValue);
-  }
-
-  private fireEvent(name: string, oldValue: string, newValue: string) {
-    this.dispatchEvent(new CustomEvent('view-events', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: {
-        oldValue,
-        newValue,
-        name: name
-      }
-    }));
+  private setScaleData(data: ISliderModel) {
+    this.scale.dataset.minValue = data.minValue.toString();
+    this.scale.dataset.maxValue = data.maxValue.toString();
+    this.scale.dataset.onScale = data.onScale.toString();
   }
 }
 
@@ -215,7 +175,6 @@ class Thumb extends HTMLElement implements IThumb {
 
 class Scale extends HTMLElement implements IScale {
   private scaleValueItems: HTMLSpanElement[] = [];
-  private position: number = 0;
 
   constructor() {
     super();
@@ -259,28 +218,30 @@ class Scale extends HTMLElement implements IScale {
 
   static get observedAttributes() {
     return [
-      'data-_min-value',
-      'data-_max-value',
-      'data-_value-from',
-      'data-_value-to',
-      'data-_on-vertical',
-      'data-_on-range',
-      'data-_on-scale'
+      'data-min-value',
+      'data-max-value',
+      'data-on-scale',
+      'data-on-vertical'
     ];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
-      case 'data-_min-value':
+      case 'data-min-value':
         this.render();
         break;
-      case 'data-_max-value':
+      case 'data-max-value':
         this.render();
         break;
+      case 'data-on-scale':
+        (this.dataset.onScale === 'false') ? $(this).hide() : $(this).show();
+        break;
+      case 'data-on-vertical':
+        this.onVertical();
     }
   }
 
-  onVertical(on: boolean) {
+  onVertical() {
     if (this.dataset._onVertical === 'true') {
       this.className = this.className + ' scale_vertical';
     } else {
@@ -289,8 +250,8 @@ class Scale extends HTMLElement implements IScale {
   }
 
   render(): void {
-    let min = Number(this.dataset._minValue);
-    let max = Number(this.dataset._maxValue);
+    let min = Number(this.dataset.minValue);
+    let max = Number(this.dataset.maxValue);
     let scaleValue = (max - min) / 3;
     this.scaleValueItems[0].textContent = min.toFixed();
     this.scaleValueItems[1].textContent = (min + scaleValue).toFixed();
@@ -300,11 +261,12 @@ class Scale extends HTMLElement implements IScale {
 
   private handleMouseDown(evt: MouseEventInit) {
     let rect = this.getBoundingClientRect();
+    let position: number = 0;
     if (evt.clientX && evt.clientY) {
       if (this.dataset._onVertical === 'true') {
-        this.position = (rect.height - (evt.clientY - rect.y)) / (rect.height / 100);
+        position = (rect.height - (evt.clientY - rect.y)) / (rect.height / 100);
       } else {
-        this.position = (evt.clientX - rect.x) / (rect.width / 100);
+        position = (evt.clientX - rect.x) / (rect.width / 100);
       }
     }
     this.dispatchEvent(new CustomEvent('scale-pos', {
@@ -312,7 +274,7 @@ class Scale extends HTMLElement implements IScale {
       cancelable: true,
       composed: true,
       detail: {
-        from: this.position
+        from: position
       }
     }));
   }

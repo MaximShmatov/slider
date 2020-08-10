@@ -1,5 +1,5 @@
 class SliderModel implements ISliderModel {
-  private readonly _id: number = 0;
+  readonly id: number;
   private _minValue: number = 0;
   private _maxValue: number = 100;
   private _valueFrom: number = 10;
@@ -12,7 +12,7 @@ class SliderModel implements ISliderModel {
   private _serverURL: URL = new URL('http://localhost:9000/slider');
 
   constructor(data: HTMLElement | SliderModel | FormData | null) {
-    this._id = Math.random();
+    this.id = Math.random();
     if (data) this.init(data);
   }
 
@@ -57,16 +57,12 @@ class SliderModel implements ISliderModel {
     this.onTooltip = Boolean(element.dataset.onTooltip);
   }
 
-  get id(): number {
-    return this._id;
-  }
-
   get minValue(): number {
     return this._minValue;
   }
 
   set minValue(minValue: number) {
-    this._minValue = minValue;
+    this._minValue = minValue ? minValue: 0;
   }
 
   get maxValue(): number {
@@ -74,7 +70,7 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    this._maxValue = maxValue;
+    this._maxValue = maxValue ? maxValue: 0;
   }
 
   get valueFrom(): number {
@@ -82,7 +78,7 @@ class SliderModel implements ISliderModel {
   }
 
   set valueFrom(valueFrom: number) {
-    this._valueFrom = valueFrom;
+    this._valueFrom = valueFrom ? valueFrom: 0;
   }
 
   get valueTo(): number {
@@ -90,7 +86,7 @@ class SliderModel implements ISliderModel {
   }
 
   set valueTo(valueTo: number) {
-    this._valueTo = valueTo;
+    this._valueTo = valueTo ? valueTo: 0;
   }
 
   get stepSize(): number {

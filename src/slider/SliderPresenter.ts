@@ -3,9 +3,8 @@ import {SliderView} from './SliderView';
 
 
 class SliderPresenter implements ISliderPresenter {
-  private readonly model: SliderModel[] = [];
-  private readonly view: SliderView[] = [];
-  private value: number = 0;
+  private readonly modelMap: Map<number, SliderModel> = new Map();
+  private model: SliderModel | undefined;
 
   constructor() {
     //this.model = new SliderModel(null);
@@ -30,80 +29,60 @@ class SliderPresenter implements ISliderPresenter {
   //   this.model.valueFrom = this.value;
   // }
 
-  initFromElement(element: HTMLElement): void {
-    let index: number | undefined = Number(element.dataset.index);
-    if (index === undefined) {
-
-    }
-    //this.model.initModelFromElement();
-    //Object.assign(this.view.dataset, this.model);
-    //console.log(this);
-  }
+  // initFromElement(element: HTMLElement): void {
+  //   let index: number | undefined = Number(element.dataset.index);
+  //   if (index === undefined) {
+  //
+  //   }
+  //   this.model.initModelFromElement();
+  //   Object.assign(this.view.dataset, this.model);
+  //   console.log(this);
+  // }
 
   init(obj: JQuery): JQuery {
-    let model: SliderModel;
-    let view: SliderView;
+    let viewArr: SliderView[] = [];
     obj.each((index: number, element: HTMLElement) => {
-      if (!$(element).attr('data-_id')) {
-        model = new SliderModel(element);
-        view = new SliderView();
-        Object.assign(view.dataset, model);
-        this.model.push(model);
-        this.view.push(view);
+      if (element instanceof SliderView) {
+        viewArr.push(element);
+      } else {
+        let model = new SliderModel(element);
+        let view = new SliderView(model.id);
+        view.setModelData(model);
         $(element).replaceWith(view);
+        this.modelMap.set(model.id, model);
+        viewArr.push(view);
       }
     });
-    return $().pushStack(this.view);
+    return $().pushStack(viewArr);
   }
 
-  setMinValue(obj: JQuery, value: number): JQuery {
-    obj = this.init(obj);
-    obj.each(function () {
-      $(this).attr('data-_min-value', value);
-    })
-    return obj;
+  setMinValue(view: SliderView, value: string): void {
+    this.model = this.modelMap.get(view.index);
+    if (this.model) {
+      this.model.minValue = Number(value);
+      view.setModelData(this.model);
+    }
   }
 
-  setMaxValue(obj: JQuery, value: number): JQuery {
-    obj = this.init(obj);
-    obj.each(function () {
-      $(this).attr('data-_max-value', value);
-    })
-    return obj;
+  setMaxValue(view: SliderView, value: string): void {
+    this.model = this.modelMap.get(view.index);
+    if (this.model) {
+      this.model.maxValue = Number(value);
+      view.setModelData(this.model);
+    }
   }
 
-  // private init(element: HTMLElement): void {
-  //
-  // }
-  // private calculateValue(pos: number) {
-  //   this.value = ((this.model.maxValue - this.model.minValue) / 100 * pos) + this.model.minValue;
-  //   this.value = Math.round(this.value / this.model.stepSize) * this.model.stepSize;
-  //
-  // }
-  // private handleViewEvents(evt: CustomEvent) {
-  //   switch (evt.detail.name) {
-  //     case 'data-value-from':
-  //       this.view.dataset.valueFrom = this.model.valueFrom.toString();
-  //       break;
-  //     case 'data-value-to':
-  //       this.view.dataset.valueTo = this.model.valueTo.toString();
-  //       break;
-  //     case 'data-min-value':
-  //       this.view.dataset.minValue = this.model.minValue.toString();
-  //       break;
-  //     case 'data-max-value':
-  //       this.view.dataset.maxValue = this.model.maxValue.toString();
-  //       break;
-  //     case 'data-on-vertical':
-  //       this.view.dataset.onVertical = this.model.onVertical.toString();
-  //       break;
-  //     case 'data-on-range':
-  //       this.view.dataset.onRange = this.model.onRange.toString();
-  //       break;
-  //     case 'data-on-tooltip':
-  //       this.view.dataset.onTooltip = this.model.onTooltip.toString();
-  //   }
-  // }
+  onScale(view: SliderView, value: string): void {
+    this.model = this.modelMap.get(view.index);
+    if (this.model) {
+      this.model.onScale = (value === 'true');
+      view.setModelData(this.model);
+    }
+  }
+
+  getProps(view: SliderView): ISliderModel | undefined {
+    return this.modelMap.get(view.index);
+  }
 }
 
 export {SliderPresenter}
