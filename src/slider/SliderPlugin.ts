@@ -2,21 +2,17 @@ import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-ad
 import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import {SliderPresenter} from './SliderPresenter';
 
-
 ;(function ($: JQueryStatic): void {
   $.slider = new SliderPresenter();
-
-  $.fn.slider = function (method?: setMethods | getMethods, prop?: string): any {
+  $.fn.slider = function (method?: setMethods | getMethods, prop?: number | boolean): any {
     if (method) {
-      if (method === 'getProps') {
-        return $.slider[method](this[0]);
-      }
-      if (prop) {
+      if (prop !== undefined) {
         this.each(function () {
-          $.slider[method](this, prop);
+          $.slider.setProps(this, <setMethods>method, prop);
         });
+        return this;
       }
-      return this;
+      return $.slider.getProps(this[0], <getMethods>method);
     }
     return $.slider.init(this);
   }

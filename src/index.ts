@@ -3,7 +3,6 @@ import './slider/SliderPlugin';
 
 class ControlPanel {
   private readonly $slider: JQuery;
-  private readonly sliderProps: ISliderModel;
   private readonly $minValue: JQuery;
   private readonly $maxValue: JQuery;
   private readonly $stepSize: JQuery;
@@ -12,81 +11,79 @@ class ControlPanel {
 
   constructor(container: HTMLElement) {
     this.$slider = $(container).find('.input-slider-plugin').slider();
-    this.sliderProps = this.$slider.slider('getProps');
     $(container)
       .find('.control__on-tooltip')
-      .prop('checked', this.sliderProps.onTooltip)
+      .prop('checked', this.$slider.slider('isTooltip'))
       .on('change', this.toggleTooltip.bind(this));
     $(container)
       .find('.control__on-vertical')
-      .prop('checked', this.sliderProps.onVertical)
+      .prop('checked', this.$slider.slider('isVertical'))
       .on('change', this.toggleVertical.bind(this));
     $(container)
       .find('.control__on-range')
-      .prop('checked', this.sliderProps.onRange)
+      .prop('checked', this.$slider.slider('isRange'))
       .on('change', this.toggleRange.bind(this));
     $(container)
       .find('.control__on-scale')
-      .prop('checked', this.sliderProps.onScale)
+      .prop('checked', this.$slider.slider('isScale'))
       .on('change', this.toggleScale.bind(this));
     this.$minValue = $(container)
       .find('.control__min-value')
-      .attr('value', this.sliderProps.minValue)
+      .attr('value', String(this.$slider.slider('getMinValue')))
       .on('input', this.setMinValue.bind(this));
     this.$maxValue = $(container)
       .find('.control__max-value')
-      .attr('value', this.sliderProps.maxValue)
+      .attr('value', String(this.$slider.slider('getMaxValue')))
       .on('input', this.setMaxValue.bind(this));
     this.$stepSize = $(container)
       .find('.control__step-size')
-      .attr('value', this.sliderProps.stepSize)
+      .attr('value', String(this.$slider.slider('getStepSize')))
       .on('input', this.setStepSize.bind(this));
     this.$valueFrom = $(container)
       .find('.control__value-from')
-      .attr('value', this.sliderProps.valueFrom)
+      .attr('value', String(this.$slider.slider('getValueFrom')))
       .on('input', this.setValueFrom.bind(this));
     this.$valueTo = $(container)
       .find('.control__value-to')
-      .attr('value', this.sliderProps.valueTo)
+      .attr('value', String(this.$slider.slider('getValueTo')))
       .on('input', this.setValueTo.bind(this));
     this.$slider.on('slider-data', this.handleElementEvents.bind(this) as EventListener);
   }
 
   private toggleScale(): void {
-    this.$slider.slider('onScale', String(!this.sliderProps.onScale));
+    this.$slider.slider('onScale', !this.$slider.slider('isScale'));
   }
 
   private toggleTooltip(): void {
-    let tooltip = this.$slider.attr('data-on-tooltip') === 'true';
-    this.$slider.attr('data-on-tooltip', String(!tooltip));
+    this.$slider.slider('onTooltip', !this.$slider.slider('isTooltip'));
   }
 
   private toggleVertical(): void {
-    console.log('on vertical');
+    this.$slider.slider('onVertical', !this.$slider.slider('isVertical'));
   }
 
   private toggleRange(): void {
-    console.log('on range');
+    this.$slider.slider('onRange', !this.$slider.slider('isRange'));
   }
 
   private setMinValue(): void {
-    this.$slider.slider('setMinValue', <string>this.$minValue.val());
+    this.$slider.slider('setMinValue', <number>this.$minValue.val());
   }
 
   private setMaxValue(): void {
-    this.$slider.slider('setMaxValue', <string>this.$maxValue.val());
+    this.$slider.slider('setMaxValue', <number>this.$maxValue.val());
   }
 
   private setStepSize(): void {
-    //this.$slider.slider('setStepSize', <string>this.$stepSize.val());
+    this.$slider.slider('setStepSize', <number>this.$stepSize.val());
   }
 
   private setValueFrom(): void {
-    //this.$slider.slider('setValueFrom', <string>this.$valueFrom.val());
+    this.$slider.slider('setValueFrom', <number>this.$valueFrom.val());
   }
 
   private setValueTo(): void {
-    //this.$slider.slider('setValueTo', <string>this.$valueTo.val());
+    this.$slider.slider('setValueTo', <number>this.$valueTo.val());
   }
 
   private handleElementEvents(evt: CustomEvent) {

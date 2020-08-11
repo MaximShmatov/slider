@@ -14,23 +14,19 @@ interface ISliderModel {
   init(data: HTMLElement | ISliderModel | FormData | null): boolean;
 
 }
+
+type TPropsUnion = keyof ISliderModel;
+
 interface ISliderView {
 
 }
 
 interface ISliderPresenter {
   init(obj: JQuery): JQuery;
-  getProps(element: HTMLElement): ISliderModel | undefined;
-  setMinValue(element: HTMLElement, value: string): void;
-  setMaxValue(element: HTMLElement, value: string): void;
-  // setValueFrom(obj: JQuery, value: string): JQuery;
-  // setValueTo(obj: JQuery, value: string): JQuery;
-  // setStepSize(obj: JQuery, value: string): JQuery;
-  // onRange(obj: JQuery, value: string): JQuery;
-  // onVertical(obj: JQuery, value: string): JQuery;
-  // onTooltip(obj: JQuery, value: string): JQuery;
-  onScale(element: HTMLElement, value: string): void;
-  // setDataServer(obj: JQuery, value: string): JQuery;
+
+  setProps(element: HTMLElement, method: setMethods, value: number | boolean): void;
+
+  getProps(element: HTMLElement, method: getMethods): number | boolean;
 }
 
 interface IThumb {
@@ -54,15 +50,35 @@ interface HTMLElementEventMap {
   'view-events': CustomEvent;
 }
 
-type setMethods = 'setMinValue' | 'setMaxValue' | 'getProps' | 'onScale';
-type getMethods = 'getProps';
-
+type setMethods =
+  'setMinValue'
+  | 'setMaxValue'
+  | 'setStepSize'
+  | 'setValueFrom'
+  | 'setValueTo'
+  | 'onScale'
+  | 'onTooltip'
+  | 'onRange'
+  | 'onVertical';
+type getMethods =
+  'getMinValue'
+  | 'getMaxValue'
+  | 'getStepSize'
+  | 'getValueFrom'
+  | 'getValueTo'
+  | 'isScale'
+  | 'isTooltip'
+  | 'isRange'
+  | 'isVertical';
 
 interface JQuery {
-  slider(method: setMethods, prop: string): JQuery;
-  slider(method: getMethods): ISliderModel;
+  slider(method: setMethods, prop: number | boolean): JQuery;
+
+  slider(method: getMethods): number | boolean;
+
   slider(): JQuery;
 }
+
 interface JQueryStatic {
   slider: ISliderPresenter;
 }

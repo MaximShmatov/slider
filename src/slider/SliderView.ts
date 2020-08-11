@@ -16,14 +16,20 @@ class SliderView extends HTMLElement implements ISliderView {
       this.shadowRoot.appendChild(this.scale);
     }
   }
-  setModelData(data: ISliderModel): void {
-    this.setScaleData(data);
+
+  setModel(model: ISliderModel): void {
+    this.scale.dataset.minValue = model.minValue.toString();
+    this.scale.dataset.maxValue = model.maxValue.toString();
+    this.scale.dataset.onScale = model.onScale.toString();
+    this.scale.dataset.onVertical = model.onVertical.toString();
+    this.rail.dataset.onTooltip = model.onTooltip.toString();
+    this.rail.dataset.onRange = model.onRange.toString();
+    this.rail.dataset.onVertical = model.onVertical.toString();
   }
 
-  private setScaleData(data: ISliderModel) {
-    this.scale.dataset.minValue = data.minValue.toString();
-    this.scale.dataset.maxValue = data.maxValue.toString();
-    this.scale.dataset.onScale = data.onScale.toString();
+  setModelData(prop: TPropsUnion, value: number | boolean) {
+    this.scale.dataset[prop] = value.toString();
+    this.rail.dataset[prop] = value.toString();
   }
 }
 
@@ -43,11 +49,26 @@ class Rail extends HTMLElement implements IRail {
     this.addEventListener('slider-pos', this.setProgressPosition.bind(this));
   }
 
-  onVertical(on: boolean) {
-    this.isVertical = on;
-    this.thumbFrom.dataset.onVertical = String(on);
-    this.thumbTo.dataset.onVertical = String(on);
+  static get observedAttributes() {
+    return ['data-on-tooltip', 'data-on-range', 'data-on-vertical'];
   }
+
+  attributeChangedCallback(prop: string) {
+    switch (prop) {
+      case 'data-on-tooltip':
+        this.thumbTo.dataset.onTooltip = this.dataset.onTooltip;
+        this.thumbFrom.dataset.onTooltip = this.dataset.onTooltip;
+        break;
+      case 'data-on-range':
+        this.thumbTo.dataset.onRange = this.dataset.onRange;
+        this.thumbFrom.dataset.onRange = this.dataset.onRange;
+        break;
+      case 'data-on-vertical':
+        this.thumbTo.dataset.onVertical = this.dataset.onVertical;
+        this.thumbFrom.dataset.onVertical = this.dataset.onVertical;
+    }
+  }
+
 
   private setProgressPosition(evt: CustomEvent) {
     switch (this.isVertical) {
@@ -77,13 +98,13 @@ class Thumb extends HTMLElement implements IThumb {
   private offsetXorY: number = 0;
   private widthOrHeight: number = 0;
   private direction: 'left' | 'top' = 'left';
-  private readonly name: string;
+  private readonly name: 'from' | 'to';
   private readonly tooltip: HTMLElement = document.createElement('div');
   private readonly point: HTMLElement = document.createElement('div');
   private readonly mouseMove: (evt: MouseEventInit) => void = this.onMouseMove.bind(this);
   private readonly mouseUp: (evt: MouseEvent) => void = this.onMouseUp.bind(this);
 
-  constructor(name: string) {
+  constructor(name: 'from' | 'to') {
     super();
     this.name = name;
     this.className = 'thumb';
@@ -95,7 +116,7 @@ class Thumb extends HTMLElement implements IThumb {
   }
 
   static get observedAttributes() {
-    return ['data-thumb-position', 'data-tooltip-value', 'data-on-vertical', 'data-on-tooltip'];
+    return ['data-thumb-position', 'data-tooltip-value', 'data-on-vertical', 'data-on-tooltip', 'data-on-range'];
   }
 
   attributeChangedCallback(prop: string) {
@@ -107,11 +128,22 @@ class Thumb extends HTMLElement implements IThumb {
         this.moveToPosition(Number(this.dataset.thumbPosition));
         break;
       case 'data-on-vertical':
-        this.isVertical = Boolean(this.dataset.onVertical);
+        this.isVertical = (this.dataset.onVertical === 'true');
         this.setProperties();
         break;
       case 'data-on-tooltip':
-        this.onTooltip(Boolean(this.dataset.onTooltip));
+        //console.log('data on tooltip');
+        (this.dataset.onTooltip === 'false') ? $(this.tooltip).hide() : $(this.tooltip).show();
+        break;
+      case 'data-on-range':
+        if (this.dataset.onRange === 'false') {
+          if (this.dataset.onVertical === 'false' && this.name === 'to') {
+            $(this).hide();
+          }
+          if (this.dataset.onVertical === 'true' && this.name === 'from') {
+            $(this).hide();
+          }
+        } else $(this).show();
     }
   }
 
@@ -129,14 +161,6 @@ class Thumb extends HTMLElement implements IThumb {
       }
     }));
     console.log(this.direction);
-  }
-
-  private onTooltip(on: boolean): void {
-    if (on) {
-      this.tooltip.style.display = 'flex';
-    } else {
-      this.tooltip.style.display = 'none';
-    }
   }
 
   private setProperties(): void {
@@ -217,12 +241,7 @@ class Scale extends HTMLElement implements IScale {
   }
 
   static get observedAttributes() {
-    return [
-      'data-min-value',
-      'data-max-value',
-      'data-on-scale',
-      'data-on-vertical'
-    ];
+    return ['data-min-value', 'data-max-value', 'data-on-scale', 'data-on-vertical'];
   }
 
   attributeChangedCallback(prop: string) {

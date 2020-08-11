@@ -55,6 +55,7 @@ class SliderModel implements ISliderModel {
     this.onVertical = Boolean(element.dataset.onVertical);
     this.onRange = Boolean(element.dataset.onRange);
     this.onTooltip = Boolean(element.dataset.onTooltip);
+    this.onScale = Boolean(element.dataset.onScale);
   }
 
   get minValue(): number {

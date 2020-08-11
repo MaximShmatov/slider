@@ -4,16 +4,19 @@ import {SliderView} from './SliderView';
 
 class SliderPresenter implements ISliderPresenter {
   private readonly modelMap: Map<number, SliderModel> = new Map();
-  private model: SliderModel | undefined;
+  private readonly propsMap: Map<string, TPropsUnion> = new Map();
 
   constructor() {
-    //this.model = new SliderModel(null);
-    //this.view = new SliderView();
-    //$(element).replaceWith(this.view);
-    //element.before(this.view);
-    //element.remove();
-    //if($obj) $obj.each(this.init.bind(this));
-    //console.log($obj);
+    this.propsMap
+      .set('setMinValue', 'minValue')
+      .set('setMaxValue', 'maxValue')
+      .set('setStepSize', 'stepSize')
+      .set('setValueFrom', 'valueFrom')
+      .set('setValueTo', 'valueTo')
+      .set('onVertical', 'onVertical')
+      .set('onRange', 'onRange')
+      .set('onTooltip', 'onTooltip')
+      .set('onScale', 'onScale');
     //this.view.addEventListener('slider-pos', this.handleViewEvents.bind(this));
     //this.view.addEventListener('scale-pos', this.handleScaleEvents.bind(this));
     //this.view.addEventListener('view-events', this.handleViewEvents.bind(this));
@@ -29,15 +32,7 @@ class SliderPresenter implements ISliderPresenter {
   //   this.model.valueFrom = this.value;
   // }
 
-  // initFromElement(element: HTMLElement): void {
-  //   let index: number | undefined = Number(element.dataset.index);
-  //   if (index === undefined) {
-  //
-  //   }
-  //   this.model.initModelFromElement();
-  //   Object.assign(this.view.dataset, this.model);
-  //   console.log(this);
-  // }
+
 
   init(obj: JQuery): JQuery {
     let viewArr: SliderView[] = [];
@@ -47,7 +42,7 @@ class SliderPresenter implements ISliderPresenter {
       } else {
         let model = new SliderModel(element);
         let view = new SliderView(model.id);
-        view.setModelData(model);
+        view.setModel(model);
         $(element).replaceWith(view);
         this.modelMap.set(model.id, model);
         viewArr.push(view);
@@ -56,32 +51,96 @@ class SliderPresenter implements ISliderPresenter {
     return $().pushStack(viewArr);
   }
 
-  setMinValue(view: SliderView, value: string): void {
-    this.model = this.modelMap.get(view.index);
-    if (this.model) {
-      this.model.minValue = Number(value);
-      view.setModelData(this.model);
+  setProps(view: SliderView, method: setMethods, value: number | boolean): void {
+    let model = this.modelMap.get(view.index);
+    let prop = this.propsMap.get(method);
+    if (model && prop && prop !== 'id' ) {
+      model[prop] = <never>value;
+      view.setModelData(prop, value);
     }
   }
 
-  setMaxValue(view: SliderView, value: string): void {
-    this.model = this.modelMap.get(view.index);
-    if (this.model) {
-      this.model.maxValue = Number(value);
-      view.setModelData(this.model);
+  getProps(view: SliderView, method: getMethods): number | boolean {
+    let model = this.modelMap.get(view.index);
+    let value: number | boolean = 0;
+    if (model) {
+      value = this[method](model);
     }
+    return value;
   }
 
-  onScale(view: SliderView, value: string): void {
-    this.model = this.modelMap.get(view.index);
-    if (this.model) {
-      this.model.onScale = (value === 'true');
-      view.setModelData(this.model);
-    }
+  private setMinValue(model: SliderModel, value: number | boolean): void {
+    model.minValue = <number>value;
   }
 
-  getProps(view: SliderView): ISliderModel | undefined {
-    return this.modelMap.get(view.index);
+  private getMinValue(model: ISliderModel): number {
+    return model.minValue;
+  }
+
+  private setMaxValue(model: SliderModel, value: number | boolean): void {
+    model.maxValue = <number>value;
+  }
+
+  private getMaxValue(model: ISliderModel): number {
+    return model.maxValue;
+  }
+
+  private setStepSize(model: SliderModel, value: number | boolean): void {
+    model.stepSize = <number>value;
+  }
+
+  private getStepSize(model: ISliderModel): number {
+    return model.stepSize;
+  }
+
+  private setValueFrom(model: SliderModel, value: number | boolean): void {
+    model.valueFrom = <number>value;
+  }
+
+  private getValueFrom(model: ISliderModel): number {
+    return model.valueFrom;
+  }
+
+  private setValueTo(model: SliderModel, value: number | boolean): void {
+    model.valueTo = <number>value;
+  }
+
+  private getValueTo(model: ISliderModel): number {
+    return model.valueTo;
+  }
+
+  private onScale(model: SliderModel, value: number | boolean): void {
+    model.onScale = <boolean>value;
+  }
+
+  private isScale(model: ISliderModel): boolean {
+    return model.onScale;
+  }
+
+  private onTooltip(model: SliderModel, value: number | boolean): void {
+    model.onTooltip = <boolean>value;
+  }
+
+  private isTooltip(model: ISliderModel): boolean {
+    return model.onTooltip;
+  }
+
+  private onRange(model: SliderModel, value: number | boolean): void {
+    model.onRange = <boolean>value;
+  }
+
+  private isRange(model: ISliderModel): boolean {
+    return model.onRange;
+  }
+
+  private onVertical(model: SliderModel, value: number | boolean): void {
+    //console.log(model.onRange)
+    model.onVertical = <boolean>value;
+  }
+
+  private isVertical(model: ISliderModel): boolean {
+    //console.log(model.onRange)
+    return model.onVertical;
   }
 }
 
