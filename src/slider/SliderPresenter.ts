@@ -8,15 +8,15 @@ class SliderPresenter implements ISliderPresenter {
 
   constructor() {
     this.propsMap
-      .set('setMinValue', 'minValue')
-      .set('setMaxValue', 'maxValue')
-      .set('setStepSize', 'stepSize')
-      .set('setValueFrom', 'valueFrom')
-      .set('setValueTo', 'valueTo')
-      .set('onVertical', 'onVertical')
-      .set('onRange', 'onRange')
-      .set('onTooltip', 'onTooltip')
-      .set('onScale', 'onScale');
+      .set('getMinValue', 'minValue')   .set('setMinValue', 'minValue')
+      .set('getMaxValue', 'maxValue')   .set('setMaxValue', 'maxValue')
+      .set('getStepSize', 'stepSize')   .set('setStepSize', 'stepSize')
+      .set('getValueFrom', 'valueFrom') .set('setValueFrom', 'valueFrom')
+      .set('getValueTo', 'valueTo')     .set('setValueTo', 'valueTo')
+      .set('isVertical', 'onVertical')  .set('onVertical', 'onVertical')
+      .set('isRange', 'onRange')        .set('onRange', 'onRange')
+      .set('isTooltip', 'onTooltip')    .set('onTooltip', 'onTooltip')
+      .set('isScale', 'onScale')        .set('onScale', 'onScale');
     //this.view.addEventListener('slider-pos', this.handleViewEvents.bind(this));
     //this.view.addEventListener('scale-pos', this.handleScaleEvents.bind(this));
     //this.view.addEventListener('view-events', this.handleViewEvents.bind(this));
@@ -31,7 +31,6 @@ class SliderPresenter implements ISliderPresenter {
   //   this.calculateValue(evt.detail.pos);
   //   this.model.valueFrom = this.value;
   // }
-
 
 
   init(obj: JQuery): JQuery {
@@ -54,7 +53,7 @@ class SliderPresenter implements ISliderPresenter {
   setProps(view: SliderView, method: setMethods, value: number | boolean): void {
     let model = this.modelMap.get(view.index);
     let prop = this.propsMap.get(method);
-    if (model && prop && prop !== 'id' ) {
+    if (model && prop && prop !== 'id') {
       model[prop] = <never>value;
       view.setModelData(prop, value);
     }
@@ -62,85 +61,12 @@ class SliderPresenter implements ISliderPresenter {
 
   getProps(view: SliderView, method: getMethods): number | boolean {
     let model = this.modelMap.get(view.index);
+    let prop = this.propsMap.get(method);
     let value: number | boolean = 0;
-    if (model) {
-      value = this[method](model);
+    if (model && prop) {
+      value = <number | boolean>model[prop];
     }
     return value;
-  }
-
-  private setMinValue(model: SliderModel, value: number | boolean): void {
-    model.minValue = <number>value;
-  }
-
-  private getMinValue(model: ISliderModel): number {
-    return model.minValue;
-  }
-
-  private setMaxValue(model: SliderModel, value: number | boolean): void {
-    model.maxValue = <number>value;
-  }
-
-  private getMaxValue(model: ISliderModel): number {
-    return model.maxValue;
-  }
-
-  private setStepSize(model: SliderModel, value: number | boolean): void {
-    model.stepSize = <number>value;
-  }
-
-  private getStepSize(model: ISliderModel): number {
-    return model.stepSize;
-  }
-
-  private setValueFrom(model: SliderModel, value: number | boolean): void {
-    model.valueFrom = <number>value;
-  }
-
-  private getValueFrom(model: ISliderModel): number {
-    return model.valueFrom;
-  }
-
-  private setValueTo(model: SliderModel, value: number | boolean): void {
-    model.valueTo = <number>value;
-  }
-
-  private getValueTo(model: ISliderModel): number {
-    return model.valueTo;
-  }
-
-  private onScale(model: SliderModel, value: number | boolean): void {
-    model.onScale = <boolean>value;
-  }
-
-  private isScale(model: ISliderModel): boolean {
-    return model.onScale;
-  }
-
-  private onTooltip(model: SliderModel, value: number | boolean): void {
-    model.onTooltip = <boolean>value;
-  }
-
-  private isTooltip(model: ISliderModel): boolean {
-    return model.onTooltip;
-  }
-
-  private onRange(model: SliderModel, value: number | boolean): void {
-    model.onRange = <boolean>value;
-  }
-
-  private isRange(model: ISliderModel): boolean {
-    return model.onRange;
-  }
-
-  private onVertical(model: SliderModel, value: number | boolean): void {
-    //console.log(model.onRange)
-    model.onVertical = <boolean>value;
-  }
-
-  private isVertical(model: ISliderModel): boolean {
-    //console.log(model.onRange)
-    return model.onVertical;
   }
 }
 
