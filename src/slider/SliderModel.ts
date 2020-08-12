@@ -63,7 +63,15 @@ class SliderModel implements ISliderModel {
   }
 
   set minValue(minValue: number) {
-    this._minValue = minValue ? minValue: 0;
+    if (this._minValue) {
+      if (this._minValue <= this._maxValue) {
+        this._minValue = minValue;
+      } else {
+        this._minValue = this._maxValue;
+      }
+    } else {
+      this._minValue = 0
+    }
   }
 
   get maxValue(): number {
@@ -71,7 +79,15 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    this._maxValue = maxValue ? maxValue: 0;
+    if (this._maxValue) {
+      if (this._maxValue >= this._minValue) {
+        this._maxValue = maxValue;
+      } else {
+        this._maxValue = this._minValue;
+      }
+    } else {
+      this._maxValue = 0
+    }
   }
 
   get valueFrom(): number {
@@ -79,7 +95,15 @@ class SliderModel implements ISliderModel {
   }
 
   set valueFrom(valueFrom: number) {
-    this._valueFrom = valueFrom ? valueFrom: 0;
+    if (this._valueFrom) {
+      if (this._valueFrom <= this._valueTo) {
+        this._valueFrom = valueFrom;
+      } else {
+        this._valueFrom = this._valueTo;
+      }
+    } else {
+      this._minValue = 0
+    }
   }
 
   get valueTo(): number {
@@ -87,7 +111,15 @@ class SliderModel implements ISliderModel {
   }
 
   set valueTo(valueTo: number) {
-    this._valueTo = valueTo ? valueTo: 0;
+    if (this._valueTo) {
+      if (this._valueTo >= this._valueFrom) {
+        this._valueTo = valueTo;
+      } else {
+        this._valueTo = this._valueFrom;
+      }
+    } else {
+      this._valueTo = 0
+    }
   }
 
   get stepSize(): number {

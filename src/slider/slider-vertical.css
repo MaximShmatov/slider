@@ -1,27 +1,19 @@
-.view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-
-  flex-direction: row;
-}
-
 .rail {
   display: flex;
+  align-items: center;
   background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
   height: 6px;
   border: 1px solid rgba(31, 32, 65, 0.25);
   border-radius: 3px;
   box-sizing: border-box;
   cursor: pointer;
+}
+.rail_vertical {
 
-  flex-direction: column;
-  height: 100%;
-  width: 6px;
 }
 
 .rail__progress {
+  position: relative;
   width: 100%;
   height: 100%;
   background: white;
@@ -32,7 +24,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 
 .thumb__point {
@@ -56,9 +47,6 @@
   background-color: #6FCF97;
   opacity: 0.5;
   border-radius: 5px;
-
-  top: -12px;
-  left: -45px;
 }
 
 .scale {

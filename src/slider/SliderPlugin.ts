@@ -4,15 +4,15 @@ import {SliderPresenter} from './SliderPresenter';
 
 ;(function ($: JQueryStatic): void {
   $.slider = new SliderPresenter();
-  $.fn.slider = function (method?: setMethods | getMethods, prop?: number | boolean): any {
+  $.fn.slider = function (method?: TMethodsUnion, prop?: number | boolean): any {
     if (method) {
       if (prop !== undefined) {
         this.each(function () {
-          $.slider.setProps(this, <setMethods>method, prop);
+          $.slider.setProps(this, method, prop);
         });
         return this;
       }
-      return $.slider.getProps(this[0], <getMethods>method);
+      return $.slider.getProps(this[0], method);
     }
     return $.slider.init(this);
   }

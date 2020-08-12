@@ -1,3 +1,5 @@
+type TMethodsUnion = 'minValue' | 'maxValue' | 'stepSize' | 'valueFrom' | 'valueTo' | 'onScale' | 'onTooltip' | 'onRange' | 'onVertical';
+
 interface ISliderModel {
   id: number;
   minValue: number;
@@ -12,10 +14,7 @@ interface ISliderModel {
   serverURL: URL;
 
   init(data: HTMLElement | ISliderModel | FormData | null): boolean;
-
 }
-
-type TPropsUnion = keyof ISliderModel;
 
 interface ISliderView {
 
@@ -24,9 +23,9 @@ interface ISliderView {
 interface ISliderPresenter {
   init(obj: JQuery): JQuery;
 
-  setProps(element: HTMLElement, method: setMethods, value: number | boolean): void;
+  setProps(element: HTMLElement, method: TMethodsUnion, value: number | boolean): void;
 
-  getProps(element: HTMLElement, method: getMethods): number | boolean;
+  getProps(element: HTMLElement, method: TMethodsUnion): number | boolean;
 }
 
 interface IThumb {
@@ -34,51 +33,25 @@ interface IThumb {
 }
 
 interface IRail {
-  thumbFrom: IThumb;
-  thumbTo: IThumb;
-  isVertical: boolean;
+
 }
 
 interface IScale {
   render(): void;
 }
 
-interface HTMLElementEventMap {
-  'slider-pos': CustomEvent;
-  'scale-pos': CustomEvent;
-  'slider-data': CustomEvent;
-  'view-events': CustomEvent;
-}
-
-type setMethods =
-  'setMinValue'
-  | 'setMaxValue'
-  | 'setStepSize'
-  | 'setValueFrom'
-  | 'setValueTo'
-  | 'onScale'
-  | 'onTooltip'
-  | 'onRange'
-  | 'onVertical';
-type getMethods =
-  'getMinValue'
-  | 'getMaxValue'
-  | 'getStepSize'
-  | 'getValueFrom'
-  | 'getValueTo'
-  | 'isScale'
-  | 'isTooltip'
-  | 'isRange'
-  | 'isVertical';
-
 interface JQuery {
-  slider(method: setMethods, prop: number | boolean): JQuery;
+  slider(method: TMethodsUnion, prop: number | boolean): JQuery;
 
-  slider(method: getMethods): number | boolean;
+  slider(method: TMethodsUnion): number | boolean;
 
   slider(): JQuery;
 }
 
 interface JQueryStatic {
   slider: ISliderPresenter;
+}
+
+interface HTMLElementEventMap {
+  'slider': CustomEvent;
 }

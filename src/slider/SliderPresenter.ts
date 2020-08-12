@@ -3,35 +3,11 @@ import {SliderView} from './SliderView';
 
 
 class SliderPresenter implements ISliderPresenter {
-  private readonly modelMap: Map<number, SliderModel> = new Map();
-  private readonly propsMap: Map<string, TPropsUnion> = new Map();
+  private readonly mapModels: Map<number, SliderModel> = new Map();
+  private readonly methods: TMethodsUnion[] = ['minValue', 'maxValue', 'stepSize', 'valueFrom', 'valueTo', 'onScale', 'onTooltip', 'onRange', 'onVertical'];
 
   constructor() {
-    this.propsMap
-      .set('getMinValue', 'minValue')   .set('setMinValue', 'minValue')
-      .set('getMaxValue', 'maxValue')   .set('setMaxValue', 'maxValue')
-      .set('getStepSize', 'stepSize')   .set('setStepSize', 'stepSize')
-      .set('getValueFrom', 'valueFrom') .set('setValueFrom', 'valueFrom')
-      .set('getValueTo', 'valueTo')     .set('setValueTo', 'valueTo')
-      .set('isVertical', 'onVertical')  .set('onVertical', 'onVertical')
-      .set('isRange', 'onRange')        .set('onRange', 'onRange')
-      .set('isTooltip', 'onTooltip')    .set('onTooltip', 'onTooltip')
-      .set('isScale', 'onScale')        .set('onScale', 'onScale');
-    //this.view.addEventListener('slider-pos', this.handleViewEvents.bind(this));
-    //this.view.addEventListener('scale-pos', this.handleScaleEvents.bind(this));
-    //this.view.addEventListener('view-events', this.handleViewEvents.bind(this));
   }
-
-  // private handleScaleEvents(evt: CustomEvent) {
-  //   this.model.valueFrom = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.from) + this.model.minValue;
-  //   this.view.rail.thumbFrom.moveToPosition(evt.detail.from);
-  //
-  // }
-  // private handleViewEvents(evt: CustomEvent): void {
-  //   this.calculateValue(evt.detail.pos);
-  //   this.model.valueFrom = this.value;
-  // }
-
 
   init(obj: JQuery): JQuery {
     let viewArr: SliderView[] = [];
@@ -41,32 +17,71 @@ class SliderPresenter implements ISliderPresenter {
       } else {
         let model = new SliderModel(element);
         let view = new SliderView(model.id);
-        view.setModel(model);
+        for (let method of this.methods) view.setModelData(method, model[method]);
+        view.addEventListener('slider', this.handleViewEvents.bind(this));
         $(element).replaceWith(view);
-        this.modelMap.set(model.id, model);
+        this.mapModels.set(model.id, model);
         viewArr.push(view);
+        console.log(model);
       }
     });
     return $().pushStack(viewArr);
   }
 
-  setProps(view: SliderView, method: setMethods, value: number | boolean): void {
-    let model = this.modelMap.get(view.index);
-    let prop = this.propsMap.get(method);
-    if (model && prop && prop !== 'id') {
-      model[prop] = <never>value;
-      view.setModelData(prop, value);
+  setProps(view: SliderView, method: TMethodsUnion, value: number | boolean): void {
+    let model = this.getModel(view);
+    if (model) {
+      model[method] = <never>value;
+      view.setModelData(method, value);
     }
   }
 
-  getProps(view: SliderView, method: getMethods): number | boolean {
-    let model = this.modelMap.get(view.index);
-    let prop = this.propsMap.get(method);
+  getProps(view: SliderView, method: TMethodsUnion): number | boolean {
+    let model = this.getModel(view);
     let value: number | boolean = 0;
-    if (model && prop) {
-      value = <number | boolean>model[prop];
+    if (model) {
+      value = <number | boolean>model[method];
     }
     return value;
+  }
+
+  private handleViewEvents(evt: CustomEvent): void {
+    evt.stopPropagation();
+    switch (evt.detail.name) {
+      case 'valueFrom':
+        this.setValueFrom(evt);
+        break;
+      case 'valueTo':
+        this.setValueTo(evt);
+    }
+  }
+
+  private setValueFrom(evt: CustomEvent) {
+    let model = this.getModel(evt);
+    let value: number = 0;
+    if (model) {
+      value = ((model.maxValue - model.minValue) / 100 * evt.detail.from); //+ model.minValue
+    }
+    this.setProps(<SliderView>evt.target, evt.detail.name, value);
+  }
+
+  private setValueTo(evt: CustomEvent) {
+    let model = this.getModel(evt);
+    let value: number = 0;
+    if (model) {
+      value = (model.maxValue - model.minValue) / 100 * evt.detail.value;
+    }
+    this.setProps(<SliderView>evt.target, evt.detail.name, value);
+  }
+
+  private getModel(source: SliderView | CustomEvent): SliderModel | undefined {
+    if (source instanceof SliderView) {
+      return this.mapModels.get(source.index);
+    }
+    if (source instanceof CustomEvent) {
+      let view = <SliderView>source.target
+      return this.mapModels.get(view.index);
+    }
   }
 }
 
