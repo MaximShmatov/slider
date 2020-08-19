@@ -96,7 +96,7 @@ class Rail extends HTMLElement implements IRail {
     let max = Number(this.dataset.maxValue);
     let target: number = 0;
     (thumb === 'from') ? target = Number(this.dataset.valueFrom) : target = Number(this.dataset.valueTo);
-    return target / ((max - min) / 100);
+    return (target / ((max - min) / 100));
   }
 
   private setProgressPosition(evt: JQuery.Event, data: { name: string, pos: number }) {

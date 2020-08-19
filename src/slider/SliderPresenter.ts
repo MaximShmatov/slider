@@ -22,7 +22,6 @@ class SliderPresenter implements ISliderPresenter {
         $(element).replaceWith(view);
         this.mapModels.set(model.id, model);
         viewArr.push(view);
-        console.log(model);
       }
     });
     return $().pushStack(viewArr);
@@ -32,7 +31,7 @@ class SliderPresenter implements ISliderPresenter {
     let model = this.getModel(view);
     if (model) {
       model[method] = <never>value;
-      view.setModelData(method, value);
+      view.setModelData(method, model[method]);
     }
   }
 
@@ -60,7 +59,7 @@ class SliderPresenter implements ISliderPresenter {
     let model = this.getModel(evt);
     let value: number = 0;
     if (model) {
-      value = ((model.maxValue - model.minValue) / 100 * evt.detail.from); //+ model.minValue
+      value = ((model.maxValue - model.minValue) / 100 * evt.detail.value); //+ model.minValue
     }
     this.setProps(<SliderView>evt.target, evt.detail.name, value);
   }
