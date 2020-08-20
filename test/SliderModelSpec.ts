@@ -5,12 +5,9 @@ describe('Slider model tests', () => {
   let model: SliderModel;
 
   beforeEach(() => {
-    model = new SliderModel(null);
+    model = new SliderModel(()=>{});
   });
 
-  it('Should assign an minValue property', () => {
-    expect(model.id).toBeDefined('should be defined');
-  });
   it('Should assign an minValue property', () => {
     expect(model.minValue).toBeDefined('should be defined');
   });

@@ -1,12 +1,13 @@
+import {SliderPresenter} from "./SliderPresenter";
+
 class SliderView extends HTMLElement implements ISliderView {
+  readonly slider: SliderPresenter = new SliderPresenter(this);
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
-  readonly index: number;
 
-  constructor(id: number) {
+  constructor() {
     super();
     this.className = 'input-slider-view';
-    this.index = id;
     this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
       this.shadowRoot.innerHTML = `<style>${require('./slider-plugin.css')}</style>`;
@@ -15,7 +16,7 @@ class SliderView extends HTMLElement implements ISliderView {
     }
   }
 
-  setModelData(method: TMethodsUnion, value: number | boolean) {
+  setModelData(method: TMethodsUnion, value: number | boolean): void {
     switch (method) {
       case 'minValue':
         this.scale.dataset[method] = value.toString();

@@ -1,7 +1,15 @@
-type TMethodsUnion = 'minValue' | 'maxValue' | 'stepSize' | 'valueFrom' | 'valueTo' | 'onScale' | 'onTooltip' | 'onRange' | 'onVertical';
+type TMethodsUnion =
+  'minValue'
+  | 'maxValue'
+  | 'stepSize'
+  | 'valueFrom'
+  | 'valueTo'
+  | 'onScale'
+  | 'onTooltip'
+  | 'onRange'
+  | 'onVertical';
 
 interface ISliderModel {
-  id: number;
   minValue: number;
   maxValue: number;
   valueFrom: number;
@@ -12,20 +20,18 @@ interface ISliderModel {
   onTooltip: boolean;
   onScale: boolean;
   serverURL: URL;
-
   init(data: HTMLElement | ISliderModel | FormData | null): boolean;
 }
 
-interface ISliderView {
-
+interface ISliderView extends HTMLElement {
+  slider: ISliderPresenter;
+  setModelData(method: TMethodsUnion, value: number | boolean): void;
 }
 
 interface ISliderPresenter {
-  init(obj: JQuery): JQuery;
-
-  setProps(element: HTMLElement, method: TMethodsUnion, value: number | boolean): void;
-
-  getProps(element: HTMLElement, method: TMethodsUnion): number | boolean;
+  init(obj: HTMLElement | ISliderModel): void;
+  setProps(method: TMethodsUnion, value: number | boolean): void
+  getProps(method: TMethodsUnion): number | boolean;
 }
 
 interface IThumb {
@@ -41,10 +47,8 @@ interface IScale {
 }
 
 interface JQuery {
-  slider(method: TMethodsUnion, prop: number | boolean): JQuery;
-
+  slider(method: TMethodsUnion, prop: number | boolean | ISliderModel): JQuery;
   slider(method: TMethodsUnion): number | boolean;
-
   slider(): JQuery;
 }
 

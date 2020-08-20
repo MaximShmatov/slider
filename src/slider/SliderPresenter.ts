@@ -1,47 +1,31 @@
 import {SliderModel} from './SliderModel';
-import {SliderView} from './SliderView';
 
 
 class SliderPresenter implements ISliderPresenter {
-  private readonly mapModels: Map<number, SliderModel> = new Map();
+  private readonly model: ISliderModel;
+  private readonly view: ISliderView;
   private readonly methods: TMethodsUnion[] = ['minValue', 'maxValue', 'stepSize', 'valueFrom', 'valueTo', 'onScale', 'onTooltip', 'onRange', 'onVertical'];
 
-  constructor() {
+  constructor(view: ISliderView) {
+    this.view = view;
+    this.model = new SliderModel(this.observer.bind(this));
+    this.view.addEventListener('slider', this.handleViewEvents.bind(this));
   }
 
-  init(obj: JQuery): JQuery {
-    let viewArr: SliderView[] = [];
-    obj.each((index: number, element: HTMLElement) => {
-      if (element instanceof SliderView) {
-        viewArr.push(element);
-      } else {
-        let model = new SliderModel(element);
-        let view = new SliderView(model.id);
-        for (let method of this.methods) view.setModelData(method, model[method]);
-        view.addEventListener('slider', this.handleViewEvents.bind(this));
-        $(element).replaceWith(view);
-        this.mapModels.set(model.id, model);
-        viewArr.push(view);
-      }
-    });
-    return $().pushStack(viewArr);
-  }
-
-  setProps(view: SliderView, method: TMethodsUnion, value: number | boolean): void {
-    let model = this.getModel(view);
-    if (model) {
-      model[method] = <never>value;
-      view.setModelData(method, model[method]);
+  init(obj: HTMLElement | ISliderModel): void {
+    this.model.init(obj);
+    for (let method of this.methods) {
+      this.view.setModelData(method, this.model[method]);
     }
   }
 
-  getProps(view: SliderView, method: TMethodsUnion): number | boolean {
-    let model = this.getModel(view);
-    let value: number | boolean = 0;
-    if (model) {
-      value = <number | boolean>model[method];
-    }
-    return value;
+  setProps(method: TMethodsUnion, value: number | boolean): void {
+    this.model[method] = <never>value;
+    this.view.setModelData(method, this.model[method]);
+  }
+
+  getProps(method: TMethodsUnion): number | boolean {
+    return this.model[method];
   }
 
   private handleViewEvents(evt: CustomEvent): void {
@@ -56,31 +40,25 @@ class SliderPresenter implements ISliderPresenter {
   }
 
   private setValueFrom(evt: CustomEvent) {
-    let model = this.getModel(evt);
-    let value: number = 0;
-    if (model) {
-      value = ((model.maxValue - model.minValue) / 100 * evt.detail.value); //+ model.minValue
-    }
-    this.setProps(<SliderView>evt.target, evt.detail.name, value);
+    let value = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.value); //+ model.minValue
+    this.setProps(evt.detail.name, value);
   }
 
   private setValueTo(evt: CustomEvent) {
-    let model = this.getModel(evt);
-    let value: number = 0;
-    if (model) {
-      value = (model.maxValue - model.minValue) / 100 * evt.detail.value;
-    }
-    this.setProps(<SliderView>evt.target, evt.detail.name, value);
+    let value = (this.model.maxValue - this.model.minValue) / 100 * evt.detail.value;
+    this.setProps(evt.detail.name, value);
   }
 
-  private getModel(source: SliderView | CustomEvent): SliderModel | undefined {
-    if (source instanceof SliderView) {
-      return this.mapModels.get(source.index);
-    }
-    if (source instanceof CustomEvent) {
-      let view = <SliderView>source.target
-      return this.mapModels.get(view.index);
-    }
+  private observer(key: TMethodsUnion, value: number | boolean) {
+    this.view.dispatchEvent(new CustomEvent('slider-data', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {
+        name: key,
+        value: value
+      }
+    }));
   }
 }
 

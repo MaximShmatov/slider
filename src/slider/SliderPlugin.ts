@@ -1,19 +1,42 @@
 import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-import {SliderPresenter} from './SliderPresenter';
+import {SliderView} from './SliderView';
 
 ;(function ($: JQueryStatic): void {
-  $.slider = new SliderPresenter();
-  $.fn.slider = function (method?: TMethodsUnion, prop?: number | boolean): any {
+  $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | ISliderModel): any {
+    if (method === 'init' || method === undefined) {
+      let viewArr: SliderView[] = [];
+      let view: SliderView;
+      this.each(function () {
+        if (this instanceof SliderView) {
+          viewArr.push(this);
+        } else {
+          view = new SliderView();
+          this.replaceWith(view);
+          viewArr.push(view);
+          if (typeof prop === 'object') {
+            view.slider.init(prop);
+          } else {
+            view.slider.init(this);
+          }
+        }
+      })
+      return $().pushStack(viewArr);
+    }
+
     if (method) {
-      if (prop !== undefined) {
+      if (prop !== undefined && (typeof prop !== 'object')) {
         this.each(function () {
-          $.slider.setProps(this, method, prop);
-        });
+          if (this instanceof SliderView) {
+            this.slider.setProps(method, prop);
+          }
+        })
         return this;
       }
-      return $.slider.getProps(this[0], method);
+
+      if (this[0] instanceof SliderView) {
+        return this[0].slider.getProps(method);
+      }
     }
-    return $.slider.init(this);
   }
 })(jQuery);

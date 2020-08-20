@@ -1,5 +1,4 @@
 class SliderModel implements ISliderModel {
-  readonly id: number;
   private _minValue: number = 0;
   private _maxValue: number = 100;
   private _valueFrom: number = 10;
@@ -10,10 +9,10 @@ class SliderModel implements ISliderModel {
   private _onVertical: boolean = false;
   private _onScale: boolean = false;
   private _serverURL: URL = new URL('http://localhost:9000/slider');
+  private readonly _observer: (key: TMethodsUnion, value: boolean | number) => void;
 
-  constructor(data: HTMLElement | SliderModel | FormData | null) {
-    this.id = Math.random();
-    if (data) this.init(data);
+  constructor(observer: (key: TMethodsUnion, value: number | boolean) => void) {
+    this._observer = observer;
   }
 
   init(data: HTMLElement | SliderModel | FormData): boolean {
@@ -76,7 +75,7 @@ class SliderModel implements ISliderModel {
         this._minValue = 0;
       }
     }
-    this.throwEvent('minValue', this._minValue);
+    this._observer('minValue', this._minValue);
   }
 
   get maxValue(): number {
@@ -97,7 +96,7 @@ class SliderModel implements ISliderModel {
         this._maxValue = 0;
       }
     }
-    this.throwEvent('maxValue', this._maxValue)
+    this._observer('maxValue', this._maxValue)
   }
 
   get valueFrom(): number {
@@ -137,7 +136,7 @@ class SliderModel implements ISliderModel {
         this._valueFrom = 0;
       }
     }
-    this.throwEvent('valueFrom', this._valueFrom)
+    this._observer('valueFrom', this._valueFrom)
   }
 
   get valueTo(): number {
@@ -177,7 +176,7 @@ class SliderModel implements ISliderModel {
         this._valueTo = 0;
       }
     }
-    this.throwEvent('valueTo', this._valueTo)
+    this._observer('valueTo', this._valueTo)
   }
 
   get stepSize(): number {
@@ -186,7 +185,7 @@ class SliderModel implements ISliderModel {
 
   set stepSize(stepSize: number) {
     this._stepSize = stepSize ? stepSize : 1;
-    this.throwEvent('stepSize', this._stepSize)
+    this._observer('stepSize', this._stepSize)
   }
 
   get onVertical(): boolean {
@@ -195,7 +194,7 @@ class SliderModel implements ISliderModel {
 
   set onVertical(onVertical: boolean) {
     this._onVertical = onVertical;
-    this.throwEvent('onVertical', this._onVertical)
+    this._observer('onVertical', this._onVertical)
   }
 
   get onRange(): boolean {
@@ -207,7 +206,7 @@ class SliderModel implements ISliderModel {
       this._valueTo = this._maxValue;
     }
     this._onRange = onRange;
-    this.throwEvent('onRange', this._onRange)
+    this._observer('onRange', this._onRange)
   }
 
   get onTooltip(): boolean {
@@ -216,7 +215,7 @@ class SliderModel implements ISliderModel {
 
   set onTooltip(onTooltip: boolean) {
     this._onTooltip = onTooltip;
-    this.throwEvent('onTooltip', this._onTooltip)
+    this._observer('onTooltip', this._onTooltip)
   }
 
   get onScale(): boolean {
@@ -225,7 +224,7 @@ class SliderModel implements ISliderModel {
 
   set onScale(onScale: boolean) {
     this._onScale = onScale;
-    this.throwEvent('onScale', this._onScale)
+    this._observer('onScale', this._onScale)
   }
 
   get serverURL(): URL {
@@ -234,18 +233,6 @@ class SliderModel implements ISliderModel {
 
   set serverURL(serverURL: URL) {
     this._serverURL = serverURL;
-  }
-
-  private throwEvent(method: TMethodsUnion, value: number | boolean) {
-    document.dispatchEvent(new CustomEvent('slider-data', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: {
-        name: method,
-        value: value
-      }
-    }));
   }
 }
 

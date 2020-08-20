@@ -14,44 +14,38 @@ class ControlPanel {
   private readonly $onVertical: JQuery;
 
   constructor(container: HTMLElement) {
-    this.$slider = $(container).find('.input-slider-plugin').slider();
     this.$minValue = $(container)
       .find('.control__min-value')
-      //.attr('value', String(this.$slider.slider('minValue')))
       .on('input', this.setMinValue.bind(this));
     this.$maxValue = $(container)
       .find('.control__max-value')
-      //.attr('value', String(this.$slider.slider('maxValue')))
       .on('input', this.setMaxValue.bind(this));
     this.$stepSize = $(container)
       .find('.control__step-size')
-      //.attr('value', String(this.$slider.slider('stepSize')))
       .on('input', this.setStepSize.bind(this));
     this.$valueFrom = $(container)
       .find('.control__value-from')
-      //.attr('value', String(this.$slider.slider('valueFrom')))
       .on('input', this.setValueFrom.bind(this));
     this.$valueTo = $(container)
       .find('.control__value-to')
-      //.attr('value', String(this.$slider.slider('valueTo')))
       .on('input', this.setValueTo.bind(this));
     this.$onTooltip = $(container)
       .find('.control__on-tooltip')
-      //.prop('checked', this.$slider.slider('onTooltip'))
       .on('change', this.toggleTooltip.bind(this));
     this.$onVertical = $(container)
       .find('.control__on-vertical')
-      //.prop('checked', this.$slider.slider('onVertical'))
       .on('change', this.toggleVertical.bind(this));
     this.$onRange = $(container)
       .find('.control__on-range')
-      //.prop('checked', this.$slider.slider('onRange'))
       .on('change', this.toggleRange.bind(this));
     this.$onScale = $(container)
       .find('.control__on-scale')
-      //.prop('checked', this.$slider.slider('onScale'))
       .on('change', this.toggleScale.bind(this));
-    $(document).on('slider-data', this.handleElementEvents.bind(this) as EventListener);
+    this.$slider = $(container)
+      .on('slider-data', this.handleElementEvents.bind(this) as EventListener)
+      .find('.input-slider-plugin')
+      .slider();
+
   }
 
   private setMinValue(): void {
@@ -91,7 +85,6 @@ class ControlPanel {
   }
 
   private handleElementEvents(evt: CustomEvent) {
-    console.log(evt.target);
     switch (evt.detail.name) {
       case 'minValue':
         this.$minValue.val(evt.detail.value);
