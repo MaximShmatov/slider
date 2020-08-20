@@ -21,7 +21,6 @@ class SliderPresenter implements ISliderPresenter {
 
   setProps(method: TMethodsUnion, value: number | boolean): void {
     this.model[method] = <never>value;
-    this.view.setModelData(method, this.model[method]);
   }
 
   getProps(method: TMethodsUnion): number | boolean {
@@ -36,28 +35,29 @@ class SliderPresenter implements ISliderPresenter {
         break;
       case 'valueTo':
         this.setValueTo(evt);
+        break;
     }
+    //console.log(evt.detail.name);
   }
 
   private setValueFrom(evt: CustomEvent) {
-    let value = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.value); //+ model.minValue
+    let value = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.value) + this.model.minValue;
     this.setProps(evt.detail.name, value);
   }
 
   private setValueTo(evt: CustomEvent) {
-    let value = (this.model.maxValue - this.model.minValue) / 100 * evt.detail.value;
+    let value = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.value) + this.model.minValue;
     this.setProps(evt.detail.name, value);
   }
 
   private observer(key: TMethodsUnion, value: number | boolean) {
+    console.log(this.model);
+    this.view.setModelData(key, value);
     this.view.dispatchEvent(new CustomEvent('slider-data', {
       bubbles: true,
       cancelable: true,
       composed: true,
-      detail: {
-        name: key,
-        value: value
-      }
+      detail: {name: key, value: value}
     }));
   }
 }

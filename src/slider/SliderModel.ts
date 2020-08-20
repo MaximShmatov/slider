@@ -62,19 +62,14 @@ class SliderModel implements ISliderModel {
   }
 
   set minValue(minValue: number) {
-    if (minValue && this._maxValue) {
-      if (minValue <= this._maxValue) {
-        this._minValue = minValue;
-      } else {
-        this._minValue = this._maxValue;
-      }
+    if (minValue <= this._maxValue) {
+      this._minValue = minValue;
     } else {
-      if (minValue) {
-        this._minValue = minValue;
-      } else {
-        this._minValue = 0;
-      }
+      this._minValue = this._maxValue;
     }
+
+    if (this._minValue > this._valueFrom) this.valueFrom = this._minValue;
+    if (this._minValue > this._valueTo) this._minValue = this._valueTo;
     this._observer('minValue', this._minValue);
   }
 
@@ -83,19 +78,13 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    if (maxValue && this._minValue) {
-      if (maxValue >= this._minValue) {
-        this._maxValue = maxValue;
-      } else {
-        this._maxValue = this._minValue;
-      }
+    if (maxValue >= this._minValue) {
+      this._maxValue = maxValue;
     } else {
-      if (maxValue) {
-        this._maxValue = maxValue;
-      } else {
-        this._maxValue = 0;
-      }
+      this._maxValue = this._minValue;
     }
+    if (this._maxValue < this._valueTo) this.valueTo = this._maxValue;
+    if (this._maxValue < this._valueFrom) this._maxValue = this._valueFrom;
     this._observer('maxValue', this._maxValue)
   }
 
@@ -104,7 +93,7 @@ class SliderModel implements ISliderModel {
   }
 
   set valueFrom(valueFrom: number) {
-    if (valueFrom && this._valueTo && this._minValue) {
+    if (this._onRange && !this._onVertical) {
       if (valueFrom <= this._valueTo && valueFrom >= this._minValue) {
         this._valueFrom = valueFrom;
       }
@@ -114,26 +103,11 @@ class SliderModel implements ISliderModel {
       if (valueFrom > this._valueTo) {
         this._valueFrom = this._valueTo;
       }
-    }
-    if (valueFrom && this._valueTo && !this._minValue) {
-      if (valueFrom < this._valueTo) {
-        this._valueFrom = valueFrom;
-      } else {
-        this._valueFrom = this._valueTo;
-      }
-    }
-    if (valueFrom && !this._valueTo && this._minValue) {
-      if (valueFrom > this._minValue) {
+    } else {
+      if (valueFrom >= this._minValue) {
         this._valueFrom = valueFrom;
       } else {
         this._valueFrom = this._minValue;
-      }
-    }
-    if (valueFrom && !this._valueTo && !this._minValue) {
-      if (this._valueFrom) {
-        this._valueFrom = valueFrom;
-      } else {
-        this._valueFrom = 0;
       }
     }
     this._observer('valueFrom', this._valueFrom)
@@ -144,37 +118,14 @@ class SliderModel implements ISliderModel {
   }
 
   set valueTo(valueTo: number) {
-    if (valueTo && this._valueFrom && this._maxValue) {
-      if (valueTo >= this._valueFrom && valueTo <= this._maxValue) {
-        this._valueTo = valueTo;
-      }
-      if (valueTo > this._maxValue) {
-        this._valueTo = this._maxValue;
-      }
-      if (valueTo < this._valueFrom) {
-        this._valueTo = this._valueFrom;
-      }
+    if (valueTo >= this._valueFrom && valueTo <= this._maxValue) {
+      this._valueTo = valueTo;
     }
-    if (valueTo && this._valueFrom && !this._maxValue) {
-      if (valueTo > this._valueFrom) {
-        this._valueTo = valueTo;
-      } else {
-        this._valueTo = this._valueFrom;
-      }
+    if (valueTo > this._maxValue) {
+      this._valueTo = this._maxValue;
     }
-    if (valueTo && !this._valueFrom && this._maxValue) {
-      if (valueTo < this._maxValue) {
-        this._valueTo = valueTo;
-      } else {
-        this._valueTo = this._maxValue;
-      }
-    }
-    if (valueTo && !this._valueFrom && !this._maxValue) {
-      if (this._valueTo) {
-        this._valueTo = valueTo;
-      } else {
-        this._valueTo = 0;
-      }
+    if (valueTo < this._valueFrom) {
+      this._valueTo = this._valueFrom;
     }
     this._observer('valueTo', this._valueTo)
   }
@@ -198,13 +149,11 @@ class SliderModel implements ISliderModel {
   }
 
   get onRange(): boolean {
+    this.valueTo = this._valueTo;
     return this._onRange;
   }
 
   set onRange(onRange: boolean) {
-    if (!onRange) {
-      this._valueTo = this._maxValue;
-    }
     this._onRange = onRange;
     this._observer('onRange', this._onRange)
   }

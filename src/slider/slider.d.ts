@@ -34,18 +34,6 @@ interface ISliderPresenter {
   getProps(method: TMethodsUnion): number | boolean;
 }
 
-interface IThumb {
-
-}
-
-interface IRail {
-
-}
-
-interface IScale {
-  render(): void;
-}
-
 interface JQuery {
   slider(method: TMethodsUnion, prop: number | boolean | ISliderModel): JQuery;
   slider(method: TMethodsUnion): number | boolean;

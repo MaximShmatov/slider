@@ -42,30 +42,29 @@ class ControlPanel {
       .find('.control__on-scale')
       .on('change', this.toggleScale.bind(this));
     this.$slider = $(container)
-      .on('slider-data', this.handleElementEvents.bind(this) as EventListener)
+      .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
       .find('.input-slider-plugin')
       .slider();
-
   }
 
   private setMinValue(): void {
-    this.$slider.slider('minValue', <number>this.$minValue.val());
+    this.$slider.slider('minValue', Number(this.$minValue.val()));
   }
 
   private setMaxValue(): void {
-    this.$slider.slider('maxValue', <number>this.$maxValue.val());
+    this.$slider.slider('maxValue', Number(this.$maxValue.val()));
   }
 
   private setValueFrom(): void {
-    this.$slider.slider('valueFrom', <number>this.$valueFrom.val());
+    this.$slider.slider('valueFrom', Number(this.$valueFrom.val()));
   }
 
   private setValueTo(): void {
-    this.$slider.slider('valueTo', <number>this.$valueTo.val());
+    this.$slider.slider('valueTo', Number(this.$valueTo.val()));
   }
 
   private setStepSize(): void {
-    this.$slider.slider('stepSize', <number>this.$stepSize.val());
+    this.$slider.slider('stepSize', Number(this.$stepSize.val()));
   }
 
   private toggleScale(): void {
@@ -84,7 +83,7 @@ class ControlPanel {
     this.$slider.slider('onRange', !this.$slider.slider('onRange'));
   }
 
-  private handleElementEvents(evt: CustomEvent) {
+  private handleContainerEvents(evt: CustomEvent) {
     switch (evt.detail.name) {
       case 'minValue':
         this.$minValue.val(evt.detail.value);

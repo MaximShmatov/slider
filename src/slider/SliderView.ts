@@ -44,32 +44,36 @@ class SliderView extends HTMLElement implements ISliderView {
   }
 }
 
-class Rail extends HTMLElement implements IRail {
+class Rail extends HTMLElement {
   private thumbFrom: Thumb = new Thumb('valueFrom');
   private thumbTo: Thumb = new Thumb('valueTo');
-  private progress = document.createElement('div');
+  private progress = new Progress();
 
   constructor() {
     super();
-    $(this.progress).addClass('rail__progress');
     $(this)
       .addClass('rail')
       .append(this.thumbFrom)
       .append(this.thumbTo)
-      .append(this.progress)
+      .append(this.progress);
   }
 
   static get observedAttributes() {
-    return ['data-value-from', 'data-value-to', 'data-on-tooltip', 'data-on-range', 'data-on-vertical'];
+    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-tooltip', 'data-on-range', 'data-on-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
+      case 'data-min-value':
+      case 'data-max-value':
+        this.thumbFrom.dataset.position = this.progress.dataset.positionFrom = this.calcThumbPosition('from').toString();
+        this.thumbTo.dataset.position = this.progress.dataset.positionTo = this.calcThumbPosition('to').toString();
+        break;
       case 'data-on-tooltip':
-        this.thumbTo.dataset.onTooltip = this.dataset.onTooltip;
-        this.thumbFrom.dataset.onTooltip = this.dataset.onTooltip;
+        this.thumbTo.dataset.onTooltip = this.thumbFrom.dataset.onTooltip = this.dataset.onTooltip;
         break;
       case 'data-on-range':
+        this.progress.dataset.onRange = this.dataset.onRange;
         if (this.dataset.onRange === 'false') {
           (this.dataset.onVertical === 'true') ? $(this.thumbFrom).hide() : $(this.thumbTo).hide();
         } else {
@@ -78,17 +82,15 @@ class Rail extends HTMLElement implements IRail {
         }
         break;
       case 'data-on-vertical':
-        this.thumbTo.dataset.onVertical = this.dataset.onVertical;
-        this.thumbFrom.dataset.onVertical = this.dataset.onVertical;
+        this.thumbTo.dataset.onVertical = this.thumbFrom.dataset.onVertical = this.progress.dataset.onVertical = this.dataset.onVertical;
         break;
       case 'data-value-from':
-        this.thumbFrom.dataset.position = this.calcThumbPosition('from').toString();
+        this.thumbFrom.dataset.position = this.progress.dataset.positionFrom = this.calcThumbPosition('from').toString();
         this.thumbFrom.dataset.value = Number(this.dataset.valueFrom).toFixed();
         break;
       case 'data-value-to':
-        this.thumbTo.dataset.position = this.calcThumbPosition('to').toString();
+        this.thumbTo.dataset.position = this.progress.dataset.positionTo = this.calcThumbPosition('to').toString();
         this.thumbTo.dataset.value = Number(this.dataset.valueTo).toFixed();
-
     }
   }
 
@@ -97,54 +99,51 @@ class Rail extends HTMLElement implements IRail {
     let max = Number(this.dataset.maxValue);
     let target: number = 0;
     (thumb === 'from') ? target = Number(this.dataset.valueFrom) : target = Number(this.dataset.valueTo);
-    return (target / ((max - min) / 100));
-  }
-
-  private setProgressPosition(evt: JQuery.Event, data: { name: string, pos: number }) {
-    switch (this.dataset.onVertical === 'true') {
-      case true:
-        if (data.name === 'from') {
-
-        } else {
-
-        }
-        break;
-      case false:
-        if (data.name === 'to') {
-
-        } else {
-          $(this.progress).css('left', `${data.pos}%`);
-          $(this.progress).css('width', `${this.calcThumbPosition('to') - this.calcThumbPosition('from')}%`);
-          //console.log(this.calcThumbPosition('from'));
-          //console.log(this.calcThumbPosition('to'));
-        }
-        break;
-    }
+    return ((target - min) / ((max - min) / 100));
   }
 }
 
-class Progress {
-  private leftOrTop: 'left' | 'top' = 'left';
-  private widthOrHeight: 'width' | 'height' = 'width';
+class Progress extends HTMLElement {
+  private _leftOrTop: 'left' | 'top' = 'left';
+  private _rightOrBottom: 'right' | 'bottom' = 'right';
+
   constructor() {
+    super();
+    $(this).addClass('rail__progress');
   }
+
   static get observedAttributes() {
     return ['data-position-from', 'data-position-to', 'data-on-range', 'data-on-vertical'];
   }
+
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-position-from':
+        $(this).css(`${this._leftOrTop}`, `${this.dataset.positionFrom}%`);
         break;
       case 'data-position-to':
+        if (this.dataset.onRange === 'true') {
+          $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
+        }
         break;
       case 'data-on-range':
+        if (this.dataset.onRange === 'false') {
+          $(this).css(`${this._rightOrBottom}`, '0');
+        } else {
+          $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
+        }
         break;
       case 'data-on-vertical':
+        if (this.dataset.onVertical === 'true') {
+          $(this).css('width', '100%');
+        } else {
+          $(this).css('height', '100%');
+        }
     }
   }
 }
 
-class Thumb extends HTMLElement implements IThumb {
+class Thumb extends HTMLElement {
   private clientXorY: 'clientX' | 'clientY' = 'clientX';
   private offsetXorY: number = 0;
   private widthOrHeight: number = 0;
@@ -223,10 +222,7 @@ class Thumb extends HTMLElement implements IThumb {
       bubbles: true,
       cancelable: true,
       composed: true,
-      detail: {
-        name: this.name,
-        value: position
-      }
+      detail: {name: this.name, value: position}
     }));
   }
 
@@ -236,7 +232,7 @@ class Thumb extends HTMLElement implements IThumb {
   }
 }
 
-class Scale extends HTMLElement implements IScale {
+class Scale extends HTMLElement {
   private scaleValueItems: HTMLSpanElement[] = [];
 
   constructor() {
@@ -300,7 +296,7 @@ class Scale extends HTMLElement implements IScale {
     }
   }
 
-  render(): void {
+  private render(): void {
     let min = Number(this.dataset.minValue);
     let max = Number(this.dataset.maxValue);
     let scaleValue = (max - min) / 3;
@@ -313,20 +309,20 @@ class Scale extends HTMLElement implements IScale {
   private handleMouseDown(evt: MouseEventInit) {
     let rect = this.getBoundingClientRect();
     let position: number = 0;
+    let name: string = 'valueFrom';
     if (evt.clientX && evt.clientY) {
       if (this.dataset._onVertical === 'true') {
+        name = 'valueTo';
         position = (rect.height - (evt.clientY - rect.y)) / (rect.height / 100);
       } else {
         position = (evt.clientX - rect.x) / (rect.width / 100);
       }
     }
-    this.dispatchEvent(new CustomEvent('scale-pos', {
+    this.dispatchEvent(new CustomEvent('slider', {
       bubbles: true,
       cancelable: true,
       composed: true,
-      detail: {
-        from: position
-      }
+      detail: {name: name, value: position}
     }));
   }
 }
@@ -337,3 +333,4 @@ customElements.define('input-slider-view', SliderView);
 customElements.define('input-slider-view-thumb', Thumb);
 customElements.define('input-slider-view-rail', Rail);
 customElements.define('input-slider-view-scale', Scale);
+customElements.define('input-slider-view-progress', Progress);
