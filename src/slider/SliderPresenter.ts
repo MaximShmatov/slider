@@ -4,12 +4,12 @@ import {SliderModel} from './SliderModel';
 class SliderPresenter implements ISliderPresenter {
   private readonly model: ISliderModel;
   private readonly view: ISliderView;
-  private readonly methods: TMethodsUnion[] = ['minValue', 'maxValue', 'stepSize', 'valueFrom', 'valueTo', 'onScale', 'onTooltip', 'onRange', 'onVertical'];
+  private readonly methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
 
   constructor(view: ISliderView) {
     this.view = view;
     this.model = new SliderModel(this.observer.bind(this));
-    this.view.addEventListener('slider', this.handleViewEvents.bind(this));
+    this.view.addEventListener('slider-view', this.handleViewEvents.bind(this));
   }
 
   init(obj: HTMLElement | ISliderModel): void {
@@ -31,27 +31,21 @@ class SliderPresenter implements ISliderPresenter {
     evt.stopPropagation();
     switch (evt.detail.name) {
       case 'valueFrom':
-        this.setValueFrom(evt);
-        break;
       case 'valueTo':
-        this.setValueTo(evt);
-        break;
+        this.setProps(evt.detail.name, this.calcFromToValues(evt));
     }
-    //console.log(evt.detail.name);
   }
 
-  private setValueFrom(evt: CustomEvent) {
-    let value = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.value) + this.model.minValue;
-    this.setProps(evt.detail.name, value);
-  }
-
-  private setValueTo(evt: CustomEvent) {
-    let value = ((this.model.maxValue - this.model.minValue) / 100 * evt.detail.value) + this.model.minValue;
-    this.setProps(evt.detail.name, value);
+  private calcFromToValues(evt: CustomEvent): number {
+    let value: number = (this.model.maxValue - this.model.minValue) / 100;
+    let step = this.model.stepSize / value;
+    step = Math.round(evt.detail.value / step) * step;
+    value = value * step + this.model.minValue;
+    return value;
   }
 
   private observer(key: TMethodsUnion, value: number | boolean) {
-    console.log(this.model);
+    //console.log(key, value);
     this.view.setModelData(key, value);
     this.view.dispatchEvent(new CustomEvent('slider-data', {
       bubbles: true,

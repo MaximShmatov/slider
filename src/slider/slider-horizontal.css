@@ -1,3 +1,9 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .rail {
   display: flex;
   position: relative;
@@ -10,15 +16,10 @@
   cursor: pointer;
 }
 
-.rail__progress {
-  position: absolute;
-  background: white;
-}
-
 .thumb {
+  display: flex;
   z-index: 10;
   position: relative;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -46,8 +47,16 @@
   border-radius: 5px;
 }
 
+.progress {
+  position: absolute;
+  background: white;
+  border-radius: 3px;
+  height: 100%;
+}
+
 .scale {
   display: block;
+  margin-top: 5px;
   cursor: pointer;
 }
 

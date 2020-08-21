@@ -45,6 +45,6 @@ interface JQueryStatic {
 }
 
 interface HTMLElementEventMap {
-  'slider': CustomEvent;
+  'slider-view': CustomEvent;
   'slider-data': CustomEvent;
 }

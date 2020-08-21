@@ -46,15 +46,15 @@ class SliderModel implements ISliderModel {
   }
 
   private initModelFromElement(element: HTMLElement) {
+    this.onVertical = (element.dataset.onVertical === 'true');
+    this.onRange = (element.dataset.onRange === 'true');
+    this.onTooltip = (element.dataset.onTooltip === 'true');
+    this.onScale = (element.dataset.onScale === 'true');
     this.minValue = Number(element.dataset.minValue);
     this.maxValue = Number(element.dataset.maxValue);
     this.valueFrom = Number(element.dataset.valueFrom);
     this.valueTo = Number(element.dataset.valueTo);
     this.stepSize = Number(element.dataset.stepSize);
-    this.onVertical = Boolean(element.dataset.onVertical);
-    this.onRange = Boolean(element.dataset.onRange);
-    this.onTooltip = Boolean(element.dataset.onTooltip);
-    this.onScale = Boolean(element.dataset.onScale);
   }
 
   get minValue(): number {
@@ -67,7 +67,6 @@ class SliderModel implements ISliderModel {
     } else {
       this._minValue = this._maxValue;
     }
-
     if (this._minValue > this._valueFrom) this.valueFrom = this._minValue;
     if (this._minValue > this._valueTo) this._minValue = this._valueTo;
     this._observer('minValue', this._minValue);
@@ -93,7 +92,7 @@ class SliderModel implements ISliderModel {
   }
 
   set valueFrom(valueFrom: number) {
-    if (this._onRange && !this._onVertical) {
+    if (this._onRange) {
       if (valueFrom <= this._valueTo && valueFrom >= this._minValue) {
         this._valueFrom = valueFrom;
       }

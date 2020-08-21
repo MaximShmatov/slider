@@ -1,4 +1,4 @@
-import {SliderPresenter} from "./SliderPresenter";
+import {SliderPresenter} from './SliderPresenter';
 
 class SliderView extends HTMLElement implements ISliderView {
   readonly slider: SliderPresenter = new SliderPresenter(this);
@@ -10,13 +10,16 @@ class SliderView extends HTMLElement implements ISliderView {
     this.className = 'input-slider-view';
     this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
-      this.shadowRoot.innerHTML = `<style>${require('./slider-plugin.css')}</style>`;
+      this.shadowRoot.innerHTML = `
+        <style>${require('./slider-horizontal.css')}</style>
+        <style>${require('./slider-vertical.css')}</style>`;
       this.shadowRoot.appendChild(this.rail);
       this.shadowRoot.appendChild(this.scale);
     }
   }
 
   setModelData(method: TMethodsUnion, value: number | boolean): void {
+    //console.log(method, value)
     switch (method) {
       case 'minValue':
         this.scale.dataset[method] = value.toString();
@@ -38,6 +41,14 @@ class SliderView extends HTMLElement implements ISliderView {
       case 'onRange':
         break;
       case 'onVertical':
+        if (value && this.shadowRoot) {
+          this.shadowRoot.styleSheets[0].disabled = true;
+          this.shadowRoot.styleSheets[1].disabled = false;
+        }
+        if (!value && this.shadowRoot) {
+          this.shadowRoot.styleSheets[1].disabled = true;
+          this.shadowRoot.styleSheets[0].disabled = false;
+        }
         this.scale.dataset[method] = value.toString();
     }
     this.rail.dataset[method] = value.toString();
@@ -74,15 +85,10 @@ class Rail extends HTMLElement {
         break;
       case 'data-on-range':
         this.progress.dataset.onRange = this.dataset.onRange;
-        if (this.dataset.onRange === 'false') {
-          (this.dataset.onVertical === 'true') ? $(this.thumbFrom).hide() : $(this.thumbTo).hide();
-        } else {
-          $(this.thumbFrom).show();
-          $(this.thumbTo).show();
-        }
+        (this.dataset.onRange === 'false') ? $(this.thumbTo).hide() : $(this.thumbTo).show();
         break;
       case 'data-on-vertical':
-        this.thumbTo.dataset.onVertical = this.thumbFrom.dataset.onVertical = this.progress.dataset.onVertical = this.dataset.onVertical;
+        this.progress.dataset.onVertical = this.thumbTo.dataset.onVertical = this.thumbFrom.dataset.onVertical = this.dataset.onVertical;
         break;
       case 'data-value-from':
         this.thumbFrom.dataset.position = this.progress.dataset.positionFrom = this.calcThumbPosition('from').toString();
@@ -109,7 +115,7 @@ class Progress extends HTMLElement {
 
   constructor() {
     super();
-    $(this).addClass('rail__progress');
+    $(this).addClass('progress');
   }
 
   static get observedAttributes() {
@@ -119,31 +125,49 @@ class Progress extends HTMLElement {
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-position-from':
-        $(this).css(`${this._leftOrTop}`, `${this.dataset.positionFrom}%`);
+        this.setPosFrom();
         break;
       case 'data-position-to':
-        if (this.dataset.onRange === 'true') {
-          $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
-        }
+        this.setPosTo();
         break;
       case 'data-on-range':
-        if (this.dataset.onRange === 'false') {
-          $(this).css(`${this._rightOrBottom}`, '0');
-        } else {
-          $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
-        }
+        this.setPosTo();
         break;
       case 'data-on-vertical':
-        if (this.dataset.onVertical === 'true') {
-          $(this).css('width', '100%');
-        } else {
-          $(this).css('height', '100%');
-        }
+        this.setDirection();
+        this.setPosFrom();
+        this.setPosTo();
+    }
+  }
+
+  private setPosFrom() {
+    $(this).css(`${this._leftOrTop}`, `${this.dataset.positionFrom}%`);
+  }
+
+  private setPosTo() {
+    if (this.dataset.onRange === 'true') {
+      $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
+    } else {
+      $(this).css(`${this._rightOrBottom}`, '0');
+    }
+
+  }
+
+  private setDirection() {
+    if (this.dataset.onVertical === 'true') {
+      this._leftOrTop = 'top';
+      this._rightOrBottom = 'bottom';
+      this.style.left = '0';
+    } else {
+      this._leftOrTop = 'left';
+      this._rightOrBottom = 'right';
+      this.style.top = '0';
     }
   }
 }
 
 class Thumb extends HTMLElement {
+  private position: number = 0;
   private clientXorY: 'clientX' | 'clientY' = 'clientX';
   private offsetXorY: number = 0;
   private widthOrHeight: number = 0;
@@ -175,10 +199,12 @@ class Thumb extends HTMLElement {
         this.tooltip.textContent = <string>this.dataset.value;
         break;
       case 'data-position':
-        this.moveToPosition(Number(this.dataset.position));
+        this.position = Number(this.dataset.position);
+        this.moveToPosition(this.position);
         break;
       case 'data-on-vertical':
         this.setPosition();
+        this.moveToPosition(this.position);
         break;
       case 'data-on-tooltip':
         (this.dataset.onTooltip === 'false') ? $(this.tooltip).hide() : $(this.tooltip).show();
@@ -186,7 +212,9 @@ class Thumb extends HTMLElement {
   }
 
   private moveToPosition(position: number): void {
-    $(this).css(`${this.direction}`, `${position}%`)
+    console.log(this.style.left, this.style.right, this.style.top, this.style.bottom, '---')
+    $(this).css(`${this.direction}`, `${position}%`);
+    //console.log('position', position);
   }
 
   private setPosition(): void {
@@ -194,14 +222,16 @@ class Thumb extends HTMLElement {
       const rect = this.parentElement.getBoundingClientRect();
       if (this.dataset.onVertical === 'true') {
         this.clientXorY = 'clientY';
+        this.direction = 'top';
         this.offsetXorY = rect.top;
         this.widthOrHeight = rect.height;
-        this.direction = 'top';
+        this.style.left = '0';
       } else {
         this.clientXorY = 'clientX';
+        this.direction = 'left';
         this.offsetXorY = rect.left;
         this.widthOrHeight = rect.width;
-        this.direction = 'left';
+        this.style.top = '0';
       }
     }
   }
@@ -214,15 +244,15 @@ class Thumb extends HTMLElement {
   }
 
   private onMouseMove(evt: MouseEventInit): void {
-    let position = (<number>evt[this.clientXorY] - this.offsetXorY) / (this.widthOrHeight / 100);
-    if (position < 0) position = 0;
-    if (position > 100) position = 100;
+    this.position = (<number>evt[this.clientXorY] - this.offsetXorY) / (this.widthOrHeight / 100);
+    if (this.position < 0) this.position = 0;
+    if (this.position > 100) this.position = 100;
     //this.moveToPosition(position);
-    this.dispatchEvent(new CustomEvent('slider', {
+    this.dispatchEvent(new CustomEvent('slider-view', {
       bubbles: true,
       cancelable: true,
       composed: true,
-      detail: {name: this.name, value: position}
+      detail: {name: this.name, value: this.position}
     }));
   }
 
@@ -288,11 +318,6 @@ class Scale extends HTMLElement {
         this.render();
         break;
       case 'data-on-vertical':
-        if (this.dataset.onVertical === 'true') {
-          $(this).addClass('scale_vertical');
-        } else {
-          $(this).removeClass('scale_vertical');
-        }
     }
   }
 
@@ -318,7 +343,7 @@ class Scale extends HTMLElement {
         position = (evt.clientX - rect.x) / (rect.width / 100);
       }
     }
-    this.dispatchEvent(new CustomEvent('slider', {
+    this.dispatchEvent(new CustomEvent('slider-view', {
       bubbles: true,
       cancelable: true,
       composed: true,

@@ -1,27 +1,26 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
 .rail {
   display: flex;
+  position: relative;
+  flex-direction: column;
   align-items: center;
   background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
-  height: 6px;
+  width: 6px;
+  height: 100%;
   border: 1px solid rgba(31, 32, 65, 0.25);
   border-radius: 3px;
   box-sizing: border-box;
   cursor: pointer;
 }
-.rail_vertical {
-
-}
-
-.rail__progress {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: white;
-}
 
 .thumb {
-  position: relative;
   display: flex;
+  z-index: 10;
+  position: relative;
   align-items: center;
   justify-content: center;
 }
@@ -42,55 +41,65 @@
   justify-content: center;
   width: 30px;
   height: 20px;
-  top: -35px;
+  left: -45px;
   border: 2px solid #66D2EA;
   background-color: #6FCF97;
   opacity: 0.5;
   border-radius: 5px;
 }
 
+.progress {
+  position: absolute;
+  background: white;
+  border-radius: 3px;
+  width: 100%;
+}
+
 .scale {
-  display: block;
+  display: flex;
+  height: 100%;
+  margin-left: 5px;
   cursor: pointer;
 }
 
 .scale__wrapper {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
 .scale__division {
   display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  width: 100%;
-  height: 8px;
-  border-bottom: 2px solid #66D2EA;
+  flex-direction: column;
   border-right: 2px solid #66D2EA;
-  padding-bottom: 2px;
+  border-top: 2px solid #66D2EA;
+  padding-left: 2px;
+  width: 8px;
+  height: 100%;
 }
 
-.scale__division:first-child {
-  border-left: 2px solid #66D2EA;
+.scale__division:last-child {
+  border-bottom: 2px solid #66D2EA;
 }
 
 .scale__subdivision {
-  width: 100%;
-  height: 5px;
+  width: 5px;
+  height: 100%;
 }
 
-.scale__subdivision:not(:first-child) {
-  border-left: 1px solid #66D2EA;
+.scale__subdivision:not(:last-child) {
+  border-bottom: 1px solid #66D2EA;
 }
 
 .scale__values {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
 }
 
 .scale__values-item {
   display: flex;
+  align-items: center;
   justify-content: center;
-  width: 0;
+  height: 0;
   color: #6FCF97;
 }
