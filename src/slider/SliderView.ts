@@ -194,7 +194,6 @@ class Thumb extends HTMLElement {
   private _direction: 'left' | 'top' = 'left';
   private readonly _name: 'valueFrom' | 'valueTo';
   private readonly _tooltip: HTMLElement = document.createElement('div');
-  private readonly _point: HTMLElement = document.createElement('div');
   private readonly _mouseMove: (evt: MouseEventInit) => void = this.onMouseMove.bind(this);
   private readonly _mouseUp: (evt: MouseEvent) => void = this.onMouseUp.bind(this);
 
@@ -203,9 +202,7 @@ class Thumb extends HTMLElement {
     this._name = name;
     this.className = 'thumb';
     this._tooltip.className = 'thumb__tooltip';
-    this._point.className = 'thumb__point';
     this.appendChild(this._tooltip);
-    this.appendChild(this._point);
     this.addEventListener('mousedown', this.onMouseDown.bind(this));
   }
 
@@ -233,6 +230,10 @@ class Thumb extends HTMLElement {
 
   private moveToPosition(position: number): void {
     $(this).css(`${this._direction}`, `${position}%`);
+    console.log(this.style.left);
+    console.log(this.style.right);
+    console.log(this.style.top);
+    console.log(this.style.bottom);
   }
 
   private setPosition(): void {
