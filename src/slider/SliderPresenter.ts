@@ -1,30 +1,31 @@
 import {SliderModel} from './SliderModel';
+import {SliderView} from './SliderView';
 
 
 class SliderPresenter implements ISliderPresenter {
-  private readonly model: ISliderModel;
-  private readonly view: ISliderView;
-  private readonly methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
+  readonly view: ISliderView;
+  private readonly _model: ISliderModel;
+  private readonly _methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
 
-  constructor(view: ISliderView) {
-    this.view = view;
-    this.model = new SliderModel(this.observer.bind(this));
+  constructor() {
+    this.view = new SliderView(this);
+    this._model = new SliderModel(this.observer.bind(this));
     this.view.addEventListener('slider-view', this.handleViewEvents.bind(this));
   }
 
   init(obj: HTMLElement | ISliderModel): void {
-    this.model.init(obj);
-    for (let method of this.methods) {
-      this.view.setModelData(method, this.model[method]);
+    this._model.init(obj);
+    for (let method of this._methods) {
+      this.view.setModelData(method, this._model[method]);
     }
   }
 
   setProps(method: TMethodsUnion, value: number | boolean): void {
-    this.model[method] = <never>value;
+    this._model[method] = <never>value;
   }
 
   getProps(method: TMethodsUnion): number | boolean {
-    return this.model[method];
+    return this._model[method];
   }
 
   private handleViewEvents(evt: CustomEvent): void {
@@ -37,15 +38,14 @@ class SliderPresenter implements ISliderPresenter {
   }
 
   private calcFromToValues(evt: CustomEvent): number {
-    let value: number = (this.model.maxValue - this.model.minValue) / 100;
-    let step = this.model.stepSize / value;
+    let value: number = (this._model.maxValue - this._model.minValue) / 100;
+    let step = this._model.stepSize / value;
     step = Math.round(evt.detail.value / step) * step;
-    value = value * step + this.model.minValue;
-    return value;
+    value = value * step + this._model.minValue;
+    return Math.round(value);
   }
 
   private observer(key: TMethodsUnion, value: number | boolean) {
-    //console.log(key, value);
     this.view.setModelData(key, value);
     this.view.dispatchEvent(new CustomEvent('slider-data', {
       bubbles: true,

@@ -8,6 +8,7 @@ class ControlPanel {
   private readonly $stepSize: JQuery;
   private readonly $valueFrom: JQuery;
   private readonly $valueTo: JQuery;
+  private readonly $valueRange: JQuery;
   private readonly $onScale: JQuery;
   private readonly $onTooltip: JQuery;
   private readonly $onRange: JQuery;
@@ -29,6 +30,7 @@ class ControlPanel {
     this.$valueTo = $(container)
       .find('.control__value-to')
       .on('input', this.setValueTo.bind(this));
+    this.$valueRange = $(container).find('.control__value-range');
     this.$onTooltip = $(container)
       .find('.control__on-tooltip')
       .on('change', this.toggleTooltip.bind(this));
@@ -83,6 +85,10 @@ class ControlPanel {
     this.$slider.slider('onRange', !this.$slider.slider('onRange'));
   }
 
+  private setRangeValue() {
+    this.$valueRange.val(Number(this.$valueTo.val()) - Number(this.$valueFrom.val()));
+  }
+
   private handleContainerEvents(evt: CustomEvent) {
     switch (evt.detail.name) {
       case 'minValue':
@@ -93,9 +99,11 @@ class ControlPanel {
         break;
       case 'valueFrom':
         this.$valueFrom.val(evt.detail.value);
+        this.setRangeValue();
         break;
       case 'valueTo':
         this.$valueTo.val(evt.detail.value);
+        this.setRangeValue();
         break;
       case 'stepSize':
         this.$stepSize.val(evt.detail.value);

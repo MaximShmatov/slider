@@ -24,7 +24,7 @@ interface ISliderModel {
 }
 
 interface ISliderView extends HTMLElement {
-  slider: ISliderPresenter;
+  slider: ISliderPresenter | null;
   setModelData(method: TMethodsUnion, value: number | boolean): void;
 }
 
