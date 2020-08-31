@@ -10,6 +10,12 @@
   cursor: pointer;
 }
 
+.rail_ver {
+  flex-direction: column;
+  width: 6px;
+  height: 100%;
+}
+
 .thumb {
   display: flex;
   z-index: 10;
@@ -20,6 +26,11 @@
   border: 2px solid white;
   border-radius: 10px;
   padding: 6px;
+}
+
+.thumb_ver {
+  margin-left: -6px;
+  margin-top: -7px;
 }
 
 .thumb__tooltip {
@@ -38,11 +49,21 @@
   border-radius: 5px;
 }
 
+.thumb__tooltip_ver {
+  left: -40px;
+  top: -5px;
+}
+
 .progress {
   position: absolute;
   background: white;
   border-radius: 3px;
   height: 100%;
+}
+
+.progress_ver {
+  width: 100%;
+  height: auto;
 }
 
 .scale {
@@ -51,9 +72,20 @@
   cursor: pointer;
 }
 
+.scale_ver {
+  display: flex;
+  height: 100%;
+  margin-left: 5px;
+   margin-top: 0;
+}
+
 .scale__wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+.scale__wrapper_ver {
+  flex-direction: column;
 }
 
 .scale__division {
@@ -67,8 +99,27 @@
   padding-bottom: 2px;
 }
 
+.scale__division_ver {
+  flex-direction: column;
+  border-right: 2px solid #66D2EA;
+  border-top: 2px solid #66D2EA;
+  padding-left: 2px;
+  width: 8px;
+  height: 100%;
+   border-bottom: none;
+   padding-bottom: 0;
+}
+
 .scale__division:first-child {
   border-left: 2px solid #66D2EA;
+}
+
+.scale__division_ver:last-child {
+  border-bottom: 2px solid #66D2EA;
+}
+
+.scale__division_ver:first-child {
+  border-left: none;
 }
 
 .scale__subdivision {
@@ -76,8 +127,21 @@
   height: 5px;
 }
 
+.scale__subdivision_ver {
+  width: 5px;
+  height: 100%;
+}
+
 .scale__subdivision:not(:first-child) {
   border-left: 1px solid #66D2EA;
+}
+
+.scale__subdivision_ver:not(:last-child) {
+  border-bottom: 1px solid #66D2EA;
+}
+
+.scale__subdivision_ver:not(:first-child) {
+  border-left: none;
 }
 
 .scale__values {
@@ -85,9 +149,20 @@
   justify-content: space-between;
 }
 
-.scale__values-item {
+.scale__values_ver {
+  flex-direction: column;
+}
+
+.scale__valuesItem {
   display: flex;
   justify-content: center;
   width: 0;
   color: #6FCF97;
+  border: 1px solid red;
+}
+
+.scale__valuesItem_ver {
+  align-items: center;
+  height: 0;
+   width: auto;
 }

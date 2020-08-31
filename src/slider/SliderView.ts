@@ -1,8 +1,12 @@
+
+// @ts-ignore
+import styles from './slider-horizontal.css';
+//import './slider-horizontal.css';
 class SliderView extends HTMLElement implements ISliderView {
   readonly slider: ISliderPresenter | null;
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
-  private readonly stylesVer = `${require('./slider-vertical.css')}`;
+  //private readonly stylesVer = `${require('./slider-vertical.css')}`;
   private readonly stylesHor = `${require('./slider-horizontal.css')}`;
   private readonly styles = document.createElement('style');
 
@@ -10,10 +14,10 @@ class SliderView extends HTMLElement implements ISliderView {
     super();
     this.slider = presenter;
     this.className = 'input-slider-view';
-    this.style
     this.attachShadow({mode: 'open'});
     this.style.display = 'flex';
     this.style.justifyContent = 'center';
+    this.styles.innerHTML = this.stylesHor;
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.styles);
       this.shadowRoot.appendChild(this.rail);
@@ -27,7 +31,7 @@ class SliderView extends HTMLElement implements ISliderView {
         this.rail.setAttribute('data-min-value', value.toString());
         this.scale.setAttribute('data-min-value', value.toString());
         break;
-      case 'maxValue':;
+      case 'maxValue':
         this.rail.setAttribute('data-max-value', value.toString());
         this.scale.setAttribute('data-max-value', value.toString());
         break;
@@ -58,11 +62,11 @@ class SliderView extends HTMLElement implements ISliderView {
     if (this.shadowRoot) {
       if (value) {
         this.style.flexDirection = 'row';
-        this.styles.innerHTML = this.stylesVer;
+        //this.styles.innerHTML = this.stylesVer;
       }
       if (!value) {
         this.style.flexDirection = 'column';
-        this.styles.innerHTML = this.stylesHor;
+        //this.styles.innerHTML = this.stylesHor;
       }
     }
   }
@@ -75,8 +79,8 @@ class Rail extends HTMLElement {
 
   constructor() {
     super();
+    this.className = styles.locals.rail
     $(this)
-      .addClass('rail')
       .append(this._thumbFrom)
       .append(this._thumbTo)
       .append(this._progress);
@@ -107,6 +111,7 @@ class Rail extends HTMLElement {
         this._thumbFrom.setAttribute('data-on-vertical', <string>this.dataset.onVertical);
         this._progress.setAttribute('data-on-vertical', <string>this.dataset.onVertical);
         this._thumbTo.setAttribute('data-on-vertical', <string>this.dataset.onVertical);
+        (this.dataset.onVertical === 'true') ? $(this).addClass(styles.locals.rail_ver) : $(this).removeClass(styles.locals.rail_ver);
         break;
       case 'data-value-from':
         this._thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
@@ -135,7 +140,7 @@ class Progress extends HTMLElement {
 
   constructor() {
     super();
-    $(this).addClass('progress');
+    this.className = styles.locals.progress;
   }
 
   static get observedAttributes() {
@@ -154,6 +159,7 @@ class Progress extends HTMLElement {
         this.setPosTo();
         break;
       case 'data-on-vertical':
+        (this.dataset.onVertical === 'true') ? $(this).addClass(styles.locals.progress_ver) : $(this).removeClass(styles.locals.progress_ver)
         this.setDirection();
         this.setPosFrom();
         this.setPosTo();
@@ -200,8 +206,8 @@ class Thumb extends HTMLElement {
   constructor(name: 'valueFrom' | 'valueTo') {
     super();
     this._name = name;
-    this.className = 'thumb';
-    this._tooltip.className = 'thumb__tooltip';
+    this.className = styles.locals.thumb;
+    this._tooltip.className = styles.locals.thumb__tooltip;
     this.appendChild(this._tooltip);
     this.addEventListener('mousedown', this.onMouseDown.bind(this));
   }
@@ -220,6 +226,13 @@ class Thumb extends HTMLElement {
         this.moveToPosition(this._position);
         break;
       case 'data-on-vertical':
+        if (this.dataset.onVertical === 'true') {
+          $(this).addClass(styles.locals.thumb_ver);
+          $(this._tooltip).addClass(styles.locals.thumb__tooltip_ver);
+        } else {
+          $(this).removeClass(styles.locals.thumb_ver);
+          $(this._tooltip).removeClass(styles.locals.thumb__tooltip_ver);
+        }
         this.setPosition();
         this.moveToPosition(this._position);
         break;
@@ -230,10 +243,6 @@ class Thumb extends HTMLElement {
 
   private moveToPosition(position: number): void {
     $(this).css(`${this._direction}`, `${position}%`);
-    console.log(this.style.left);
-    console.log(this.style.right);
-    console.log(this.style.top);
-    console.log(this.style.bottom);
   }
 
   private setPosition(): void {
@@ -286,38 +295,38 @@ class Scale extends HTMLElement {
 
   constructor() {
     super();
-    this.className = 'scale';
+    this.className = styles.locals.scale;
     for (let i = 0; i < 4; i++) {
       this._scaleValueItems[i] = document.createElement('span');
-      this._scaleValueItems[i].className = 'scale__values-item';
+      this._scaleValueItems[i].className = styles.locals.scale__valuesItem;
     }
     let scaleValues: HTMLElement = document.createElement('div');
-    scaleValues.className = 'scale__values'
+    scaleValues.className = styles.locals.scale__values;
     for (let span of this._scaleValueItems) {
       scaleValues.appendChild(span);
     }
     this.innerHTML = `      
-      <div class="scale__wrapper">
-        <div class="scale__division">
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
+      <div class="${styles.locals.scale__wrapper}">
+        <div class="${styles.locals.scale__division}">
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
         </div>
-        <div class="scale__division">
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
+        <div class="${styles.locals.scale__division}">
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
         </div>
-        <div class="scale__division">
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
-          <span class="scale__subdivision"></span>
+        <div class="${styles.locals.scale__division}">
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
+          <span class="${styles.locals.scale__subdivision}"></span>
         </div>
       </div>`;
     this.appendChild(scaleValues);
@@ -335,6 +344,23 @@ class Scale extends HTMLElement {
         break;
       case 'data-max-value':
         this.render();
+        break;
+      case 'data-on-vertical':
+        if (this.dataset.onVertical === 'true') {
+          $(this).addClass(styles.locals.scale_ver);
+          $(this).find(`.${styles.locals.scale__wrapper}`).addClass(styles.locals.scale__wrapper_ver);
+          $(this).find(`.${styles.locals.scale__values}`).addClass(styles.locals.scale__values_ver);
+          $(this).find(`.${styles.locals.scale__valuesItem}`).addClass(styles.locals.scale__valuesItem_ver);
+          $(this).find(`.${styles.locals.scale__division}`).addClass(styles.locals.scale__division_ver);
+          $(this).find(`.${styles.locals.scale__subdivision}`).addClass(styles.locals.scale__subdivision_ver);
+        } else {
+          $(this).removeClass(styles.locals.scale_ver);
+          $(this).find(`.${styles.locals.scale__wrapper}`).removeClass(styles.locals.scale__wrapper_ver);
+          $(this).find(`.${styles.locals.scale__values}`).removeClass(styles.locals.scale__values_ver);
+          $(this).find(`.${styles.locals.scale__valuesItem}`).removeClass(styles.locals.scale__valuesItem_ver);
+          $(this).find(`.${styles.locals.scale__division}`).removeClass(styles.locals.scale__division_ver);
+          $(this).find(`.${styles.locals.scale__subdivision}`).removeClass(styles.locals.scale__subdivision_ver);
+        }
     }
   }
 
