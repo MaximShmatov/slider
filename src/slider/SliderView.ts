@@ -1,13 +1,10 @@
+import styles from './slider.module.sass';
+console.log(styles)
 
-// @ts-ignore
-import styles from './slider-horizontal.css';
-//import './slider-horizontal.css';
 class SliderView extends HTMLElement implements ISliderView {
   readonly slider: ISliderPresenter | null;
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
-  //private readonly stylesVer = `${require('./slider-vertical.css')}`;
-  private readonly stylesHor = `${require('./slider-horizontal.css')}`;
   private readonly styles = document.createElement('style');
 
   constructor(presenter: ISliderPresenter | null) {
@@ -17,7 +14,7 @@ class SliderView extends HTMLElement implements ISliderView {
     this.attachShadow({mode: 'open'});
     this.style.display = 'flex';
     this.style.justifyContent = 'center';
-    this.styles.innerHTML = this.stylesHor;
+    this.styles.innerHTML = styles;
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.styles);
       this.shadowRoot.appendChild(this.rail);
@@ -52,22 +49,9 @@ class SliderView extends HTMLElement implements ISliderView {
         this.scale.setAttribute('data-on-range', value.toString());
         break;
       case 'onVertical':
-        this.toggleStyles(value);
+        (value) ? this.style.flexDirection = 'row': this.style.flexDirection = 'column';
         this.rail.setAttribute('data-on-vertical', value.toString());
         this.scale.setAttribute('data-on-vertical', value.toString());
-    }
-  }
-
-  private toggleStyles(value: number | boolean) {
-    if (this.shadowRoot) {
-      if (value) {
-        this.style.flexDirection = 'row';
-        //this.styles.innerHTML = this.stylesVer;
-      }
-      if (!value) {
-        this.style.flexDirection = 'column';
-        //this.styles.innerHTML = this.stylesHor;
-      }
     }
   }
 }

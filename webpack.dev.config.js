@@ -32,24 +32,21 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(css)$/,
-        exclude: /node_modules/,
-        loader: 'css-loader',
-        options: {
-          modules: true
-        }
-        // use:
-        //   [
-        //     //'to-string-loader',
-        //     //'css-loader'
-        //     'style-loader',
-        //     'css-loader'
-        //   ]
+        test: /\.module\.sass$/,
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            }
+          },
+          'sass-loader'
+        ]
       },
       {
-        test: /\.(sass)$/,
-        use:
-        [
+        test: /\.sass$/,
+        exclude: /\.module\.sass$/,
+        use: [
           'style-loader',
           'css-loader',
           'sass-loader'

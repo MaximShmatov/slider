@@ -86,7 +86,7 @@ class ControlPanel {
   }
 
   private setRangeValue() {
-    this.$valueRange.val(Number(this.$valueTo.val()) - Number(this.$valueFrom.val()));
+    this.$valueRange.text(Number(this.$valueTo.val()) - Number(this.$valueFrom.val()));
   }
 
   private handleContainerEvents(evt: CustomEvent) {
