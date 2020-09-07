@@ -1,3 +1,5 @@
+import instantiate = WebAssembly.instantiate;
+
 class SliderModel implements ISliderModel {
   private _minValue: number = 0;
   private _maxValue: number = 100;
@@ -15,11 +17,18 @@ class SliderModel implements ISliderModel {
     this._observer = observer;
   }
 
-  init(data: HTMLElement | SliderModel | FormData): boolean {
+  init(data: HTMLElement | ISliderData | FormData): boolean {
     try {
-      if (data instanceof HTMLElement) this.initModelFromElement(data);
-      if (data instanceof SliderModel) this.initModelFromObject(data);
-      if (data instanceof FormData) this.initModelFromServer(data);
+      if (data instanceof HTMLElement) {
+        this.initModelFromElement(data);
+        return true;
+      }
+      if (data instanceof FormData) {
+        this.initModelFromServer(data);
+        return true;
+      }
+      this.initModelFromObject(data);
+      console.log('model-2-2');
       return true;
     } catch (e) {
       console.log('Error initialization model', e)
@@ -27,13 +36,14 @@ class SliderModel implements ISliderModel {
     }
   }
 
-  private initModelFromServer(form: FormData): boolean {
-    //let form: FormData = new FormData();
-    //form.append('variant', variant);
+  private initModelFromServer(form: FormData) {
     try {
       fetch(this._serverURL.href, {method: 'POST', body: form})
-        .then((res: Response) => res.json())
-        .then((model: ISliderModel) => this.initModelFromObject(model));
+        .then((res: Response) => {
+          res.json()
+            .then((data: ISliderData) => this.initModelFromObject(data))
+        })
+      console.log('model-2-1');
       return true;
     } catch (e) {
       console.log('Error connection', e)
@@ -41,8 +51,17 @@ class SliderModel implements ISliderModel {
     }
   }
 
-  private initModelFromObject(data: ISliderModel) {
-    Object.assign(this, data);
+  private initModelFromObject(data: ISliderData) {
+    this.onVertical = data.onVertical;
+    this.onRange = data.onRange;
+    this.onTooltip = data.onTooltip;
+    this.onScale = data.onScale;
+    this.minValue = data.minValue;
+    this.maxValue = data.maxValue;
+    this.valueFrom = data.valueFrom;
+    this.valueTo = data.valueTo;
+    this.stepSize = data.stepSize;
+
   }
 
   private initModelFromElement(element: HTMLElement) {
@@ -55,6 +74,7 @@ class SliderModel implements ISliderModel {
     this.valueFrom = Number(element.dataset.valueFrom);
     this.valueTo = Number(element.dataset.valueTo);
     this.stepSize = Number(element.dataset.stepSize);
+    console.log('model-2-3');
   }
 
   get minValue(): number {
@@ -68,7 +88,7 @@ class SliderModel implements ISliderModel {
       this._minValue = this._maxValue;
     }
     if (this._minValue > this._valueFrom) this.valueFrom = this._minValue;
-    if (this._minValue > this._valueTo) this._minValue = this._valueTo;
+    if (this._minValue > this._valueTo) this.valueTo = this._minValue;
     this._observer('minValue', this._minValue);
   }
 
@@ -83,7 +103,7 @@ class SliderModel implements ISliderModel {
       this._maxValue = this._minValue;
     }
     if (this._maxValue < this._valueTo) this.valueTo = this._maxValue;
-    if (this._maxValue < this._valueFrom) this._maxValue = this._valueFrom;
+    if (this._maxValue < this._valueFrom) this.valueFrom = this._maxValue;
     this._observer('maxValue', this._maxValue)
   }
 
@@ -103,10 +123,17 @@ class SliderModel implements ISliderModel {
         this._valueFrom = this._valueTo;
       }
     } else {
-      if (valueFrom >= this._minValue) {
+      if (valueFrom >= this._minValue && valueFrom <= this._maxValue) {
         this._valueFrom = valueFrom;
-      } else {
+      }
+      if (valueFrom > this._maxValue) {
+        this._valueFrom = this._maxValue;
+      }
+      if (valueFrom < this._minValue) {
         this._valueFrom = this._minValue;
+      }
+      if (valueFrom > this._valueTo) {
+        this.valueTo = this._valueFrom;
       }
     }
     this._observer('valueFrom', this._valueFrom)

@@ -1,17 +1,8 @@
 declare module '*.module.sass';
 
-type TMethodsUnion =
-  'minValue'
-  | 'maxValue'
-  | 'stepSize'
-  | 'valueFrom'
-  | 'valueTo'
-  | 'onScale'
-  | 'onTooltip'
-  | 'onRange'
-  | 'onVertical';
+type TMethodsUnion = keyof ISliderData;
 
-interface ISliderModel {
+interface ISliderData {
   minValue: number;
   maxValue: number;
   valueFrom: number;
@@ -21,9 +12,12 @@ interface ISliderModel {
   onRange: boolean;
   onTooltip: boolean;
   onScale: boolean;
+}
+
+interface ISliderModel extends ISliderData {
   serverURL: URL;
 
-  init(data: HTMLElement | ISliderModel | FormData | null): boolean;
+  init(data: HTMLElement | ISliderData | FormData | null): boolean;
 }
 
 interface ISliderView extends HTMLElement {

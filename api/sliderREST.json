@@ -1,23 +1,25 @@
 [
   {
-    "minValue": 1,
-    "maxValue": 100,
+    "minValue": 2,
+    "maxValue": 102,
     "valueFrom": 1,
     "valueTo": 1,
     "stepSize": 1,
     "onVertical": false,
     "onRange": false,
-    "onTooltip": false
+    "onTooltip": false,
+    "onScale": true
   },
   {
-    "minValue": 1,
-    "maxValue": 100,
+    "minValue": 4,
+    "maxValue": 104,
     "valueFrom": 3,
     "valueTo": 7,
     "stepSize": 1,
     "onVertical": true,
     "onRange": false,
-    "onTooltip": false
+    "onTooltip": false,
+    "onScale": true
   },
   {
     "minValue": 1,
@@ -27,7 +29,8 @@
     "stepSize": 10,
     "onVertical": false,
     "onRange": true,
-    "onTooltip": true
+    "onTooltip": true,
+    "onScale": true
   },
   {
     "minValue": 1,
@@ -37,7 +40,8 @@
     "stepSize": 1,
     "onVertical": true,
     "onRange": false,
-    "onTooltip": false
+    "onTooltip": false,
+    "onScale": true
   },
   {
     "minValue": 10,
@@ -47,6 +51,7 @@
     "stepSize": 10,
     "onVertical": false,
     "onRange": true,
-    "onTooltip": true
+    "onTooltip": true,
+    "onScale": true
   }
 ]

@@ -1,8 +1,9 @@
+import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
+import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import styles from './slider.module.sass';
-console.log(styles)
 
 class SliderView extends HTMLElement implements ISliderView {
-  readonly slider: ISliderPresenter | null;
+  readonly slider: ISliderPresenter | null = null;
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
   private readonly styles = document.createElement('style');
@@ -64,10 +65,9 @@ class Rail extends HTMLElement {
   constructor() {
     super();
     this.className = styles.locals.rail
-    $(this)
-      .append(this._thumbFrom)
-      .append(this._thumbTo)
-      .append(this._progress);
+    this.appendChild(this._thumbFrom);
+    this.appendChild(this._thumbTo);
+    this.appendChild(this._progress);
   }
 
   static get observedAttributes() {
@@ -382,10 +382,10 @@ class Scale extends HTMLElement {
   }
 }
 
-export {SliderView}
-
 customElements.define('input-slider', SliderView);
 customElements.define('input-slider-view-thumb', Thumb);
 customElements.define('input-slider-view-rail', Rail);
 customElements.define('input-slider-view-scale', Scale);
 customElements.define('input-slider-view-progress', Progress);
+
+export {SliderView}

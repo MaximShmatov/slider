@@ -1,6 +1,3 @@
-import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-
 import {SliderPresenter} from './SliderPresenter';
 import {SliderView} from './SliderView';
 
