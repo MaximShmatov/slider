@@ -17,41 +17,31 @@ class SliderModel implements ISliderModel {
     this._observer = observer;
   }
 
-  init(data: HTMLElement | ISliderData | FormData): boolean {
-    try {
-      if (data instanceof HTMLElement) {
-        this.initModelFromElement(data);
-        return true;
-      }
+  init(data: HTMLElement | ISliderData | FormData): Promise<any> {
+    if (data instanceof HTMLElement) {
+      return Promise.resolve(this.initModelFromElement(data));
+    } else {
       if (data instanceof FormData) {
-        this.initModelFromServer(data);
-        return true;
+        return this.initModelFromServer(data);
+      } else {
+        return Promise.resolve(this.initModelFromObject(data));
       }
-      this.initModelFromObject(data);
-      console.log('model-2-2');
-      return true;
-    } catch (e) {
-      console.log('Error initialization model', e)
-      return false;
     }
   }
 
   private initModelFromServer(form: FormData) {
-    try {
-      fetch(this._serverURL.href, {method: 'POST', body: form})
-        .then((res: Response) => {
-          res.json()
-            .then((data: ISliderData) => this.initModelFromObject(data))
-        })
-      console.log('model-2-1');
-      return true;
-    } catch (e) {
-      console.log('Error connection', e)
-      return false;
-    }
+    return fetch(this._serverURL.href, {method: 'POST', body: form,})
+      .then((res: Response) => res.json())
+      .then((data: ISliderData) => {
+        console.log('model-2');
+        return this.initModelFromObject(data);
+      })
+      .catch((e) => {
+        console.log('Error connection', e)
+      });
   }
 
-  private initModelFromObject(data: ISliderData) {
+  private initModelFromObject(data: ISliderData): boolean {
     this.onVertical = data.onVertical;
     this.onRange = data.onRange;
     this.onTooltip = data.onTooltip;
@@ -61,10 +51,10 @@ class SliderModel implements ISliderModel {
     this.valueFrom = data.valueFrom;
     this.valueTo = data.valueTo;
     this.stepSize = data.stepSize;
-
+    return true;
   }
 
-  private initModelFromElement(element: HTMLElement) {
+  private initModelFromElement(element: HTMLElement): boolean {
     this.onVertical = (element.dataset.onVertical === 'true');
     this.onRange = (element.dataset.onRange === 'true');
     this.onTooltip = (element.dataset.onTooltip === 'true');
@@ -74,7 +64,7 @@ class SliderModel implements ISliderModel {
     this.valueFrom = Number(element.dataset.valueFrom);
     this.valueTo = Number(element.dataset.valueTo);
     this.stepSize = Number(element.dataset.stepSize);
-    console.log('model-2-3');
+    return true;
   }
 
   get minValue(): number {

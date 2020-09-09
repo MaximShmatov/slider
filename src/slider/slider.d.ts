@@ -17,7 +17,7 @@ interface ISliderData {
 interface ISliderModel extends ISliderData {
   serverURL: URL;
 
-  init(data: HTMLElement | ISliderData | FormData | null): boolean;
+  init(data: HTMLElement | ISliderData | FormData | null): Promise<any>;
 }
 
 interface ISliderView extends HTMLElement {
