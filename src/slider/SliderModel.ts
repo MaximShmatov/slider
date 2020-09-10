@@ -1,5 +1,3 @@
-import instantiate = WebAssembly.instantiate;
-
 class SliderModel implements ISliderModel {
   private _minValue: number = 0;
   private _maxValue: number = 100;
@@ -11,37 +9,37 @@ class SliderModel implements ISliderModel {
   private _onVertical: boolean = false;
   private _onScale: boolean = false;
   private _serverURL: URL = new URL('http://localhost:9000/slider');
-  private readonly _observer: (key: TMethodsUnion, value: boolean | number) => void;
+  private readonly _observer: (key: TMethodsUnion, value: boolean | number | URL) => void;
 
-  constructor(observer: (key: TMethodsUnion, value: number | boolean) => void) {
+  constructor(observer: (key: TMethodsUnion, value: number | boolean | URL) => void) {
     this._observer = observer;
   }
 
-  init(data: HTMLElement | ISliderData | FormData): Promise<any> {
+  init(data: HTMLElement | ISliderData | FormData): Promise<boolean> {
     if (data instanceof HTMLElement) {
-      return Promise.resolve(this.initModelFromElement(data));
+      return this.initModelFromElement(data);
     } else {
       if (data instanceof FormData) {
         return this.initModelFromServer(data);
       } else {
-        return Promise.resolve(this.initModelFromObject(data));
+        return this.initModelFromObject(data);
       }
     }
   }
 
-  private initModelFromServer(form: FormData) {
-    return fetch(this._serverURL.href, {method: 'POST', body: form,})
+  private initModelFromServer(form: FormData): Promise<boolean> {
+    return fetch(this.serverURL.href, {method: 'POST', body: form})
       .then((res: Response) => res.json())
       .then((data: ISliderData) => {
-        console.log('model-2');
         return this.initModelFromObject(data);
       })
       .catch((e) => {
-        console.log('Error connection', e)
+        console.log('Request error', e);
+        return false;
       });
   }
 
-  private initModelFromObject(data: ISliderData): boolean {
+  private async initModelFromObject(data: ISliderData): Promise<boolean> {
     this.onVertical = data.onVertical;
     this.onRange = data.onRange;
     this.onTooltip = data.onTooltip;
@@ -54,7 +52,7 @@ class SliderModel implements ISliderModel {
     return true;
   }
 
-  private initModelFromElement(element: HTMLElement): boolean {
+  private async initModelFromElement(element: HTMLElement): Promise<boolean> {
     this.onVertical = (element.dataset.onVertical === 'true');
     this.onRange = (element.dataset.onRange === 'true');
     this.onTooltip = (element.dataset.onTooltip === 'true');
@@ -152,6 +150,9 @@ class SliderModel implements ISliderModel {
 
   set stepSize(stepSize: number) {
     this._stepSize = stepSize ? stepSize : 1;
+    if (stepSize > (this._maxValue - this._minValue)) {
+      this._stepSize = this._maxValue - this._minValue;
+    }
     this._observer('stepSize', this._stepSize)
   }
 
@@ -189,7 +190,7 @@ class SliderModel implements ISliderModel {
 
   set onScale(onScale: boolean) {
     this._onScale = onScale;
-    this._observer('onScale', this._onScale)
+    this._observer('onScale', this._onScale);
   }
 
   get serverURL(): URL {
@@ -198,6 +199,7 @@ class SliderModel implements ISliderModel {
 
   set serverURL(serverURL: URL) {
     this._serverURL = serverURL;
+    this._observer('onScale', this._serverURL);
   }
 }
 

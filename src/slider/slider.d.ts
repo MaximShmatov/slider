@@ -12,38 +12,33 @@ interface ISliderData {
   onRange: boolean;
   onTooltip: boolean;
   onScale: boolean;
+  serverURL: URL;
 }
 
 interface ISliderModel extends ISliderData {
-  serverURL: URL;
-
-  init(data: HTMLElement | ISliderData | FormData | null): Promise<any>;
+  init(data: HTMLElement | ISliderData | FormData | null): Promise<boolean>;
 }
 
 interface ISliderView extends HTMLElement {
   slider: ISliderPresenter | null;
 
-  setModelData(method: TMethodsUnion, value: number | boolean): void;
+  setModelData(method: TMethodsUnion, value: number | boolean | URL): void;
 }
 
 interface ISliderPresenter {
-  init(obj: HTMLElement | ISliderModel): void;
+  init(obj: HTMLElement | ISliderData): void;
 
-  setProps(method: TMethodsUnion, value: number | boolean): void
+  setProps(method: TMethodsUnion, value: number | boolean | URL): void
 
-  getProps(method: TMethodsUnion): number | boolean;
+  getProps(method: TMethodsUnion): number | boolean | URL;
 }
 
 interface JQuery {
-  slider(method: TMethodsUnion, prop: number | boolean | ISliderModel): JQuery;
+  slider(method: TMethodsUnion, prop: number | boolean | ISliderData | URL): JQuery;
 
-  slider(method: TMethodsUnion): number | boolean;
+  slider(method: TMethodsUnion): number | boolean | URL;
 
   slider(): JQuery;
-}
-
-interface JQueryStatic {
-  slider: ISliderPresenter;
 }
 
 interface HTMLElementEventMap {

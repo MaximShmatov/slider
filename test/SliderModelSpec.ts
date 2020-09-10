@@ -1,152 +1,255 @@
 import {SliderModel} from '../src/slider/SliderModel';
 
 describe('src/slider/SliderModel.ts tests', () => {
-  let model: SliderModel = new SliderModel(callbackFunc.bind(this));
-  let methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
-  let testData: Map<string, number | boolean> = new Map();
-  let testValues: number[] = [-112, 455, 34.5, 0, -11, 10, 0, 120, -28, 0.5, 12.8];
+  let model: SliderModel;
+  let callbackTestData: Map<string, number | boolean | URL>;
+  let resultInitsFromServer: Map<string, number | boolean | URL>[] = [];
+  let checkInitsFromServer: boolean [] = [];
+  let resultInitsFromElement: Map<string, number | boolean | URL>[] = [];
+  let checkInitsFromElement: boolean [] = [];
+  let resultInitsFromObject: Map<string, number | boolean | URL>[] = [];
+  let checkInitsFromObject: boolean [] = [];
+
+
+
+  //let methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
+
+  //let testValues: number[] = [-112, 455, 34.5, 0, -11, 10, 0, 120, -28, 0.5, 12.8];
   //testData.set('minValue', 111).set('maxValue', 222);
-
-  it('Model should be init from server', async () => {
-    let result = await model.init(getTestForms()[0]);
-    expect(result).toBeTruthy();
+  // it('Model should be init from server', async () => {
+  //    await expectAsync(model.init(getTestForms()[0])).toBeResolvedTo(true);
+  //    console.log(model);
+  //   //expect(result).toBeTruthy()
+  // });
+  beforeAll(async () => {
+    model = new SliderModel(callbackFunc.bind(this));
+    callbackTestData = new Map();
+    for (let form of getTestForms()) {
+      try {
+        checkInitsFromServer.push(await model.init(form));
+        resultInitsFromServer.push(callbackTestData);
+      } catch (e) {
+        console.log('Initialization error: ', e)
+      }
+    }
   });
-  describe('Model should be init from HTMLElement', () => {
-    initModel(getTestElements(), (data: HTMLElement) => {
-      describe(`HTMLElement: ${data.outerHTML}`, () => {
-        for (let i = 0; i < methods.length; i++) {
-          it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
-            expect(model[methods[i]]).toBeDefined('undefined');
+  // describe('Model should be init from HTMLElement', () => {
+  //   setTestData(getTestElements(), (data: HTMLElement) => {
+  //     describe(`HTMLElement: ${data.outerHTML}`, () => {
+  //       for (let i = 0; i < methods.length; i++) {
+  //         it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
+  //           expect(model[methods[i]]).toBeDefined('undefined');
+  //         });
+  //       }
+  //     });
+  //   });
+  // });
+  //
+  // describe('Model should be init from objects', () => {
+  //   setTestData(getTestObjects(), (data: ISliderData) => {
+  //     describe(`Object: ${JSON.stringify(data)}`, () => {
+  //       for (let i = 0; i < methods.length; i++) {
+  //         it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
+  //           expect(model[methods[i]]).toBeDefined('undefined');
+  //         });
+  //       }
+  //     });
+  //   });
+  // });
+
+  fdescribe('Model should be initialized from server and be valid', () => {
+    setTestData(getTestForms(), (data: FormData) => {
+      describe(`Initial from server: variant - ${data.get('variant')}`, () => {
+
+        beforeAll(async () => {
+          await model.init(data);
+        });
+
+        // it('Model should be initialized', async () => {
+        //   await expectAsync(model.init(data)).toBeResolvedTo(true);
+        //   console.log(this);
+        //
+        // });
+
+        describe(`Property minValue should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            spyOnProperty(model, 'minValue', 'set');
+            model.minValue = 0;
+            //model.minValue = model.minValue;
+            expect(model.minValue).toHaveBeenCalled();
           });
-        }
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'minValue', 'get');
+            model.minValue = model.minValue;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it(`Should be <= valueFrom property`, () => {
+            expect(model.minValue).toBeLessThanOrEqual(model.valueFrom);
+          });
+          it(`Should be <= valueTo property`, () => {
+            expect(model.minValue).toBeLessThanOrEqual(model.valueTo);
+          });
+          it(`Should be <= maxValue property`, () => {
+            expect(model.minValue).toBeLessThanOrEqual(model.maxValue);
+          });
+        });
+        describe(`Property maxValue should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'maxValue', 'set');
+            model.maxValue = model.maxValue;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'maxValue', 'get');
+            model.maxValue = model.maxValue;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it(`Should be >= valueTo property`, () => {
+            expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
+          });
+          it(`Should be >= valueFrom property`, () => {
+            expect(model.maxValue).toBeGreaterThanOrEqual(model.valueFrom);
+          });
+          it(`Should be >= minValue property`, () => {
+            expect(model.maxValue).toBeGreaterThanOrEqual(model.minValue);
+          });
+        });
+        describe(`Property valueFrom should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'valueFrom', 'set');
+            model.valueFrom = model.valueFrom;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'valueFrom', 'get');
+            model.valueFrom = model.valueFrom;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it(`Should be >= minValue property`, () => {
+            expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
+          });
+          it(`Should be <= valueTo property`, () => {
+            expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
+          });
+          it(`Should be <= maxValue property`, () => {
+            expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
+          });
+        });
+        describe(`Property valueTo should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'valueTo', 'set');
+            model.valueTo = model.valueTo;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'valueTo', 'get');
+            model.valueTo = model.valueTo;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it(`Should be >= minValue property`, () => {
+            expect(model.valueTo).toBeGreaterThanOrEqual(model.minValue);
+          });
+          it(`Should be >= valueFrom property`, () => {
+            expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+          });
+          it(`Should be <= maxValue property`, () => {
+            expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+          });
+        });
+        describe(`Property stepSize should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'stepSize', 'set');
+            model.stepSize = model.stepSize;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'stepSize', 'get');
+            model.stepSize = model.stepSize;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it(`Should be <= (maxValue - minValue)`, () => {
+            expect(model.stepSize).toBeLessThanOrEqual(model.maxValue);
+          });
+        });
+        describe(`Property onVertical should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'onVertical', 'set');
+            model.onVertical = model.onVertical;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'onVertical', 'get');
+            model.onVertical = model.onVertical;
+            expect(testProp).toHaveBeenCalled();
+          });
+        });
+        describe(`Property onRange should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'onRange', 'set');
+            model.onRange = model.onRange;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'onRange', 'get');
+            model.onRange = model.onRange;
+            expect(testProp).toHaveBeenCalled();
+          });
+        });
+        describe(`Property onScale should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'onScale', 'set');
+            model.onScale = model.onScale;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'onScale', 'get');
+            model.onScale = model.onScale;
+            expect(testProp).toHaveBeenCalled();
+          });
+        });
+        describe(`Property onTooltip should be defined and be valid`, () => {
+          it('Should be set property', () => {
+            let testProp = spyOnProperty(model, 'onTooltip', 'set');
+            model.onTooltip = model.onTooltip;
+            expect(testProp).toHaveBeenCalled();
+          });
+          it('Should be get property', () => {
+            let testProp = spyOnProperty(model, 'onTooltip', 'get');
+            model.onTooltip = model.onTooltip;
+            expect(testProp).toHaveBeenCalled();
+          });
+        });
+         // describe(`Property serverURL should be defined and be valid`, () => {
+         //   it('Should be set property', () => {
+         //     let testProp = spyOnProperty(model, 'serverURL', 'set');
+         //     model.serverURL = model.serverURL;
+         //     expect(testProp).toHaveBeenCalled();
+         //   });
+         //   it('Should be get property', () => {
+         //     let testProp = spyOnProperty(model, 'serverURL', 'get');
+         //     model.serverURL = model.serverURL;
+         //     expect(testProp).toHaveBeenCalled();
+         //   });
+         // });
       });
     });
   });
 
-  describe('Model should be init from objects', () => {
-    initModel(getTestObjects(), (data: ISliderData) => {
-      describe(`Object: ${JSON.stringify(data)}`, () => {
-        for (let i = 0; i < methods.length; i++) {
-          it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
-            expect(model[methods[i]]).toBeDefined('undefined');
-          });
-        }
-      });
-    });
-  });
-
-  describe('Model should be init from server', () => {
-    console.log('model-1');
-    initModel(getTestForms(), (data: FormData) => {
-      describe(`Server: variant ${data.get('variant')}`, () => {
-        console.log('model-3');
-        for (let i = 0; i < methods.length; i++) {
-          it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
-            //console.log(testData.get(methods[i]));
-            expect(model[methods[i]]).toBeDefined('undefined');
-            console.log('model-4');
-          });
-        }
-      });
-    });
-  });
-  // it('Model should be init from server', () => {
-  //
-  //   expect(model.init(form)).toBeTruthy('error init model from server')
-  // });
-  //
-  // describe('Property model.onVertical should be valid', () => {
-  //
-  //   it('Property should be true or false', () => {
-  //     expect(model.onVertical || !model.onVertical).toBeTruthy('not(true|false))');
-  //   });
-  // });
-  //
-  // describe('Property model.onRange should be valid', () => {
-  //
-  //   it('Property should be true or false', () => {
-  //     expect(model.onRange || !model.onRange).toBeTruthy('not(true|false))');
-  //   });
-  // });
-  //
-  // describe('Property model.onTooltip should be valid', () => {
-  //
-  //   it('Property should be true or false', () => {
-  //     expect(model.onTooltip || !model.onTooltip).toBeTruthy('not(true|false))');
-  //   });
-  // });
-  //
-  // describe('Property model.onScale should be valid', () => {
-  //
-  //   it('Property should be true or false', () => {
-  //     expect(model.onScale || !model.onScale).toBeTruthy('not(true|false))');
-  //   });
-  // });
-  //
-  // describe('Property model.minValue should be valid', () => {
-  //
-  //   using('Should valid all properties in SliderModel', testValues, (value: number) => {
-  //     it(`Should be: model.minValue (${value}) <= model.maxValue`, () => {
-  //       model.minValue = value;
-  //       expect(model.minValue <= model.maxValue).toBeTruthy(`model.minValue (${model.minValue}) <= model.maxValue (${model.maxValue})`);
-  //     });
-  //   });
-  // });
-  //
-  // describe('Property model.maxValue should be valid', () => {
-  //
-  //   using('Should valid all properties in SliderModel', testValues, (value: number) => {
-  //     it(`Should be: model.maxValue (${value}) >= model.minValue`, () => {
-  //       model.maxValue = value;
-  //       expect(model.maxValue >= model.minValue).toBeTruthy(`model.maxValue (${model.maxValue}) >= model.minValue (${model.minValue})`);
-  //     });
-  //   });
-  // });
-  //
-  // describe('Property model.valueFrom should be valid', () => {
-  //
-  //   using('Should valid all properties in SliderModel', testValues, (value: number) => {
-  //     it(`Should be: model.minValue <= model.valueFrom (${value}) <= model.valueTo `, () => {
-  //       model.valueFrom = value;
-  //       expect((model.valueFrom >= model.minValue) && (model.valueFrom <= model.valueTo))
-  //         .toBeTruthy(`model.minValue (${model.minValue}) <= model.valueFrom (${model.valueFrom}) <= model.valueTo (${model.valueTo})`);
-  //     });
-  //   });
-  // });
-  //
-  // describe('Property model.valueTo should be valid', () => {
-  //
-  //   using('Should valid all properties in SliderModel', testValues, (value: number) => {
-  //     it(`Should be: model.valueFrom <= model.valueTo (${value}) <= model.maxValue`, () => {
-  //       model.valueTo = value;
-  //       expect((model.valueTo >= model.valueFrom) && (model.valueTo <= model.maxValue))
-  //         .toBeTruthy(`model.minValue (${model.valueFrom}) <= model.valueTo (${model.valueTo}) <= model.maxValue (${model.maxValue})`);
-  //     });
-  //   });
-  // });
-  //
-  // describe('Property model.stepSize should be valid', () => {
-  //   it('Property should be defined', () => {
-  //     expect(model.stepSize).toBeDefined('undefined');
-  //   });
-  // });
-  //
-  // describe('Property model.serverURL should be valid', () => {
-  //   it('Property should be defined', () => {
-  //     expect(model.serverURL).toBeDefined(`undefined`);
-  //   });
-  // });
-
-  function callbackFunc(method: TMethodsUnion, value: number | boolean) {
-    testData.set(method, value);
+  function callbackFunc(method: TMethodsUnion, value: number | boolean | URL) {
+    callbackTestData.set(method, value);
   }
 
-  function initModel(values: ISliderData[] | HTMLElement[] | FormData[], func: Function) {
+  // function getSpyon(property: TMethodsUnion, method: 'set' | 'get') {
+  //   return spyOnProperty(model, property, method);
+  // }
+  function setTestData(values: ISliderData[] | HTMLElement[] | FormData[], func: Function) {
     for (let i = 0, count = values.length; i < count; i++) {
       func.apply(Object, [values[i]]);
     }
   }
-
+  function testProps(func: Function) {
+    func.apply(Object);
+  }
   function testProperties(values: Map<string, number | boolean>, func: Function) {
     values.forEach((val, key, map) => {
       func.apply(Object, [key, val]);
@@ -194,7 +297,8 @@ describe('src/slider/SliderModel.ts tests', () => {
         onRange: true,
         onTooltip: true,
         onVertical: true,
-        onScale: true
+        onScale: true,
+        serverURL: new URL('http://localhost:9000/slider')
       },
       {
         minValue: 11,
@@ -205,7 +309,8 @@ describe('src/slider/SliderModel.ts tests', () => {
         onRange: false,
         onTooltip: false,
         onVertical: false,
-        onScale: false
+        onScale: false,
+        serverURL: new URL('http://localhost:9000/slider')
       }
     ];
   }

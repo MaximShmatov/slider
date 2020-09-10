@@ -5,7 +5,7 @@ import {SliderView} from './SliderView';
 class SliderPresenter implements ISliderPresenter {
   readonly view: ISliderView;
   private readonly _model: ISliderModel;
-  private readonly _methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
+  private readonly _methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize', 'serverURL'];
 
   constructor() {
     this.view = new SliderView(this);
@@ -13,18 +13,25 @@ class SliderPresenter implements ISliderPresenter {
     this.view.addEventListener('slider-view', this.handleViewEvents.bind(this));
   }
 
-  init(obj: HTMLElement | ISliderModel): void {
-    this._model.init(obj);
-    for (let method of this._methods) {
-      this.view.setModelData(method, this._model[method]);
-    }
+  init(obj: HTMLElement | ISliderData): void {
+    this._model.init(obj)
+      .then(() => {
+        for (let method of this._methods) {
+          this.view.setModelData(method, this._model[method]);
+        }
+        return true;
+      })
+      .catch((e) => {
+        console.log('Error model initialization', e);
+        return false;
+      });
   }
 
-  setProps(method: TMethodsUnion, value: number | boolean): void {
+  setProps(method: TMethodsUnion, value: number | boolean | URL): void {
     this._model[method] = <never>value;
   }
 
-  getProps(method: TMethodsUnion): number | boolean {
+  getProps(method: TMethodsUnion): number | boolean | URL {
     return this._model[method];
   }
 
@@ -45,7 +52,7 @@ class SliderPresenter implements ISliderPresenter {
     return Math.round(value);
   }
 
-  private observer(key: TMethodsUnion, value: number | boolean) {
+  private observer(key: TMethodsUnion, value: number | boolean | URL) {
     this.view.setModelData(key, value);
     this.view.dispatchEvent(new CustomEvent('slider-data', {
       bubbles: true,

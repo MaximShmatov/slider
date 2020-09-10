@@ -23,7 +23,7 @@ class SliderView extends HTMLElement implements ISliderView {
     }
   }
 
-  setModelData(method: TMethodsUnion, value: number | boolean): void {
+  setModelData(method: TMethodsUnion, value: number | boolean | URL): void {
     switch (method) {
       case 'minValue':
         this.rail.setAttribute('data-min-value', value.toString());

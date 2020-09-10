@@ -2,7 +2,7 @@ import {SliderPresenter} from './SliderPresenter';
 import {SliderView} from './SliderView';
 
 ;(function ($: JQueryStatic): void {
-  $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | ISliderModel): any {
+  $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | URL | ISliderData): any {
 
     if (method === 'init' || method === undefined) {
       let viewArr: ISliderView[] = [];
@@ -15,10 +15,12 @@ import {SliderView} from './SliderView';
           $(this).replaceWith(view);
           viewArr.push(view);
           if (view.slider) {
-            if (typeof prop === 'object') {
+            if (prop instanceof HTMLElement && !(prop instanceof URL)) {
               view.slider.init(prop);
             } else {
-              view.slider.init(this);
+              if (!(prop instanceof URL)) {
+                view.slider.init(this);
+              }
             }
           }
         }
