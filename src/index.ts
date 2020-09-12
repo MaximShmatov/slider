@@ -2,6 +2,18 @@ import './index.sass';
 import './slider/SliderPlugin';
 
 class ControlPanel {
+  private readonly obj: ISliderData = {
+    minValue: 0,
+    maxValue: 100,
+    valueFrom: 10,
+    valueTo: 80,
+    stepSize: 1,
+    onVertical: false,
+    onRange: true,
+    onTooltip: true,
+    onScale: true,
+    serverURL: 'http://localhost:9000/slider'
+  }
   private readonly $slider: JQuery;
   private readonly $minValue: JQuery;
   private readonly $maxValue: JQuery;
@@ -43,10 +55,12 @@ class ControlPanel {
     this.$onScale = $(container)
       .find('.control__on-scale')
       .on('change', this.toggleScale.bind(this));
+    let form = new FormData();
+    form.set('variant', '1');
     this.$slider = $(container)
       .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
       .find('.input-slider-plugin')
-      .slider();
+      .slider('init', this.obj);
   }
 
   private setMinValue(): void {

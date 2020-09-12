@@ -1,19 +1,18 @@
 import {SliderModel} from '../src/slider/SliderModel';
+import SpyObj = jasmine.SpyObj;
 
-describe('src/slider/SliderModel.ts tests', () => {
-  let model: SliderModel;
-  let callbackTestData: Map<string, number | boolean | URL>;
-  let resultInitsFromServer: Map<string, number | boolean | URL>[] = [];
-  let checkInitsFromServer: boolean [] = [];
-  let resultInitsFromElement: Map<string, number | boolean | URL>[] = [];
-  let checkInitsFromElement: boolean [] = [];
-  let resultInitsFromObject: Map<string, number | boolean | URL>[] = [];
-  let checkInitsFromObject: boolean [] = [];
-
-
-
-  //let methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize'];
-
+describe('Testing module src/slider/SliderModel.ts', () => {
+  let model: SliderModel = new SliderModel(callbackFunc.bind(this));
+  let callbackTestData: Map<TMethodsUnion, number | boolean | string> = new Map();
+  // let resultInitsFromServer: Map<string, number | boolean | URL>[] = [];
+  // let checkInitsFromServer: boolean [] = [];
+  // let resultInitsFromElement: Map<string, number | boolean | URL>[] = [];
+  // let checkInitsFromElement: boolean [] = [];
+  // let resultInitsFromObject: Map<string, number | boolean | URL>[] = [];
+  // let checkInitsFromObject: boolean [] = [];
+  let props: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize', 'serverURL'];
+  //let spySetters: SpyObj<any> = jasmine.createSpyObj('spySetters', props);
+  //let spyGetters: SpyObj<any> = jasmine.createSpyObj('spyGetters', props);
   //let testValues: number[] = [-112, 455, 34.5, 0, -11, 10, 0, 120, -28, 0.5, 12.8];
   //testData.set('minValue', 111).set('maxValue', 222);
   // it('Model should be init from server', async () => {
@@ -21,235 +20,207 @@ describe('src/slider/SliderModel.ts tests', () => {
   //    console.log(model);
   //   //expect(result).toBeTruthy()
   // });
-  beforeAll(async () => {
-    model = new SliderModel(callbackFunc.bind(this));
-    callbackTestData = new Map();
-    for (let form of getTestForms()) {
-      try {
-        checkInitsFromServer.push(await model.init(form));
-        resultInitsFromServer.push(callbackTestData);
-      } catch (e) {
-        console.log('Initialization error: ', e)
-      }
-    }
-  });
-  // describe('Model should be init from HTMLElement', () => {
-  //   setTestData(getTestElements(), (data: HTMLElement) => {
-  //     describe(`HTMLElement: ${data.outerHTML}`, () => {
-  //       for (let i = 0; i < methods.length; i++) {
-  //         it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
-  //           expect(model[methods[i]]).toBeDefined('undefined');
-  //         });
-  //       }
-  //     });
-  //   });
+  // beforeAll(() => {
+  //   for (let prop of props) {
+  //     spySetters[prop] = spyOnProperty(model, prop, 'set').and.callThrough();
+  //     //spyGetters[prop] = spyOnProperty(model, prop, 'get').and.callThrough();
+  //   }
   // });
-  //
-  // describe('Model should be init from objects', () => {
-  //   setTestData(getTestObjects(), (data: ISliderData) => {
-  //     describe(`Object: ${JSON.stringify(data)}`, () => {
-  //       for (let i = 0; i < methods.length; i++) {
-  //         it(`Property ${methods[i]} should be defined (${model[methods[i]]})`, () => {
-  //           expect(model[methods[i]]).toBeDefined('undefined');
-  //         });
-  //       }
-  //     });
-  //   });
-  // });
+  //console.log(spySetters);
 
-  fdescribe('Model should be initialized from server and be valid', () => {
+  describe('Model should be initialized from server and be valid', () => {
     setTestData(getTestForms(), (data: FormData) => {
-      describe(`Initial from server: variant - ${data.get('variant')}`, () => {
-
+      console.log('step-1');
+      describe(`Should be initialized from server: variant - ${data.get('variant')}`, () => {
+        //let minValueGetSpy: any;
+        //let minValueSetSpy: any;
         beforeAll(async () => {
-          await model.init(data);
+          //minValueGetSpy = spyOnProperty(model, 'minValue', 'get').and.callThrough();
+          //minValueSetSpy = spyOnProperty(model, 'minValue', 'set').and.callThrough();
+          //console.log('step-3');
+          await expectAsync(model.init(data)).toBeResolvedTo(true);
+          //console.log(callbackTestData);
+          //console.log('step-4');
         });
-
-        // it('Model should be initialized', async () => {
-        //   await expectAsync(model.init(data)).toBeResolvedTo(true);
-        //   console.log(this);
-        //
+        // setTestData(props, (key: TMethodsUnion) => {
+        //   it(`Should be set property "${key}"`, () => {
+        //     expect(spySetters[key]).toHaveBeenCalled();
+        //   });
         // });
 
-        describe(`Property minValue should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            spyOnProperty(model, 'minValue', 'set');
-            model.minValue = 0;
-            //model.minValue = model.minValue;
-            expect(model.minValue).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'minValue', 'get');
-            model.minValue = model.minValue;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it(`Should be <= valueFrom property`, () => {
+        console.log('step-2');
+        describe(`Property minValue should be reading and be valid`, () => {
+          it('Should be <= valueFrom property', () => {
             expect(model.minValue).toBeLessThanOrEqual(model.valueFrom);
           });
-          it(`Should be <= valueTo property`, () => {
-            expect(model.minValue).toBeLessThanOrEqual(model.valueTo);
-          });
-          it(`Should be <= maxValue property`, () => {
-            expect(model.minValue).toBeLessThanOrEqual(model.maxValue);
-          });
+          // it('Should be <= valueTo property', () => {
+          //   expect(model.minValue).toBeLessThanOrEqual(model.valueTo);
+          // });
+          // it('Should be <= maxValue property', () => {
+          //   expect(model.minValue).toBeLessThanOrEqual(model.maxValue);
+          // });
         });
-        describe(`Property maxValue should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'maxValue', 'set');
-            model.maxValue = model.maxValue;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'maxValue', 'get');
-            model.maxValue = model.maxValue;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it(`Should be >= valueTo property`, () => {
-            expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
-          });
-          it(`Should be >= valueFrom property`, () => {
-            expect(model.maxValue).toBeGreaterThanOrEqual(model.valueFrom);
-          });
-          it(`Should be >= minValue property`, () => {
-            expect(model.maxValue).toBeGreaterThanOrEqual(model.minValue);
-          });
-        });
-        describe(`Property valueFrom should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'valueFrom', 'set');
-            model.valueFrom = model.valueFrom;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'valueFrom', 'get');
-            model.valueFrom = model.valueFrom;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it(`Should be >= minValue property`, () => {
-            expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
-          });
-          it(`Should be <= valueTo property`, () => {
-            expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
-          });
-          it(`Should be <= maxValue property`, () => {
-            expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
-          });
-        });
-        describe(`Property valueTo should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'valueTo', 'set');
-            model.valueTo = model.valueTo;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'valueTo', 'get');
-            model.valueTo = model.valueTo;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it(`Should be >= minValue property`, () => {
-            expect(model.valueTo).toBeGreaterThanOrEqual(model.minValue);
-          });
-          it(`Should be >= valueFrom property`, () => {
-            expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
-          });
-          it(`Should be <= maxValue property`, () => {
-            expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
-          });
-        });
-        describe(`Property stepSize should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'stepSize', 'set');
-            model.stepSize = model.stepSize;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'stepSize', 'get');
-            model.stepSize = model.stepSize;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it(`Should be <= (maxValue - minValue)`, () => {
-            expect(model.stepSize).toBeLessThanOrEqual(model.maxValue);
-          });
-        });
-        describe(`Property onVertical should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'onVertical', 'set');
-            model.onVertical = model.onVertical;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'onVertical', 'get');
-            model.onVertical = model.onVertical;
-            expect(testProp).toHaveBeenCalled();
-          });
-        });
-        describe(`Property onRange should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'onRange', 'set');
-            model.onRange = model.onRange;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'onRange', 'get');
-            model.onRange = model.onRange;
-            expect(testProp).toHaveBeenCalled();
-          });
-        });
-        describe(`Property onScale should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'onScale', 'set');
-            model.onScale = model.onScale;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'onScale', 'get');
-            model.onScale = model.onScale;
-            expect(testProp).toHaveBeenCalled();
-          });
-        });
-        describe(`Property onTooltip should be defined and be valid`, () => {
-          it('Should be set property', () => {
-            let testProp = spyOnProperty(model, 'onTooltip', 'set');
-            model.onTooltip = model.onTooltip;
-            expect(testProp).toHaveBeenCalled();
-          });
-          it('Should be get property', () => {
-            let testProp = spyOnProperty(model, 'onTooltip', 'get');
-            model.onTooltip = model.onTooltip;
-            expect(testProp).toHaveBeenCalled();
-          });
-        });
-         // describe(`Property serverURL should be defined and be valid`, () => {
-         //   it('Should be set property', () => {
-         //     let testProp = spyOnProperty(model, 'serverURL', 'set');
-         //     model.serverURL = model.serverURL;
-         //     expect(testProp).toHaveBeenCalled();
-         //   });
-         //   it('Should be get property', () => {
-         //     let testProp = spyOnProperty(model, 'serverURL', 'get');
-         //     model.serverURL = model.serverURL;
-         //     expect(testProp).toHaveBeenCalled();
-         //   });
-         // });
+        // describe(`Property maxValue should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'maxValue', 'set');
+        //     model.maxValue = model.maxValue;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'maxValue', 'get');
+        //     model.maxValue = model.maxValue;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it(`Should be >= valueTo property`, () => {
+        //     expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
+        //   });
+        //   it(`Should be >= valueFrom property`, () => {
+        //     expect(model.maxValue).toBeGreaterThanOrEqual(model.valueFrom);
+        //   });
+        //   it(`Should be >= minValue property`, () => {
+        //     expect(model.maxValue).toBeGreaterThanOrEqual(model.minValue);
+        //   });
+        // });
+        // describe(`Property valueFrom should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'valueFrom', 'set');
+        //     model.valueFrom = model.valueFrom;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'valueFrom', 'get');
+        //     model.valueFrom = model.valueFrom;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it(`Should be >= minValue property`, () => {
+        //     expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
+        //   });
+        //   it(`Should be <= valueTo property`, () => {
+        //     expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
+        //   });
+        //   it(`Should be <= maxValue property`, () => {
+        //     expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
+        //   });
+        // });
+        // describe(`Property valueTo should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'valueTo', 'set');
+        //     model.valueTo = model.valueTo;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'valueTo', 'get');
+        //     model.valueTo = model.valueTo;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it(`Should be >= minValue property`, () => {
+        //     expect(model.valueTo).toBeGreaterThanOrEqual(model.minValue);
+        //   });
+        //   it(`Should be >= valueFrom property`, () => {
+        //     expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+        //   });
+        //   it(`Should be <= maxValue property`, () => {
+        //     expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+        //   });
+        // });
+        // describe(`Property stepSize should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'stepSize', 'set');
+        //     model.stepSize = model.stepSize;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'stepSize', 'get');
+        //     model.stepSize = model.stepSize;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it(`Should be <= (maxValue - minValue)`, () => {
+        //     expect(model.stepSize).toBeLessThanOrEqual(model.maxValue);
+        //   });
+        // });
+        // describe(`Property onVertical should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'onVertical', 'set');
+        //     model.onVertical = model.onVertical;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'onVertical', 'get');
+        //     model.onVertical = model.onVertical;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        // });
+        // describe(`Property onRange should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'onRange', 'set');
+        //     model.onRange = model.onRange;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'onRange', 'get');
+        //     model.onRange = model.onRange;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        // });
+        // describe(`Property onScale should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'onScale', 'set');
+        //     model.onScale = model.onScale;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'onScale', 'get');
+        //     model.onScale = model.onScale;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        // });
+        // describe(`Property onTooltip should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'onTooltip', 'set');
+        //     model.onTooltip = model.onTooltip;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'onTooltip', 'get');
+        //     model.onTooltip = model.onTooltip;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        // });
+        // describe(`Property serverURL should be defined and be valid`, () => {
+        //   it('Should be set property', () => {
+        //     let testProp = spyOnProperty(model, 'serverURL', 'set');
+        //     //console.log(model.serverURL);
+        //     //console.log(model.minValue);
+        //     model.serverURL = model.serverURL;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        //   it('Should be get property', () => {
+        //     let testProp = spyOnProperty(model, 'serverURL', 'get');
+        //     model.serverURL = model.serverURL;
+        //     expect(testProp).toHaveBeenCalled();
+        //   });
+        // });
       });
     });
   });
 
-  function callbackFunc(method: TMethodsUnion, value: number | boolean | URL) {
+  function callbackFunc(method: TMethodsUnion, value: number | boolean | string) {
     callbackTestData.set(method, value);
   }
 
   // function getSpyon(property: TMethodsUnion, method: 'set' | 'get') {
   //   return spyOnProperty(model, property, method);
   // }
-  function setTestData(values: ISliderData[] | HTMLElement[] | FormData[], func: Function) {
-    for (let i = 0, count = values.length; i < count; i++) {
+  function setTestData(values: ISliderData[] | HTMLElement[] | FormData[] | TMethodsUnion[], func: Function) {
+    for (let i = 0; i < values.length; i++) {
       func.apply(Object, [values[i]]);
     }
   }
+
   function testProps(func: Function) {
     func.apply(Object);
   }
+
   function testProperties(values: Map<string, number | boolean>, func: Function) {
     values.forEach((val, key, map) => {
       func.apply(Object, [key, val]);
@@ -298,7 +269,7 @@ describe('src/slider/SliderModel.ts tests', () => {
         onTooltip: true,
         onVertical: true,
         onScale: true,
-        serverURL: new URL('http://localhost:9000/slider')
+        serverURL: 'http://localhost:9000/slider'
       },
       {
         minValue: 11,
@@ -310,7 +281,7 @@ describe('src/slider/SliderModel.ts tests', () => {
         onTooltip: false,
         onVertical: false,
         onScale: false,
-        serverURL: new URL('http://localhost:9000/slider')
+        serverURL: 'http://localhost:9000/slider'
       }
     ];
   }

@@ -3,14 +3,14 @@ import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import styles from './slider.module.sass';
 
 class SliderView extends HTMLElement implements ISliderView {
-  readonly slider: ISliderPresenter | null = null;
+  readonly presenter: ISliderPresenter | null = null;
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
   private readonly styles = document.createElement('style');
 
   constructor(presenter: ISliderPresenter | null) {
     super();
-    this.slider = presenter;
+    this.presenter = presenter;
     this.className = 'input-slider-view';
     this.attachShadow({mode: 'open'});
     this.style.display = 'flex';
@@ -23,7 +23,7 @@ class SliderView extends HTMLElement implements ISliderView {
     }
   }
 
-  setModelData(method: TMethodsUnion, value: number | boolean | URL): void {
+  setModelData(method: TMethodsUnion, value: number | boolean | string): void {
     switch (method) {
       case 'minValue':
         this.rail.setAttribute('data-min-value', value.toString());

@@ -12,7 +12,7 @@ interface ISliderData {
   onRange: boolean;
   onTooltip: boolean;
   onScale: boolean;
-  serverURL: URL;
+  serverURL: string;
 }
 
 interface ISliderModel extends ISliderData {
@@ -20,23 +20,27 @@ interface ISliderModel extends ISliderData {
 }
 
 interface ISliderView extends HTMLElement {
-  slider: ISliderPresenter | null;
+  presenter: ISliderPresenter | null;
 
-  setModelData(method: TMethodsUnion, value: number | boolean | URL): void;
+  setModelData(method: TMethodsUnion, value: number | boolean | string): void;
 }
 
 interface ISliderPresenter {
-  init(obj: HTMLElement | ISliderData): void;
+  init(obj: HTMLElement | ISliderData | FormData): void;
 
-  setProps(method: TMethodsUnion, value: number | boolean | URL): void
+  setProps(method: TMethodsUnion, value: number | boolean | string): void
 
-  getProps(method: TMethodsUnion): number | boolean | URL;
+  getProps(method: TMethodsUnion): number | boolean | string;
 }
 
 interface JQuery {
-  slider(method: TMethodsUnion, prop: number | boolean | ISliderData | URL): JQuery;
+  slider(method: 'init', prop: HTMLElement | ISliderData | FormData): JQuery;
 
-  slider(method: TMethodsUnion): number | boolean | URL;
+  slider(method: 'init'): JQuery;
+
+  slider(method: TMethodsUnion): number | boolean | string;
+
+  slider(method: TMethodsUnion, prop: number | boolean | string): void;
 
   slider(): JQuery;
 }

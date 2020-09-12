@@ -8,10 +8,10 @@ class SliderModel implements ISliderModel {
   private _onTooltip: boolean = false;
   private _onVertical: boolean = false;
   private _onScale: boolean = false;
-  private _serverURL: URL = new URL('http://localhost:9000/slider');
-  private readonly _observer: (key: TMethodsUnion, value: boolean | number | URL) => void;
+  private _serverURL: string = 'http://localhost:9000/slider';
+  private readonly _observer: (key: TMethodsUnion, value: boolean | number | string) => void;
 
-  constructor(observer: (key: TMethodsUnion, value: number | boolean | URL) => void) {
+  constructor(observer: (key: TMethodsUnion, value: number | boolean | string) => void) {
     this._observer = observer;
   }
 
@@ -28,7 +28,7 @@ class SliderModel implements ISliderModel {
   }
 
   private initModelFromServer(form: FormData): Promise<boolean> {
-    return fetch(this.serverURL.href, {method: 'POST', body: form})
+    return fetch(this.serverURL, {method: 'POST', body: form})
       .then((res: Response) => res.json())
       .then((data: ISliderData) => {
         return this.initModelFromObject(data);
@@ -49,6 +49,7 @@ class SliderModel implements ISliderModel {
     this.valueFrom = data.valueFrom;
     this.valueTo = data.valueTo;
     this.stepSize = data.stepSize;
+    this.serverURL = data.serverURL;
     return true;
   }
 
@@ -193,11 +194,11 @@ class SliderModel implements ISliderModel {
     this._observer('onScale', this._onScale);
   }
 
-  get serverURL(): URL {
+  get serverURL(): string {
     return this._serverURL;
   }
 
-  set serverURL(serverURL: URL) {
+  set serverURL(serverURL: string) {
     this._serverURL = serverURL;
     this._observer('onScale', this._serverURL);
   }

@@ -1,44 +1,54 @@
 import {SliderPresenter} from './SliderPresenter';
-import {SliderView} from './SliderView';
+
 
 ;(function ($: JQueryStatic): void {
-  $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | URL | ISliderData): any {
+  $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | string | FormData | ISliderData | HTMLElement): any {
 
-    if (method === 'init' || method === undefined) {
-      let viewArr: ISliderView[] = [];
-      let view: ISliderView;
+    let viewArr: ISliderView[] = [];
+
+    if (method === undefined) {
       this.each(function () {
-        if (this instanceof SliderView) {
-          viewArr.push(this);
+        if (this.constructor.name === 'SliderView') {
+          viewArr.push(<ISliderView>this);
+        }
+      });
+      return $().pushStack(viewArr);
+    }
+
+    if (method === 'init') {
+      this.each(function () {
+        if (this.constructor.name === 'SliderView') {
+          viewArr.push(<ISliderView>this);
         } else {
-          view = new SliderPresenter().view;
-          $(this).replaceWith(view);
-          viewArr.push(view);
-          if (view.slider) {
-            if (prop instanceof HTMLElement && !(prop instanceof URL)) {
-              view.slider.init(prop);
-            } else {
-              if (!(prop instanceof URL)) {
-                view.slider.init(this);
-              }
-            }
+          let presenter = new SliderPresenter();
+          $(this).replaceWith(presenter.view);
+          viewArr.push(presenter.view);
+          if (prop === undefined) {
+            presenter.init(this);
+          } else {
+            presenter.init(<HTMLElement | FormData | ISliderData>prop);
           }
         }
-      })
+      });
       return $().pushStack(viewArr);
     }
 
     if (method) {
-      if (prop !== undefined && (typeof prop !== 'object')) {
+      if (prop === undefined && this[0].constructor.name === 'SliderView') {
+        let element = <ISliderView>this[0];
+        if(element.presenter) {
+          return element.presenter.getProps(method);
+        }
+      } else {
         this.each(function () {
-          if (this instanceof SliderView && this.slider) {
-            this.slider.setProps(method, prop);
+          if (this.constructor.name === 'SliderView') {
+            let element = <ISliderView>this;
+            if(element.presenter) {
+              return element.presenter.setProps(method, <number | boolean | string>prop);
+            }
           }
-        })
+        });
         return this;
-      }
-      if (this[0] instanceof SliderView && this[0].slider) {
-        return this[0].slider.getProps(method);
       }
     }
   }

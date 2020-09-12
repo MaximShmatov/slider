@@ -13,6 +13,6 @@ describe('src/slider/SliderView.ts tests', () => {
   });
 
   it('Should be defined view.slider', () => {
-    expect(view.slider).toBeDefined('should be defined');
+    expect(view.presenter).toBeDefined('should be defined');
   });
 });

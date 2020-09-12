@@ -5,20 +5,17 @@ import {SliderView} from './SliderView';
 class SliderPresenter implements ISliderPresenter {
   readonly view: ISliderView;
   private readonly _model: ISliderModel;
-  private readonly _methods: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize', 'serverURL'];
 
   constructor() {
-    this.view = new SliderView(this);
     this._model = new SliderModel(this.observer.bind(this));
+    this.view = new SliderView(this);
     this.view.addEventListener('slider-view', this.handleViewEvents.bind(this));
   }
 
-  init(obj: HTMLElement | ISliderData): void {
+  init(obj: HTMLElement | ISliderData | FormData): void {
     this._model.init(obj)
       .then(() => {
-        for (let method of this._methods) {
-          this.view.setModelData(method, this._model[method]);
-        }
+        console.log('initialization Model successful');
         return true;
       })
       .catch((e) => {
@@ -27,11 +24,11 @@ class SliderPresenter implements ISliderPresenter {
       });
   }
 
-  setProps(method: TMethodsUnion, value: number | boolean | URL): void {
+  setProps(method: TMethodsUnion, value: number | boolean | string): void {
     this._model[method] = <never>value;
   }
 
-  getProps(method: TMethodsUnion): number | boolean | URL {
+  getProps(method: TMethodsUnion): number | boolean | string {
     return this._model[method];
   }
 
@@ -52,7 +49,7 @@ class SliderPresenter implements ISliderPresenter {
     return Math.round(value);
   }
 
-  private observer(key: TMethodsUnion, value: number | boolean | URL) {
+  private observer(key: TMethodsUnion, value: number | boolean | string) {
     this.view.setModelData(key, value);
     this.view.dispatchEvent(new CustomEvent('slider-data', {
       bubbles: true,
