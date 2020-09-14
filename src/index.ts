@@ -60,7 +60,7 @@ class ControlPanel {
     this.$slider = $(container)
       .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
       .find('.input-slider-plugin')
-      .slider('init', this.obj);
+      .slider('init');
   }
 
   private setMinValue(): void {

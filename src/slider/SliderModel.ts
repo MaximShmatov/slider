@@ -34,7 +34,7 @@ class SliderModel implements ISliderModel {
         return this.initModelFromObject(data);
       })
       .catch((e) => {
-        console.log('Request error', e);
+        console.log('Request error2:', e);
         return false;
       });
   }
@@ -55,14 +55,15 @@ class SliderModel implements ISliderModel {
 
   private async initModelFromElement(element: HTMLElement): Promise<boolean> {
     this.onVertical = (element.dataset.onVertical === 'true');
-    this.onRange = (element.dataset.onRange === 'true');
     this.onTooltip = (element.dataset.onTooltip === 'true');
     this.onScale = (element.dataset.onScale === 'true');
+    this.onRange = (element.dataset.onRange === 'true');
     this.minValue = Number(element.dataset.minValue);
     this.maxValue = Number(element.dataset.maxValue);
     this.valueFrom = Number(element.dataset.valueFrom);
     this.valueTo = Number(element.dataset.valueTo);
     this.stepSize = Number(element.dataset.stepSize);
+    this.serverURL = String(element.dataset.serverURL);
     return true;
   }
 
@@ -200,7 +201,7 @@ class SliderModel implements ISliderModel {
 
   set serverURL(serverURL: string) {
     this._serverURL = serverURL;
-    this._observer('onScale', this._serverURL);
+    this._observer('serverURL', this._serverURL);
   }
 }
 
