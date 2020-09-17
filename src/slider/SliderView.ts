@@ -285,7 +285,7 @@ class Scale extends HTMLElement {
       this._scaleValueItems[i] = document.createElement('span');
       this._scaleValueItems[i].className = styles.locals.scale__valuesItem;
     }
-    let scaleValues: HTMLElement = document.createElement('div');
+    const scaleValues: HTMLElement = document.createElement('div');
     scaleValues.className = styles.locals.scale__values;
     for (let span of this._scaleValueItems) {
       scaleValues.appendChild(span);
@@ -350,9 +350,9 @@ class Scale extends HTMLElement {
   }
 
   private render(): void {
-    let min = Number(this.dataset.minValue);
-    let max = Number(this.dataset.maxValue);
-    let scaleValue = (max - min) / 3;
+    const min = Number(this.dataset.minValue);
+    const max = Number(this.dataset.maxValue);
+    const scaleValue = (max - min) / 3;
     this._scaleValueItems[0].textContent = min.toFixed();
     this._scaleValueItems[1].textContent = (min + scaleValue).toFixed();
     this._scaleValueItems[2].textContent = (min + scaleValue + scaleValue).toFixed();
@@ -360,7 +360,7 @@ class Scale extends HTMLElement {
   }
 
   private handleMouseDown(evt: MouseEventInit) {
-    let rect = this.getBoundingClientRect();
+    const rect = this.getBoundingClientRect();
     let position: number = 0;
     if (evt.clientX && evt.clientY) {
       if (this.dataset.onVertical === 'true') {
