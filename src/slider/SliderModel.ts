@@ -34,7 +34,7 @@ class SliderModel implements ISliderModel {
         return this.initModelFromObject(data);
       })
       .catch((e) => {
-        console.log('Request error2:', e);
+        console.log('Request error:', e);
         return false;
       });
   }

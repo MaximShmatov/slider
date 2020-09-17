@@ -1,3 +1,4 @@
+import * as $ from 'jquery';
 import './index.sass';
 import './slider/SliderPlugin';
 
@@ -56,7 +57,7 @@ class ControlPanel {
       .find('.control__on-scale')
       .on('change', this.toggleScale.bind(this));
     let form = new FormData();
-    form.set('variant', '1');
+    //form.set('variant', '1');
     this.$slider = $(container)
       .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
       .find('.input-slider-plugin')

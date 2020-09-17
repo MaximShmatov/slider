@@ -1,4 +1,6 @@
+import * as jQuery from 'jquery';
 import {SliderPresenter} from './SliderPresenter';
+import {SliderView} from "./SliderView";
 
 
 ;(function ($: JQueryStatic): void {
@@ -8,7 +10,7 @@ import {SliderPresenter} from './SliderPresenter';
 
     if (method === undefined) {
       this.each(function () {
-        if (this.constructor.name === 'SliderView') {
+        if (this instanceof SliderView) {
           viewArr.push(<ISliderView>this);
         }
       });
@@ -17,7 +19,7 @@ import {SliderPresenter} from './SliderPresenter';
 
     if (method === 'init') {
       this.each(function () {
-        if (this.constructor.name === 'SliderView') {
+        if (this instanceof SliderView) {
           viewArr.push(<ISliderView>this);
         } else {
           let presenter = new SliderPresenter();
@@ -34,17 +36,15 @@ import {SliderPresenter} from './SliderPresenter';
     }
 
     if (method) {
-      if (prop === undefined && this[0].constructor.name === 'SliderView') {
-        let element = <ISliderView>this[0];
-        if(element.presenter) {
-          return element.presenter.getProps(method);
+      if (prop === undefined && this[0] instanceof SliderView) {
+        if(this[0].presenter) {
+          return this[0].presenter.getProps(method);
         }
       } else {
         this.each(function () {
-          if (this.constructor.name === 'SliderView') {
-            let element = <ISliderView>this;
-            if(element.presenter) {
-              return element.presenter.setProps(method, <number | boolean | string>prop);
+          if (this instanceof SliderView) {
+            if(this.presenter) {
+              return this.presenter.setProps(method, <number | boolean | string>prop);
             }
           }
         });
