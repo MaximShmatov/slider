@@ -161,7 +161,6 @@ class Progress extends HTMLElement {
     } else {
       $(this).css(`${this._rightOrBottom}`, '0');
     }
-
   }
 
   private setDirection() {
