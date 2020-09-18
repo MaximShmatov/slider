@@ -5,14 +5,14 @@ describe('Testing module src/slider/SliderView.ts', () => {
   const view = new SliderView(null);
   let spySetModelData: jasmine.Spy;
   const model = {
-    minValue: 0,
-    maxValue: 100,
-    valueFrom: 10,
-    valueTo: 90,
+    minValue: 12,
+    maxValue: 105,
+    valueFrom: 33,
+    valueTo: 17,
     onRange: true,
     onTooltip: true,
     onVertical: true,
-    onScale: false,
+    onScale: true,
   }
 
   beforeAll(() => {
@@ -27,7 +27,6 @@ describe('Testing module src/slider/SliderView.ts', () => {
     view.setModelData('onVertical', model.onVertical);
     view.setModelData('onTooltip', model.onTooltip);
   });
-
   it('View should be defined', () => {
     expect(view).toBeInstanceOf(SliderView);
   });
@@ -76,25 +75,28 @@ describe('Testing module src/slider/SliderView.ts', () => {
       expect(scale).toBeInstanceOf(HTMLElement)
     });
     it('The "view.shadowRoot" element must include style element', () => {
-      expect(shadowRoot.querySelectorAll('style').length).toEqual(1);
+      expect(shadowRoot.querySelector('style')).toBeInstanceOf(HTMLElement);
     });
     it('Should switch on/off scale', () => {
-      expect(scale.style.display).toMatch(/^$|none/);
+      if (model.onScale) {
+        expect(scale.style.display).toEqual('');
+      } else {
+        expect(scale.style.display).toEqual('none');
+      }
     });
+
     describe('Testing element "input-slider-view-rail"', () => {
       const positionFrom: number = (model.valueFrom - model.minValue) / ((model.maxValue - model.minValue) / 100);
       const positionTo: number = (model.valueTo - model.minValue) / ((model.maxValue - model.minValue) / 100);
       let thumbFrom: HTMLElement;
       let thumbTo: HTMLElement;
       let progress: HTMLElement;
-      let onRange: boolean;
       beforeAll(() => {
         const thumbs = rail.querySelectorAll('input-slider-view-thumb');
         if (thumbs[0] instanceof HTMLElement) thumbFrom = thumbs[0];
         if (thumbs[1] instanceof HTMLElement) thumbTo = thumbs[1];
         let element = rail.querySelector('input-slider-view-progress');
         if (element instanceof HTMLElement) progress = element;
-        onRange = rail.getAttribute('data-on-range') === 'true';
       });
       it('Must include element "input-slider-view-progress"', () => {
         expect(progress).toBeInstanceOf(HTMLElement);
@@ -124,29 +126,27 @@ describe('Testing module src/slider/SliderView.ts', () => {
         expect(rail.getAttribute('data-on-tooltip')).toEqual(String(model.onTooltip));
       });
       it(`The attribute "data-on-range" must be set to "${model.onRange}"`, () => {
-        expect(onRange).toEqual(model.onRange);
+        expect(rail.getAttribute('data-on-range')).toEqual(String(model.onRange));
       });
       it(`The attribute "data-on-vertical" must be set to "${model.onVertical}"`, () => {
         expect(rail.getAttribute('data-on-vertical')).toEqual(String(model.onVertical));
       });
-      it('Should switch on/off thumbTo', () => {
-        expect(thumbTo.style.display).toMatch(/^$|none/);
-      });
-      it('Should switch classes from horizontal or vertical position', () => {
-        if (rail.getAttribute('data-on-vertical') === 'true') {
+      it('Should switch to horizontal or vertical position', () => {
+        if (model.onVertical) {
           expect(rail).toHaveClass(styles.locals.rail_ver);
         } else {
           expect(rail).not.toHaveClass(styles.locals.rail_ver);
         }
       });
+      it('Should switch on/off thumbTo', () => {
+        if (model.onRange) {
+          expect(thumbTo.style.display).not.toEqual('none');
+        } else {
+          expect(thumbTo.style.display).toEqual('none');
+        }
+      });
 
       describe('Testing element "input-slider-view-progress"', () => {
-        let onVertical: boolean;
-        let onRange: boolean;
-        beforeAll(() => {
-          onVertical = scale.getAttribute('data-on-vertical') === 'true';
-          onRange = scale.getAttribute('data-on-range') === 'true';
-        });
         it('The attribute "class" must be set to "progress"', () => {
           expect(progress).toHaveClass(styles.locals.progress);
         });
@@ -157,30 +157,30 @@ describe('Testing module src/slider/SliderView.ts', () => {
           expect(progress.getAttribute('data-position-to')).toEqual(positionTo.toString());
         });
         it(`The attribute "data-on-range" must be set to "${model.onRange}"`, () => {
-          expect(onRange).toEqual(model.onRange);
+          expect(progress.getAttribute('data-on-range')).toEqual(String(model.onRange));
         });
         it(`The attribute "data-on-vertical" must be set to "${model.onVertical}"`, () => {
-          expect(onVertical).toEqual(model.onVertical);
+          expect(progress.getAttribute('data-on-vertical')).toEqual(String(model.onVertical));
         });
         it('Should switch to horizontal or vertical position', () => {
-          if (onVertical) {
+          if (model.onVertical) {
             expect(progress).toHaveClass(styles.locals.progress_ver);
           } else {
             expect(progress).not.toHaveClass(styles.locals.rail_ver);
           }
         });
-        it('Positions (top, right, bottom, lef) must be set', () => {
-          if (onVertical) {
-            expect(progress.style.top).toEqual(`${positionFrom.toString()}%`);
-            if (onRange) {
-              expect(progress.style.bottom).toEqual(`${(100 - positionTo).toString()}%`);
+        it('Positions (top, right, bottom, lef) must be set ', () => {
+          if (model.onVertical) {
+            expect(Number(progress.style.top.slice(0, -1))).toBeCloseTo(positionFrom);
+            if (model.onRange) {
+              expect(Number(progress.style.bottom.slice(0, -1))).toBeCloseTo(100 - positionTo);
             } else {
               expect(progress.style.bottom).toEqual('0px');
             }
           } else {
-            expect(progress.style.left).toEqual(`${positionFrom.toString()}%`);
-            if (onRange) {
-              expect(progress.style.right).toEqual(`${(100 - positionTo).toString()}%`);
+            expect(Number(progress.style.left.slice(0, -1))).toBeCloseTo(positionFrom);
+            if (model.onRange) {
+              expect(Number(progress.style.right.slice(0, -1))).toBeCloseTo(100 - positionTo);
             } else {
               expect(progress.style.right).toEqual('0px');
             }
@@ -191,20 +191,12 @@ describe('Testing module src/slider/SliderView.ts', () => {
       describe('Testing element "input-slider-view-thumb"', () => {
         let tooltipFrom: HTMLElement;
         let tooltipTo: HTMLElement;
-        let onVerticalFrom: boolean;
-        let onVerticalTo: boolean;
-        let onTooltipFrom: boolean;
-        let onTooltipTo: boolean;
         beforeAll(() => {
           let element: HTMLElement | null;
           element = thumbFrom.querySelector(`.${styles.locals.thumb__tooltip}`);
           if (element) tooltipFrom = element;
           element = thumbTo.querySelector(`.${styles.locals.thumb__tooltip}`);
           if (element) tooltipTo = element;
-          onVerticalFrom = thumbFrom.getAttribute('data-on-vertical') === 'true';
-          onVerticalTo = thumbFrom.getAttribute('data-on-vertical') === 'true';
-          onTooltipFrom = thumbFrom.getAttribute('data-on-tooltip') === 'true';
-          onTooltipTo = thumbFrom.getAttribute('data-on-tooltip') === 'true';
         });
         it('The attribute "class" must be set to "thumb"', () => {
           expect(thumbFrom).toHaveClass(styles.locals.thumb);
@@ -223,32 +215,32 @@ describe('Testing module src/slider/SliderView.ts', () => {
           expect(thumbTo.getAttribute('data-position')).toEqual(positionTo.toString());
         });
         it(`The attribute "data-on-vertical" must be set to "${model.onVertical}"`, () => {
-          expect(onVerticalFrom).toEqual(model.onVertical);
-          expect(onVerticalTo).toEqual(model.onVertical);
+          expect(thumbFrom.getAttribute('data-on-vertical')).toEqual(String(model.onVertical));
+          expect(thumbTo.getAttribute('data-on-vertical')).toEqual(String(model.onVertical));
         });
         it(`The attribute "data-on-tooltip" must be set to "${model.onTooltip}"`, () => {
-          expect(onTooltipFrom).toEqual(model.onTooltip);
-          expect(onTooltipTo).toEqual(model.onTooltip);
+          expect(thumbFrom.getAttribute('data-on-tooltip')).toEqual(String(model.onTooltip));
+          expect(thumbTo.getAttribute('data-on-tooltip')).toEqual(String(model.onTooltip));
         });
         it(`Must be set text content from tooltipFrom (${model.valueFrom}) or tooltipTo (${model.valueTo})`, () => {
           expect(tooltipFrom.textContent).toEqual(model.valueFrom.toFixed());
-          expect(tooltipTo.textContent).toEqual((100 - model.valueFrom).toFixed());
+          expect(tooltipTo.textContent).toEqual(model.valueTo.toFixed());
         });
         it('Should be set left or top positions ', () => {
-          if (onVerticalFrom && onVerticalTo) {
-            expect(thumbFrom.style.top).toEqual(`${positionFrom}%`);
-            expect(thumbTo.style.top).toEqual(`${positionTo}%`);
+          if (model.onVertical) {
+            expect(Number(thumbFrom.style.top.slice(0, -1))).toBeCloseTo(positionFrom);
+            expect(Number(thumbTo.style.top.slice(0, -1))).toBeCloseTo(positionTo);
             expect(thumbFrom.style.left).toEqual('0px');
             expect(thumbTo.style.left).toEqual('0px');
           } else {
-            expect(thumbFrom.style.left).toEqual(`${positionFrom}%`);
-            expect(thumbTo.style.left).toEqual(`${positionTo}%`);
+            expect(Number(thumbFrom.style.left.slice(0, -1))).toBeCloseTo(positionFrom);
+            expect(Number(thumbTo.style.left.slice(0, -1))).toBeCloseTo(positionTo);
             expect(thumbFrom.style.top).toEqual('0px');
             expect(thumbTo.style.top).toEqual('0px');
           }
         });
         it('Should switch to horizontal or vertical position', () => {
-          if (onVerticalFrom && onVerticalTo) {
+          if (model.onVertical) {
             expect(thumbFrom).toHaveClass(styles.locals.thumb_ver);
             expect(thumbTo).toHaveClass(styles.locals.thumb_ver);
             expect(tooltipFrom).toHaveClass(styles.locals.thumb__tooltip_ver);
@@ -261,8 +253,13 @@ describe('Testing module src/slider/SliderView.ts', () => {
           }
         });
         it('Should switch on/off tooltip', () => {
-          expect(tooltipFrom.style.display).toMatch(/^$|none/, 'tooltip from');
-          expect(tooltipTo.style.display).toMatch(/^$|none/, 'tooltip to')
+          if (model.onTooltip) {
+            expect(tooltipFrom.style.display).toEqual('');
+            expect(tooltipTo.style.display).toEqual('');
+          } else {
+            expect(tooltipFrom.style.display).toEqual('none');
+            expect(tooltipTo.style.display).toEqual('none');
+          }
         });
         it(`On event "mouseup->mousemove" should dispatch event "slider-view" from thumbFrom`, () => {
           let customEvent: CustomEvent | undefined = undefined;
@@ -347,33 +344,29 @@ describe('Testing module src/slider/SliderView.ts', () => {
       });
 
       describe('Vertical and horizontal switching tests', () => {
-        let onVertical: boolean;
-        beforeAll(() => {
-          onVertical = scale.getAttribute('data-on-vertical') === 'true';
-        });
-        it('Class "scale_ver" must be added or removed to the element with the class "scale"', () => {
-          if (onVertical) {
+        it('The "scale_ver" class must be toggled for the "scale" element', () => {
+          if (model.onVertical) {
             expect(scale).toHaveClass(styles.locals.scale_ver);
           } else {
             expect(scale).not.toHaveClass(styles.locals.scale_ver);
           }
         });
-        it('Class "scale__wrapper_ver" must be added or removed to the element with the class "scale__wrapper"', () => {
-          if (onVertical) {
+        it('The "wrapper_ver" class must be toggled for the "wrapper" element', () => {
+          if (model.onVertical) {
             expect(wrapper).toHaveClass(styles.locals.scale__wrapper_ver);
           } else {
             expect(wrapper).not.toHaveClass(styles.locals.scale__wrapper_ver);
           }
         });
-        it('Class "scale__values_ver" must be added or removed to the element with the class "scale__values"', () => {
-          if (onVertical) {
+        it('The "scale__values_ver" class must be toggled for the "values" element', () => {
+          if (model.onVertical) {
             expect(values).toHaveClass(styles.locals.scale__values_ver);
           } else {
             expect(values).not.toHaveClass(styles.locals.scale__values_ver);
           }
         });
-        it('Class "scale__valuesItem_ver" must be added or removed to the all elements with the class "scale__valuesItem"', () => {
-          if (onVertical) {
+        it('The "scale__valuesItem_ver" class must be toggled for the all "valuesItem" elements', () => {
+          if (model.onVertical) {
             valuesItem.forEach((element) => {
               expect(element).toHaveClass(styles.locals.scale__valuesItem_ver);
             });
@@ -383,8 +376,8 @@ describe('Testing module src/slider/SliderView.ts', () => {
             });
           }
         });
-        it('Class "scale__division_ver" must be added or removed to the all elements with the class "scale__division"', () => {
-          if (onVertical) {
+        it('The "scale__division_ver" class must be toggled for the all "division" elements', () => {
+          if (model.onVertical) {
             division.forEach((element) => {
               expect(element).toHaveClass(styles.locals.scale__division_ver);
             });
@@ -394,8 +387,8 @@ describe('Testing module src/slider/SliderView.ts', () => {
             });
           }
         });
-        it('Class "scale__subdivision_ver" must be added or removed to the all elements with the class "scale__subdivision"', () => {
-          if (onVertical) {
+        it('The "scale__subdivision_ver" class must be toggled for the all "subdivision" elements', () => {
+          if (model.onVertical) {
             subdivision.forEach((element) => {
               expect(element).toHaveClass(styles.locals.scale__subdivision_ver);
             });
