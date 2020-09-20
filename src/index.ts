@@ -30,19 +30,19 @@ class ControlPanel {
   constructor(container: HTMLElement) {
     this.$minValue = $(container)
       .find('.control__min-value')
-      .on('input', this.setMinValue.bind(this));
+      .on('blur', this.setMinValue.bind(this));
     this.$maxValue = $(container)
       .find('.control__max-value')
-      .on('input', this.setMaxValue.bind(this));
+      .on('blur', this.setMaxValue.bind(this));
     this.$stepSize = $(container)
       .find('.control__step-size')
-      .on('input', this.setStepSize.bind(this));
+      .on('blur', this.setStepSize.bind(this));
     this.$valueFrom = $(container)
       .find('.control__value-from')
-      .on('input', this.setValueFrom.bind(this));
+      .on('blur', this.setValueFrom.bind(this));
     this.$valueTo = $(container)
       .find('.control__value-to')
-      .on('input', this.setValueTo.bind(this));
+      .on('blur', this.setValueTo.bind(this));
     this.$valueRange = $(container).find('.control__value-range');
     this.$onTooltip = $(container)
       .find('.control__on-tooltip')

@@ -1,8 +1,8 @@
 class SliderModel implements ISliderModel {
   private _minValue: number = 0;
   private _maxValue: number = 100;
-  private _valueFrom: number = 10;
-  private _valueTo: number = 90;
+  private _valueFrom: number = 0;
+  private _valueTo: number = 100;
   private _stepSize: number = 1;
   private _onRange: boolean = false;
   private _onTooltip: boolean = false;
@@ -32,39 +32,73 @@ class SliderModel implements ISliderModel {
       .then((res: Response) => res.json())
       .then((data: ISliderData) => {
         return this.initModelFromObject(data);
-      })
-      .catch((e) => {
-        console.log('Request error:', e);
-        return false;
       });
   }
 
   private async initModelFromObject(data: ISliderData): Promise<boolean> {
-    this.onVertical = data.onVertical;
-    this.onRange = data.onRange;
-    this.onTooltip = data.onTooltip;
-    this.onScale = data.onScale;
-    this.minValue = data.minValue;
-    this.maxValue = data.maxValue;
-    this.valueFrom = data.valueFrom;
-    this.valueTo = data.valueTo;
-    this.stepSize = data.stepSize;
-    this.serverURL = data.serverURL;
+    this._serverURL = data.serverURL;
+    this._observer('serverURL', this._serverURL);
+    this._onVertical = data.onVertical;
+    this._observer('onVertical', this._onVertical);
+    this._onRange = data.onRange;
+    this._observer('onRange', this._onRange);
+    this._onTooltip = data.onTooltip;
+    this._observer('onTooltip', this._onTooltip);
+    this._onScale = data.onScale;
+    this._observer('onScale', this._onScale);
+
+    if (data.minValue) {
+      this._minValue = data.minValue;
+    } else {
+      this._minValue = 0;
+    }
+    this._observer('minValue', this._minValue);
+
+    if (data.stepSize && data.stepSize > 0) {
+      this._stepSize = data.stepSize;
+    } else {
+      this._stepSize = 1;
+    }
+    this._observer('stepSize', this._stepSize);
+
+    if (data.valueFrom && data.valueFrom > this._minValue) {
+      this._valueFrom = Math.round((data.valueFrom - data.minValue) / this._stepSize) * this._stepSize + data.minValue;
+    } else {
+      this._valueFrom = this._minValue;
+    }
+    this._observer('valueFrom', this._valueFrom);
+
+    if (data.valueTo && data.valueTo > this._valueFrom) {
+      this._valueTo = Math.round((data.valueTo - data.minValue) / this._stepSize) * this._stepSize + data.minValue;
+    } else {
+      this._valueTo = this._valueFrom + this._stepSize;
+    }
+    this._observer('valueTo', this._valueTo);
+
+    if (data.maxValue && data.maxValue > this._valueTo) {
+      this._maxValue = Math.round((data.maxValue - data.minValue) / this._stepSize) * this._stepSize;
+    } else {
+      this._maxValue = this._valueTo;
+    }
+    this._observer('maxValue', this._maxValue);
+
     return true;
   }
 
   private async initModelFromElement(element: HTMLElement): Promise<boolean> {
-    this.onVertical = (element.dataset.onVertical === 'true');
-    this.onTooltip = (element.dataset.onTooltip === 'true');
-    this.onScale = (element.dataset.onScale === 'true');
-    this.onRange = (element.dataset.onRange === 'true');
-    this.minValue = Number(element.dataset.minValue);
-    this.maxValue = Number(element.dataset.maxValue);
-    this.valueFrom = Number(element.dataset.valueFrom);
-    this.valueTo = Number(element.dataset.valueTo);
-    this.stepSize = Number(element.dataset.stepSize);
-    this.serverURL = String(element.dataset.serverURL);
-    return true;
+    const data = {
+      onVertical: (element.dataset.onVertical === 'true'),
+      onRange: (element.dataset.onRange === 'true'),
+      onTooltip: (element.dataset.onTooltip === 'true'),
+      onScale: (element.dataset.onScale === 'true'),
+      minValue: Number(element.dataset.minValue),
+      maxValue: Number(element.dataset.maxValue),
+      valueFrom: Number(element.dataset.valueFrom),
+      valueTo: Number(element.dataset.valueTo),
+      stepSize: Number(element.dataset.stepSize),
+      serverURL: String(element.dataset.serverURL)
+    }
+    return this.initModelFromObject(data);
   }
 
   get minValue(): number {
@@ -72,13 +106,11 @@ class SliderModel implements ISliderModel {
   }
 
   set minValue(minValue: number) {
-    if (minValue <= this._maxValue) {
-      this._minValue = minValue;
+    if (minValue <= this._valueFrom) {
+      this._minValue = this._maxValue - Math.round((this._maxValue - minValue) / this._stepSize) * this._stepSize
     } else {
-      this._minValue = this._maxValue;
+      this._minValue = this._valueFrom;
     }
-    if (this._minValue > this._valueFrom) this.valueFrom = this._minValue;
-    if (this._minValue > this._valueTo) this.valueTo = this._minValue;
     this._observer('minValue', this._minValue);
   }
 
@@ -87,13 +119,11 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    if (maxValue >= this._minValue) {
-      this._maxValue = maxValue;
+    if (maxValue >= this._valueTo) {
+      this._maxValue = Math.round((maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
     } else {
-      this._maxValue = this._minValue;
+      this._maxValue = this._valueTo;
     }
-    if (this._maxValue < this._valueTo) this.valueTo = this._maxValue;
-    if (this._maxValue < this._valueFrom) this.valueFrom = this._maxValue;
     this._observer('maxValue', this._maxValue)
   }
 
@@ -103,30 +133,27 @@ class SliderModel implements ISliderModel {
 
   set valueFrom(valueFrom: number) {
     if (this._onRange) {
-      if (valueFrom <= this._valueTo && valueFrom >= this._minValue) {
-        this._valueFrom = valueFrom;
-      }
-      if (valueFrom < this._minValue) {
-        this._valueFrom = this._minValue;
-      }
-      if (valueFrom > this._valueTo) {
-        this._valueFrom = this._valueTo;
+      if (valueFrom >= this._minValue && valueFrom <= this._valueTo) {
+        this._valueFrom = Math.round((valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      } else {
+        if (valueFrom > this._valueTo) {
+          this._valueFrom = Math.round((this._valueTo - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+        } else {
+          this._valueFrom = this._minValue;
+        }
       }
     } else {
       if (valueFrom >= this._minValue && valueFrom <= this._maxValue) {
-        this._valueFrom = valueFrom;
-      }
-      if (valueFrom > this._maxValue) {
-        this._valueFrom = this._maxValue;
-      }
-      if (valueFrom < this._minValue) {
-        this._valueFrom = this._minValue;
-      }
-      if (valueFrom > this._valueTo) {
-        this.valueTo = this._valueFrom;
+        this._valueFrom = Math.round((valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      } else {
+        if (valueFrom > this._maxValue) {
+          this._valueFrom = Math.round((this._maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+        } else {
+          this._valueFrom = this._minValue;
+        }
       }
     }
-    this._observer('valueFrom', this._valueFrom)
+    this._observer('valueFrom', this._valueFrom);
   }
 
   get valueTo(): number {
@@ -135,13 +162,13 @@ class SliderModel implements ISliderModel {
 
   set valueTo(valueTo: number) {
     if (valueTo >= this._valueFrom && valueTo <= this._maxValue) {
-      this._valueTo = valueTo;
-    }
-    if (valueTo > this._maxValue) {
-      this._valueTo = this._maxValue;
-    }
-    if (valueTo < this._valueFrom) {
-      this._valueTo = this._valueFrom;
+      this._valueTo = Math.round((valueTo - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+    } else {
+      if (valueTo > this._maxValue) {
+        this._valueTo = Math.round((this._maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      } else {
+        this._valueTo = this._valueFrom;
+      }
     }
     this._observer('valueTo', this._valueTo)
   }
@@ -151,11 +178,20 @@ class SliderModel implements ISliderModel {
   }
 
   set stepSize(stepSize: number) {
-    this._stepSize = stepSize ? stepSize : 1;
-    if (stepSize > (this._maxValue - this._minValue)) {
-      this._stepSize = this._maxValue - this._minValue;
+    console.log(stepSize)
+    if (stepSize <= 0) {
+      this._stepSize = 1;
+    } else {
+      if (stepSize <= (this._maxValue - this._minValue)) {
+        this._stepSize = Math.round(stepSize);
+      } else {
+        this._stepSize = this._maxValue - this._minValue;
+      }
     }
-    this._observer('stepSize', this._stepSize)
+    this.valueFrom = this.valueFrom;
+    this.valueTo = this.valueTo;
+    this.maxValue = this.maxValue;
+    this._observer('stepSize', this._stepSize);
   }
 
   get onVertical(): boolean {

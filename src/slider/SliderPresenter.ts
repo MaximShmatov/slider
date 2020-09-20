@@ -19,7 +19,7 @@ class SliderPresenter implements ISliderPresenter {
         return true;
       })
       .catch((e) => {
-        console.log('Error model initialization', e);
+        console.log('Error model initialization.', e);
         return false;
       });
   }
