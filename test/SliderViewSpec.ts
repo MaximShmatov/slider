@@ -1,7 +1,7 @@
 import {SliderView} from '../src/slider/SliderView';
 import styles from '../src/slider/slider.module.sass';
 
-describe('Testing module src/slider/SliderView.ts', () => {
+describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
   const view = new SliderView(null);
   let spySetModelData: jasmine.Spy;
   const model = {

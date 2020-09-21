@@ -1,118 +1,281 @@
 import {SliderModel} from '../src/slider/SliderModel';
 
 
-describe('Testing module src/slider/SliderModel.ts', () => {
-  let spyCallback = jasmine.createSpy('spyCallback');
+describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
+  const spyCallback = jasmine.createSpy('spyCallback');
   const model: SliderModel = new SliderModel(spyCallback);
-  const props: TMethodsUnion[] = ['onVertical', 'onRange', 'onTooltip', 'onScale', 'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize', 'serverURL'];
-  const spyGetters = jasmine.createSpyObj(props);
-  const spySetters = jasmine.createSpyObj(props);
 
-
-  beforeAll(() => {
-    for (let prop of props) {
-      spyGetters[prop] = spyOnProperty(model, prop, 'get').and.callThrough();
-      spySetters[prop] = spyOnProperty(model, prop, 'set').and.callThrough();
-    }
-  });
-
-  getTestData((title: string, data: ISliderData, obj: HTMLElement | ISliderData | FormData) => {
+  getTestData((title: string, data: ISliderData, initObj: HTMLElement | ISliderData | FormData) => {
     describe(title, () => {
       beforeAll(async () => {
-        await expectAsync(model.init(obj)).toBeResolvedTo(true);
-      });
-      afterAll(() => {
-        for (let prop of props) {
-          spyGetters[prop].calls.reset();
-          spySetters[prop].calls.reset();
-        }
-        spyCallback.calls.reset();
-        console.log(model);
-      });
-      describe('Model should be initialized', () => {
-        for (let key of props) {
-          it(`Should be execute callback from "${key}"`, () => {
-            expect(spyCallback).toHaveBeenCalledWith(key, jasmine.anything());
-          });
+        if (initObj instanceof FormData) {
+          await fetch(model.serverURL, {method: 'POST', body: initObj})
+            .then(res => res.json())
+            .then(obj => {
+              initObj = obj;
+              data = obj;
+            })
+            .catch((e) => console.log(e));
         }
       });
-
-      describe(`Property minValue should be valid`, () => {
-        it('Should be <= valueFrom property', () => {
+      describe('Testing model initialization', () => {
+        beforeAll(async () => {
+          spyCallback.calls.reset();
+          await expectAsync(model.init(initObj)).toBeResolvedTo(true);
+        });
+        it(`Should be execute callback for "minValue"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('minValue', jasmine.anything());
+        });
+        it(`Should be execute callback for "maxValue"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
+        });
+        it(`Should be execute callback for "valueFrom"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
+        });
+        it(`Should be execute callback for "valueTo"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
+        });
+        it(`Should be execute callback for "stepSize"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
+        });
+        it(`Should be execute callback for "onVertical"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('onVertical', jasmine.anything());
+        });
+        it(`Should be execute callback for "onTooltip"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('onTooltip', jasmine.anything());
+        });
+        it(`Should be execute callback for "onRange"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('onRange', jasmine.anything());
+        });
+        it(`Should be execute callback for "onScale"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('onScale', jasmine.anything());
+        });
+        it(`Should be execute callback for "serverURL"`, () => {
+          expect(spyCallback).toHaveBeenCalledWith('serverURL', jasmine.anything());
+        });
+        it('"minValue" should be <= "valueFrom"', () => {
           expect(model.minValue).toBeLessThanOrEqual(model.valueFrom);
         });
-        it('Should be <= valueTo property', () => {
-          expect(model.minValue).toBeLessThanOrEqual(model.valueTo);
+        it('"maxValue" should be >= "valueTo"', () => {
+          expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
         });
-        it('Should be < maxValue property', () => {
-          expect(model.minValue).toBeLessThan(model.maxValue);
+        it('"valueFrom" should be <= "valueTo"', () => {
+          expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
+        });
+        it('"valueFrom" should be >= "minValue"', () => {
+          expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
+        });
+        it('"valueTo" should be <= "maxValue"', () => {
+          expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+        });
+        it('"valueTo" should be >= "valueFrom"', () => {
+          expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+        });
+        it('"stepSize" should be >= 1', () => {
+          expect(model.stepSize).toBeGreaterThanOrEqual(1);
+        });
+        it('"stepSize" should be <= (maxValue - minValue)', () => {
+          expect(model.stepSize).toBeLessThanOrEqual(model.maxValue - model.minValue);
+        });
+        it('Property "onVertical" must be setting', () => {
+          expect(model.onVertical).toEqual(data.onVertical);
+        });
+        it('Property "onTooltip" must be setting', () => {
+          expect(model.onTooltip).toEqual(data.onTooltip);
+        });
+        it('Property "onRange" must be setting', () => {
+          expect(model.onRange).toEqual(data.onRange);
+        });
+        it('Property "onScale" must be setting', () => {
+          expect(model.onScale).toEqual(data.onScale);
+        });
+        it('Property "serverURL" must be setting', () => {
+          expect(model.serverURL).toEqual(data.serverURL);
         });
       });
 
-      describe(`Property maxValue should be valid`, () => {
-        it(`Should be >= valueTo property`, () => {
+      describe('Testing setter and getter for "minValue" property', () => {
+        const num = Math.round(Math.random() * 100);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'minValue', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.minValue = num;
+        });
+        it(`Should be called setter with ${num}`, () => {
+          expect(spySet).toHaveBeenCalledWith(num);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('minValue', jasmine.anything());
+        });
+        it('"minValue" should be <= "valueFrom"', () => {
+          expect(model.minValue).toBeLessThanOrEqual(model.valueFrom);
+        });
+      });
+
+      describe('Testing setter and getter for "maxValue" property', () => {
+        const num = Math.round(Math.random() * 100);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'maxValue', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.maxValue = num;
+        });
+        it(`Should be called setter with ${num}`, () => {
+          expect(spySet).toHaveBeenCalledWith(num);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
+        });
+        it('"maxValue" should be >= "valueTo"', () => {
           expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
         });
-        it(`Should be >= valueFrom property`, () => {
-          expect(model.maxValue).toBeGreaterThanOrEqual(model.valueFrom);
-        });
-        it(`Should be > minValue property`, () => {
-          expect(model.maxValue).toBeGreaterThan(model.minValue);
-        });
       });
-      describe(`Property valueFrom should be valid`, () => {
-        it(`Should be >= minValue property`, () => {
+
+      describe('Testing setter and getter for "valueFrom" property', () => {
+        const num = Math.round(Math.random() * 100);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'valueFrom', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.valueFrom = num;
+        });
+        it(`Should be called setter with ${num}`, () => {
+          expect(spySet).toHaveBeenCalledWith(num);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
+        });
+        it('"valueFrom" should be <= "valueTo"', () => {
+          if (model.onRange) {
+            expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
+          } else {
+            expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
+          }
+        });
+        it('"valueFrom" should be >= "minValue"', () => {
           expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
         });
-        it(`Should be <= valueTo property`, () => {
-          expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
-        });
-        it(`Should be <= maxValue property`, () => {
-          expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
-        });
       });
-      describe(`Property valueTo should be valid`, () => {
-        it(`Should be >= minValue property`, () => {
-          expect(model.valueTo).toBeGreaterThanOrEqual(model.minValue);
+
+      describe('Testing setter and getter for "valueTo" property', () => {
+        const num = Math.round(Math.random() * 100);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'valueTo', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.valueTo = num;
         });
-        it(`Should be >= valueFrom property`, () => {
-          expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+        it(`Should be called setter with ${num}`, () => {
+          expect(spySet).toHaveBeenCalledWith(num);
         });
-        it(`Should be <= maxValue property`, () => {
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
+        });
+        it('"valueTo" should be <= "maxValue"', () => {
           expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
         });
-      });
-      describe(`Property stepSize should be valid`, () => {
-        it(`Should be <= (maxValue - minValue)`, () => {
-          expect(model.stepSize).toBeLessThanOrEqual(model.maxValue);
-        });
-        it(`Should be > 0`, () => {
-          expect(model.stepSize).toBeGreaterThan(0);
-        });
-      });
-      describe(`Property onVertical should be valid`, () => {
-        it(`Should be ${data.onVertical}`, () => {
-          expect(model.onVertical).toEqual(data.onVertical);
+        it('"valueTo" should be >= "valueFrom"', () => {
+          if (model.onRange) {
+            expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+          } else {
+            expect(model.valueTo).toBeGreaterThanOrEqual(model.minValue);
+          }
         });
       });
-      describe(`Property onScale should be valid`, () => {
-        it(`Should be ${data.onScale}`, () => {
-          expect(model.onScale).toEqual(data.onScale);
+
+      describe('Testing setter and getter for "onVertical" property', () => {
+        const bool = (Math.round(Math.random()) === 0);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'onVertical', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.onVertical = bool;
+        });
+        it(`Should be called setter with ${bool}`, () => {
+          expect(spySet).toHaveBeenCalledWith(bool);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('onVertical', bool);
+        });
+        it(`Should be setting ${bool}`, () => {
+          expect(model.onVertical).toBe(bool);
         });
       });
-      describe(`Property onRange should be valid`, () => {
-        it(`Should be ${data.onRange}`, () => {
-          expect(model.onRange).toEqual(data.onRange);
+
+      describe('Testing setter and getter for "onRange" property', () => {
+        const bool = (Math.round(Math.random()) === 0);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'onRange', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.onRange = bool;
+        });
+        it(`Should be called setter with ${bool}`, () => {
+          expect(spySet).toHaveBeenCalledWith(bool);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('onRange', bool);
+        });
+        it(`Should be setting ${bool}`, () => {
+          expect(model.onRange).toBe(bool);
         });
       });
-      describe(`Property onTooltip should be valid`, () => {
-        it(`Should be ${data.onTooltip}`, () => {
-          expect(model.onTooltip).toEqual(data.onTooltip);
+
+      describe('Testing setter and getter for "onScale" property', () => {
+        const bool = (Math.round(Math.random()) === 0);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'onScale', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.onScale = bool;
+        });
+        it(`Should be called setter with ${bool}`, () => {
+          expect(spySet).toHaveBeenCalledWith(bool);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('onScale', bool);
+        });
+        it(`Should be setting ${bool}`, () => {
+          expect(model.onScale).toBe(bool);
         });
       });
-      describe(`Property serverURL should be valid`, () => {
-        it(`Should be ${data.serverURL}`, () => {
-          expect(model.serverURL).toEqual(data.serverURL);
+
+      describe('Testing setter and getter for "onTooltip" property', () => {
+        const bool = (Math.round(Math.random()) === 0);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'onTooltip', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.onTooltip = bool;
+        });
+        it(`Should be called setter with ${bool}`, () => {
+          expect(spySet).toHaveBeenCalledWith(bool);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('onTooltip', bool);
+        });
+        it(`Should be setting ${bool}`, () => {
+          expect(model.onTooltip).toBe(bool);
+        });
+      });
+
+      describe('Testing setter and getter for "serverURL" property', () => {
+        const str = 'test string';
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'serverURL', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.serverURL = str;
+        });
+        it(`Should be called setter with ${str}`, () => {
+          expect(spySet).toHaveBeenCalledWith(str);
+        });
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('serverURL', str);
+        });
+        it(`Should be setting ${str}`, () => {
+          expect(model.serverURL).toBe(str);
         });
       });
     });
@@ -136,27 +299,27 @@ describe('Testing module src/slider/SliderModel.ts', () => {
   function getTestData(func: Function): void {
     const data: ISliderData[] = [
       {
-        minValue: 10,
-        maxValue: 110,
-        valueFrom: 20,
-        valueTo: 90,
-        stepSize: 1,
-        onVertical: false,
-        onRange: false,
-        onTooltip: false,
-        onScale: true,
+        minValue: Math.round(Math.random() * 100),
+        maxValue: Math.round(Math.random() * 100),
+        valueFrom: Math.round(Math.random() * 100),
+        valueTo: Math.round(Math.random() * 100),
+        stepSize: Math.round(Math.random() * 100),
+        onVertical: Math.round(Math.random()) === 1,
+        onRange: Math.round(Math.random()) === 1,
+        onTooltip: Math.round(Math.random()) === 1,
+        onScale: Math.round(Math.random()) === 1,
         serverURL: 'http://localhost:9000/slider'
       },
       {
-        minValue: 5,
-        maxValue: 8,
-        valueFrom: 11,
-        valueTo: 28,
-        stepSize: 3,
-        onRange: true,
-        onTooltip: false,
-        onVertical: true,
-        onScale: false,
+        minValue: Math.round(Math.random() * 100),
+        maxValue: Math.round(Math.random() * 100),
+        valueFrom: Math.round(Math.random() * 100),
+        valueTo: Math.round(Math.random() * 100),
+        stepSize: Math.round(Math.random() * 100),
+        onRange: Math.round(Math.random()) === 1,
+        onTooltip: Math.round(Math.random()) === 1,
+        onVertical: Math.round(Math.random()) === 1,
+        onScale: Math.round(Math.random()) === 1,
         serverURL: 'http://localhost:9000/slider'
       }
     ];

@@ -1,9 +1,9 @@
 [
   {
-    "minValue": 10,
-    "maxValue": 110,
-    "valueFrom": 20,
-    "valueTo": 90,
+    "minValue": 0,
+    "maxValue": 10,
+    "valueFrom": 0,
+    "valueTo": 0,
     "stepSize": 1,
     "onVertical": false,
     "onRange": false,

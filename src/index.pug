@@ -32,8 +32,28 @@ html(lang="ru" dir="ltr")
     title Slider demo
   body
     div.container
-      input(class="input-slider-plugin" data-min-value="0" data-max-value="10" data-value-from="2" data-value-to="8" data-step-size="1" data-on-vertical="false" data-on-scale="true" data-on-range="true" data-on-tooltip="true")
+      input(
+        class="input-slider-plugin"
+        data-min-value=`${Math.round(Math.random() * 10)}`
+        data-max-value=`${Math.round(Math.random() * 100)}`
+        data-value-from=`${Math.round(Math.random() * 10)}`
+        data-value-to=`${Math.round(Math.random() * 100)}`
+        data-step-size=`${Math.round(Math.random() * 10)}`
+        data-on-vertical="false"
+        data-on-scale="true"
+        data-on-range="true"
+        data-on-tooltip="true")
       +control
     div.container
-      input(class="input-slider-plugin" data-min-value="0" data-max-value="10" data-value-from="2" data-value-to="8" data-step-size="1" data-on-vertical="true" data-on-scale="true" data-on-range="true" data-on-tooltip="true")
+      input(
+        class="input-slider-plugin"
+        data-min-value=`${Math.round(Math.random() * 10)}`
+        data-max-value=`${Math.round(Math.random() * 100)}`
+        data-value-from=`${Math.round(Math.random() * 10)}`
+        data-value-to=`${Math.round(Math.random() * 100)}`
+        data-step-size=`${Math.round(Math.random() * 10)}`
+        data-on-vertical="true"
+        data-on-scale="true"
+        data-on-range="true"
+        data-on-tooltip="true")
       +control

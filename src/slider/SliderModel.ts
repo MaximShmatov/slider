@@ -54,33 +54,42 @@ class SliderModel implements ISliderModel {
     }
     this._observer('minValue', this._minValue);
 
-    if (data.stepSize && data.stepSize > 0) {
-      this._stepSize = data.stepSize;
+    if (data.stepSize > 0) {
+      this._stepSize = Math.round(data.stepSize);
     } else {
       this._stepSize = 1;
     }
     this._observer('stepSize', this._stepSize);
 
-    if (data.valueFrom && data.valueFrom > this._minValue) {
-      this._valueFrom = Math.round((data.valueFrom - data.minValue) / this._stepSize) * this._stepSize + data.minValue;
+    if (data.maxValue > (this._minValue + this._stepSize)) {
+      this._maxValue = Math.round((data.maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
     } else {
-      this._valueFrom = this._minValue;
+      this._maxValue = this._stepSize + this._minValue;
+    }
+    this._observer('maxValue', this._maxValue);
+
+
+    if (data.valueFrom > this._minValue && data.valueFrom < this._maxValue) {
+      this._valueFrom = Math.round((data.valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+    } else {
+      if (data.valueFrom >= this._maxValue) {
+        this._valueFrom = this._maxValue;
+      } else {
+        this._valueFrom = this._minValue;
+      }
     }
     this._observer('valueFrom', this._valueFrom);
 
-    if (data.valueTo && data.valueTo > this._valueFrom) {
-      this._valueTo = Math.round((data.valueTo - data.minValue) / this._stepSize) * this._stepSize + data.minValue;
+    if (data.valueTo > this._valueFrom && data.valueTo < this._maxValue) {
+      this._valueTo = Math.round((data.valueTo - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
     } else {
-      this._valueTo = this._valueFrom + this._stepSize;
+      if (data.valueTo >= this._maxValue) {
+        this._valueTo = this._maxValue;
+      } else {
+        this._valueTo = this._valueFrom;
+      }
     }
     this._observer('valueTo', this._valueTo);
-
-    if (data.maxValue && data.maxValue > this._valueTo) {
-      this._maxValue = Math.round((data.maxValue - data.minValue) / this._stepSize) * this._stepSize;
-    } else {
-      this._maxValue = this._valueTo;
-    }
-    this._observer('maxValue', this._maxValue);
 
     return true;
   }
@@ -178,12 +187,12 @@ class SliderModel implements ISliderModel {
   }
 
   set stepSize(stepSize: number) {
-    console.log(stepSize)
+    stepSize = Math.round(stepSize);
     if (stepSize <= 0) {
       this._stepSize = 1;
     } else {
       if (stepSize <= (this._maxValue - this._minValue)) {
-        this._stepSize = Math.round(stepSize);
+        this._stepSize = stepSize;
       } else {
         this._stepSize = this._maxValue - this._minValue;
       }
