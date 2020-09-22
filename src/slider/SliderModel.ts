@@ -54,8 +54,9 @@ class SliderModel implements ISliderModel {
     }
     this._observer('minValue', this._minValue);
 
+    data.stepSize = Math.round(Math.abs(data.stepSize));
     if (data.stepSize > 0) {
-      this._stepSize = Math.round(data.stepSize);
+      this._stepSize = data.stepSize;
     } else {
       this._stepSize = 1;
     }
@@ -67,7 +68,6 @@ class SliderModel implements ISliderModel {
       this._maxValue = this._stepSize + this._minValue;
     }
     this._observer('maxValue', this._maxValue);
-
 
     if (data.valueFrom > this._minValue && data.valueFrom < this._maxValue) {
       this._valueFrom = Math.round((data.valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
@@ -115,10 +115,13 @@ class SliderModel implements ISliderModel {
   }
 
   set minValue(minValue: number) {
-    if (minValue <= this._valueFrom) {
-      this._minValue = this._maxValue - Math.round((this._maxValue - minValue) / this._stepSize) * this._stepSize
+    if (minValue < this._valueFrom) {
+      this._minValue = this._valueFrom - Math.round((this._valueFrom - minValue) / this._stepSize) * this._stepSize
     } else {
       this._minValue = this._valueFrom;
+    }
+    if (this._minValue === this._maxValue) {
+      this._minValue = this._minValue - this._stepSize;
     }
     this._observer('minValue', this._minValue);
   }
@@ -128,10 +131,17 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    if (maxValue >= this._valueTo) {
-      this._maxValue = Math.round((maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
-    } else {
+    if (this._onRange && maxValue <= this._valueTo) {
       this._maxValue = this._valueTo;
+    } else {
+      if (maxValue <= this._valueFrom) {
+        this._maxValue = this._valueFrom;
+      } else {
+        this._maxValue = Math.round((maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      }
+    }
+    if (this._maxValue === this._minValue) {
+      this._maxValue = this._maxValue + this._stepSize;
     }
     this._observer('maxValue', this._maxValue)
   }
@@ -141,24 +151,16 @@ class SliderModel implements ISliderModel {
   }
 
   set valueFrom(valueFrom: number) {
-    if (this._onRange) {
-      if (valueFrom >= this._minValue && valueFrom <= this._valueTo) {
-        this._valueFrom = Math.round((valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
-      } else {
-        if (valueFrom > this._valueTo) {
-          this._valueFrom = Math.round((this._valueTo - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
-        } else {
-          this._valueFrom = this._minValue;
-        }
-      }
+    if (valueFrom <= this._minValue) {
+      this._valueFrom = this._minValue;
     } else {
-      if (valueFrom >= this._minValue && valueFrom <= this._maxValue) {
-        this._valueFrom = Math.round((valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      if (this._onRange && valueFrom >= this._valueTo) {
+        this._valueFrom = this._valueTo;
       } else {
-        if (valueFrom > this._maxValue) {
-          this._valueFrom = Math.round((this._maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+        if (valueFrom >= this._maxValue) {
+          this._valueFrom = this._maxValue;
         } else {
-          this._valueFrom = this._minValue;
+          this._valueFrom = Math.round((valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
         }
       }
     }
@@ -170,11 +172,11 @@ class SliderModel implements ISliderModel {
   }
 
   set valueTo(valueTo: number) {
-    if (valueTo >= this._valueFrom && valueTo <= this._maxValue) {
-      this._valueTo = Math.round((valueTo - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+    if (this._onRange && valueTo > this._valueFrom && valueTo < this._maxValue) {
+      this._valueTo = Math.round((valueTo - this._valueFrom) / this._stepSize) * this._stepSize + this._valueFrom;
     } else {
-      if (valueTo > this._maxValue) {
-        this._valueTo = Math.round((this._maxValue - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      if (valueTo >= this._maxValue) {
+        this._valueTo = this._maxValue
       } else {
         this._valueTo = this._valueFrom;
       }
@@ -187,20 +189,34 @@ class SliderModel implements ISliderModel {
   }
 
   set stepSize(stepSize: number) {
-    stepSize = Math.round(stepSize);
-    if (stepSize <= 0) {
-      this._stepSize = 1;
+    let maxStep = Math.abs(this._maxValue - this._minValue)
+    if (stepSize < maxStep && stepSize > 0) {
+      this._stepSize = Math.round(stepSize);
     } else {
-      if (stepSize <= (this._maxValue - this._minValue)) {
-        this._stepSize = stepSize;
+      if (stepSize >= maxStep) {
+        this._stepSize = maxStep;
       } else {
-        this._stepSize = this._maxValue - this._minValue;
+        this._stepSize = 1;
       }
     }
-    this.valueFrom = this.valueFrom;
-    this.valueTo = this.valueTo;
-    this.maxValue = this.maxValue;
     this._observer('stepSize', this._stepSize);
+
+    if (this._valueFrom > this._minValue) {
+      this._valueFrom = Math.round((this._valueFrom - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+    } else {
+      this._valueFrom = this._minValue
+    }
+    this._observer('valueFrom', this._valueFrom);
+
+    if (this._onRange) {
+      if (this._valueTo > this._valueFrom) {
+        this._valueTo = Math.round((this._valueTo - this._minValue) / this._stepSize) * this._stepSize + this._minValue;
+      } else {
+        this._valueTo = this._valueFrom;
+      }
+      this._observer('valueTo', this._valueTo);
+    }
+    this.maxValue = this.maxValue;
   }
 
   get onVertical(): boolean {
@@ -213,12 +229,12 @@ class SliderModel implements ISliderModel {
   }
 
   get onRange(): boolean {
-    this.valueTo = this._valueTo;
     return this._onRange;
   }
 
   set onRange(onRange: boolean) {
     this._onRange = onRange;
+    this.valueTo = this._valueTo;
     this._observer('onRange', this._onRange)
   }
 

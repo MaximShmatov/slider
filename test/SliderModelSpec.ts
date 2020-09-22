@@ -5,19 +5,8 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
   const spyCallback = jasmine.createSpy('spyCallback');
   const model: SliderModel = new SliderModel(spyCallback);
 
-  getTestData((title: string, data: ISliderData, initObj: HTMLElement | ISliderData | FormData) => {
+  getTestData((title: string, initObj: HTMLElement | ISliderData | FormData) => {
     describe(title, () => {
-      beforeAll(async () => {
-        if (initObj instanceof FormData) {
-          await fetch(model.serverURL, {method: 'POST', body: initObj})
-            .then(res => res.json())
-            .then(obj => {
-              initObj = obj;
-              data = obj;
-            })
-            .catch((e) => console.log(e));
-        }
-      });
       describe('Testing model initialization', () => {
         beforeAll(async () => {
           spyCallback.calls.reset();
@@ -31,9 +20,6 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         });
         it(`Should be execute callback for "valueFrom"`, () => {
           expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
-        });
-        it(`Should be execute callback for "valueTo"`, () => {
-          expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
         });
         it(`Should be execute callback for "stepSize"`, () => {
           expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
@@ -53,44 +39,67 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it(`Should be execute callback for "serverURL"`, () => {
           expect(spyCallback).toHaveBeenCalledWith('serverURL', jasmine.anything());
         });
+
+        it('Property "onVertical" must be defined', () => {
+          expect(model.onVertical).toBeDefined();
+        });
+        it('Property "onTooltip" must be defined', () => {
+          expect(model.onTooltip).toBeDefined();
+        });
+        it('Property "onRange" must be defined', () => {
+          expect(model.onRange).toBeDefined()
+        });
+        it('Property "onScale" must be defined', () => {
+          expect(model.onScale).toBeDefined()
+        });
+        it('Property "serverURL" must be defined', () => {
+          expect(model.serverURL).toBeDefined()
+        });
+
+        it('"stepSize" should be > 0', () => {
+          expect(model.stepSize).toBeGreaterThanOrEqual(0);
+        });
+        it('"stepSize" should be <= mod(maxValue - minValue)', () => {
+          expect(model.stepSize).toBeLessThanOrEqual(model.maxValue - model.minValue);
+        });
         it('"minValue" should be <= "valueFrom"', () => {
           expect(model.minValue).toBeLessThanOrEqual(model.valueFrom);
         });
-        it('"maxValue" should be >= "valueTo"', () => {
-          expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
+        it('"valueFrom" should be <= "maxValue"', () => {
+          expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
         });
-        it('"valueFrom" should be <= "valueTo"', () => {
-          expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
+        if (model.onRange) {
+          it(`Should be execute callback for "valueTo"`, () => {
+            expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
+          });
+          it('"valueTo" should be <= "maxValue"', () => {
+            expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+          });
+          it('"valueTo" should be >= "valueFrom"', () => {
+            expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+          });
+        }
+      });
+
+      describe('Testing setter and getter for "stepSize" property', () => {
+        const num = Math.round(Math.random() * 100);
+        let spySet: jasmine.Spy;
+        beforeAll(() => {
+          spySet = spyOnProperty(model, 'stepSize', 'set').and.callThrough();
+          spyCallback.calls.reset();
+          model.stepSize = num;
         });
-        it('"valueFrom" should be >= "minValue"', () => {
-          expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
+        it(`Should be called setter with ${num}`, () => {
+          expect(spySet).toHaveBeenCalledWith(num);
         });
-        it('"valueTo" should be <= "maxValue"', () => {
-          expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+        it('Should be execute callback', () => {
+          expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
         });
-        it('"valueTo" should be >= "valueFrom"', () => {
-          expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+        it('"stepSize" should be > 0', () => {
+          expect(model.stepSize).toBeGreaterThanOrEqual(0);
         });
-        it('"stepSize" should be >= 1', () => {
-          expect(model.stepSize).toBeGreaterThanOrEqual(1);
-        });
-        it('"stepSize" should be <= (maxValue - minValue)', () => {
+        it('"stepSize" should be <= mod(maxValue - minValue)', () => {
           expect(model.stepSize).toBeLessThanOrEqual(model.maxValue - model.minValue);
-        });
-        it('Property "onVertical" must be setting', () => {
-          expect(model.onVertical).toEqual(data.onVertical);
-        });
-        it('Property "onTooltip" must be setting', () => {
-          expect(model.onTooltip).toEqual(data.onTooltip);
-        });
-        it('Property "onRange" must be setting', () => {
-          expect(model.onRange).toEqual(data.onRange);
-        });
-        it('Property "onScale" must be setting', () => {
-          expect(model.onScale).toEqual(data.onScale);
-        });
-        it('Property "serverURL" must be setting', () => {
-          expect(model.serverURL).toEqual(data.serverURL);
         });
       });
 
@@ -127,9 +136,15 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
         });
-        it('"maxValue" should be >= "valueTo"', () => {
-          expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
-        });
+        if (model.onRange) {
+          it('"maxValue" should be >= "valueTo"', () => {
+            expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
+          });
+        } else {
+          it('"maxValue" should be >= "valueFrom"', () => {
+            expect(model.maxValue).toBeGreaterThanOrEqual(model.valueFrom);
+          });
+        }
       });
 
       describe('Testing setter and getter for "valueFrom" property', () => {
@@ -146,13 +161,15 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
         });
-        it('"valueFrom" should be <= "valueTo"', () => {
-          if (model.onRange) {
+        if (model.onRange) {
+          it('"valueFrom" should be <= "valueTo"', () => {
             expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
-          } else {
+          });
+        } else {
+          it('"valueFrom" should be <= "maxValue"', () => {
             expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
-          }
-        });
+          });
+        }
         it('"valueFrom" should be >= "minValue"', () => {
           expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
         });
@@ -169,19 +186,17 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it(`Should be called setter with ${num}`, () => {
           expect(spySet).toHaveBeenCalledWith(num);
         });
-        it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
-        });
-        it('"valueTo" should be <= "maxValue"', () => {
-          expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
-        });
-        it('"valueTo" should be >= "valueFrom"', () => {
-          if (model.onRange) {
+        if (model.onRange) {
+          it('Should be execute callback', () => {
+            expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
+          });
+          it('"valueTo" should be <= "maxValue"', () => {
+            expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+          });
+          it('"valueTo" should be >= "valueFrom"', () => {
             expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
-          } else {
-            expect(model.valueTo).toBeGreaterThanOrEqual(model.minValue);
-          }
-        });
+          });
+        }
       });
 
       describe('Testing setter and getter for "onVertical" property', () => {
@@ -261,7 +276,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
       });
 
       describe('Testing setter and getter for "serverURL" property', () => {
-        const str = 'test string';
+        const str = 'http://localhost:9000/slider';
         let spySet: jasmine.Spy;
         beforeAll(() => {
           spySet = spyOnProperty(model, 'serverURL', 'set').and.callThrough();
@@ -296,44 +311,38 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
     return element;
   }
 
+  function getRandom(num: number) {
+    if (Math.round(Math.random())) {
+      num = num * -1;
+    }
+    return Math.round(Math.random() * num);
+  }
+
   function getTestData(func: Function): void {
-    const data: ISliderData[] = [
-      {
-        minValue: Math.round(Math.random() * 100),
-        maxValue: Math.round(Math.random() * 100),
-        valueFrom: Math.round(Math.random() * 100),
-        valueTo: Math.round(Math.random() * 100),
-        stepSize: Math.round(Math.random() * 100),
-        onVertical: Math.round(Math.random()) === 1,
-        onRange: Math.round(Math.random()) === 1,
-        onTooltip: Math.round(Math.random()) === 1,
-        onScale: Math.round(Math.random()) === 1,
-        serverURL: 'http://localhost:9000/slider'
-      },
-      {
-        minValue: Math.round(Math.random() * 100),
-        maxValue: Math.round(Math.random() * 100),
-        valueFrom: Math.round(Math.random() * 100),
-        valueTo: Math.round(Math.random() * 100),
-        stepSize: Math.round(Math.random() * 100),
-        onRange: Math.round(Math.random()) === 1,
-        onTooltip: Math.round(Math.random()) === 1,
-        onVertical: Math.round(Math.random()) === 1,
-        onScale: Math.round(Math.random()) === 1,
-        serverURL: 'http://localhost:9000/slider'
-      }
-    ];
-    const element = getHTMLElementFromObj(data[1]);
+    const data: ISliderData = {
+      minValue: getRandom(100),
+      maxValue: getRandom(100),
+      valueFrom: getRandom(100),
+      valueTo: getRandom(100),
+      stepSize: getRandom(10),
+      onVertical: Math.round(Math.random()) === 1,
+      onRange: Math.round(Math.random()) === 1,
+      onTooltip: Math.round(Math.random()) === 1,
+      onScale: Math.round(Math.random()) === 1,
+      serverURL: 'http://localhost:9000/slider'
+    };
+    const element = getHTMLElementFromObj(data);
     const formData: FormData = new FormData();
-    formData.set('variant', '0');
+    formData.set('variant', 'random(0 - 100)');
     const title = [
-      `Testing model initialized from the "ISliderData": ${JSON.stringify(data[0])}`,
+      `Testing model initialized from the "ISliderData": ${JSON.stringify(data)}`,
       `Testing model initialized from the server: variant - ${formData.get('variant')}`,
       `Testing model initialized from the "HTMLElement": ${element.outerHTML}`
     ];
-
-    func(title[0], data[0], data[0]);
-    func(title[1], data[0], formData);
-    func(title[2], data[1], element);
+    for (let i = 0; i < 2; i++) {
+      func(title[0], data);
+      func(title[1], formData);
+      func(title[2], element);
+    }
   }
 });
