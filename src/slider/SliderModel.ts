@@ -172,16 +172,18 @@ class SliderModel implements ISliderModel {
   }
 
   set valueTo(valueTo: number) {
-    if (this._onRange && valueTo > this._valueFrom && valueTo < this._maxValue) {
-      this._valueTo = Math.round((valueTo - this._valueFrom) / this._stepSize) * this._stepSize + this._valueFrom;
-    } else {
-      if (valueTo >= this._maxValue) {
-        this._valueTo = this._maxValue
+    if (this._onRange) {
+      if (valueTo > this._valueFrom && valueTo < this._maxValue) {
+        this._valueTo = Math.round((valueTo - this._valueFrom) / this._stepSize) * this._stepSize + this._valueFrom;
       } else {
-        this._valueTo = this._valueFrom;
+        if (valueTo >= this._maxValue) {
+          this._valueTo = this._maxValue
+        } else {
+          this._valueTo = this._valueFrom;
+        }
       }
+      this._observer('valueTo', this._valueTo);
     }
-    this._observer('valueTo', this._valueTo)
   }
 
   get stepSize(): number {
@@ -234,8 +236,8 @@ class SliderModel implements ISliderModel {
 
   set onRange(onRange: boolean) {
     this._onRange = onRange;
+    this._observer('onRange', this._onRange);
     this.valueTo = this._valueTo;
-    this._observer('onRange', this._onRange)
   }
 
   get onTooltip(): boolean {
