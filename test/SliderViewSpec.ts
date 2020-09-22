@@ -1,8 +1,7 @@
-import {SliderView} from '../src/slider/SliderView';
 import styles from '../src/slider/slider.module.sass';
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
-  const view = new SliderView(null);
+  const view = <ISliderView>document.createElement('input-slider');
   let spySetModelData: jasmine.Spy;
   const model = {
     minValue: 12,
@@ -28,7 +27,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     view.setModelData('onTooltip', model.onTooltip);
   });
   it('View should be defined', () => {
-    expect(view).toBeInstanceOf(SliderView);
+    expect(view).toBeDefined();
   });
 
   describe('Testing element "input-slider"', () => {
@@ -39,7 +38,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     beforeAll(() => {
       let element: HTMLElement | null;
       element = document.body.querySelector('input-slider');
-      if (element instanceof SliderView) {
+      if (element) {
         slider = element;
         if (slider.shadowRoot) {
           shadowRoot = slider.shadowRoot;
@@ -53,8 +52,8 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     afterAll(() => {
       slider.remove();
     })
-    it('Property view.presenter should be set to null', () => {
-      expect(view.presenter).toBeNull();
+    it('Property view.presenter should be set to  null', () => {
+      expect(view.presenter).toBeUndefined();
     });
     it('"View.shadowRoot" element should be defined', () => {
       expect(shadowRoot).toBeInstanceOf(ShadowRoot);

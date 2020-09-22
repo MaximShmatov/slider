@@ -4,7 +4,7 @@ import '../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import styles from './slider.module.sass';
 
 class SliderView extends HTMLElement implements ISliderView {
-  readonly presenter: ISliderPresenter | null = null;
+  readonly presenter: ISliderPresenter | null;
   private readonly rail: Rail = new Rail();
   private readonly scale: Scale = new Scale();
   private readonly styles = document.createElement('style');
@@ -12,16 +12,19 @@ class SliderView extends HTMLElement implements ISliderView {
   constructor(presenter: ISliderPresenter | null) {
     super();
     this.presenter = presenter;
-    this.className = 'input-slider-view';
-    this.attachShadow({mode: 'open'});
-    this.style.display = 'flex';
-    this.style.justifyContent = 'center';
     this.styles.innerHTML = styles;
+    this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.styles);
       this.shadowRoot.appendChild(this.rail);
       this.shadowRoot.appendChild(this.scale);
     }
+  }
+
+  connectedCallback() {
+    this.className = 'input-slider-view';
+    this.style.display = 'flex';
+    this.style.justifyContent = 'center';
   }
 
   setModelData(method: TMethodsUnion, value: number | boolean | string): void {
@@ -51,7 +54,7 @@ class SliderView extends HTMLElement implements ISliderView {
         this.scale.setAttribute('data-on-range', value.toString());
         break;
       case 'onVertical':
-        (value) ? this.style.flexDirection = 'row': this.style.flexDirection = 'column';
+        (value) ? this.style.flexDirection = 'row' : this.style.flexDirection = 'column';
         this.rail.setAttribute('data-on-vertical', value.toString());
         this.scale.setAttribute('data-on-vertical', value.toString());
     }
