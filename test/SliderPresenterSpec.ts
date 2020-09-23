@@ -35,10 +35,10 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
   });
   describe('Testing setting properties', () => {
     let spySetModelData: jasmine.Spy;
+    const dataModelEvt: { name: string, value: number | boolean | string }[] = [];
     const spyModelEvt = jasmine.createSpy('spyModelEvt').and.callFake((evt) => {
       dataModelEvt.push(evt.detail);
     });
-    const dataModelEvt: { name: string, value: number | boolean | string }[] = [];
 
     beforeAll(() => {
       spySetModelData = spyOn(presenter.view, 'setModelData');
@@ -62,6 +62,41 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
         }
       });
     }
+  });
+
+  describe('Testing handle events "slider-view"', () => {
+    let spySetProps: jasmine.Spy;
+    let dataViewEvt: CustomEvent;
+    const spyViewEvt = jasmine.createSpy('spyViewEvt').and.callFake((evt) => {
+      dataViewEvt = evt;
+    });
+    let thumbs: NodeListOf<HTMLElement>;
+
+    beforeAll(() => {
+      if (presenter.view.shadowRoot) {
+        thumbs = presenter.view.shadowRoot.querySelectorAll('input-slider-view-thumb');
+      }
+      spySetProps = spyOn(presenter, 'setProps');
+      presenter.view.addEventListener('slider-view', spyViewEvt);
+    });
+    afterEach(() => {
+      spyViewEvt.calls.reset();
+      spySetProps.calls.reset();
+    });
+    it('Events "mousedown (from)"->"mousemove" should dispatch event "slider-view" and call method "setProps" with (valueFrom)', () => {
+      thumbs[0].dispatchEvent(new MouseEvent('mousedown'));
+      document.dispatchEvent(new MouseEvent('mousemove'));
+      expect(spyViewEvt).toHaveBeenCalled();
+      expect(dataViewEvt.detail.name).toEqual('valueFrom');
+      expect(spySetProps).toHaveBeenCalledWith('valueFrom', jasmine.anything());
+    });
+    it('Events "mousedown (to)"->"mousemove" should dispatch event "slider-view" and call method "setProps with (valueTo)"', () => {
+      thumbs[1].dispatchEvent(new MouseEvent('mousedown'));
+      document.dispatchEvent(new MouseEvent('mousemove'));
+      expect(spyViewEvt).toHaveBeenCalled();
+      expect(dataViewEvt.detail.name).toEqual('valueTo');
+      expect(spySetProps).toHaveBeenCalledWith('valueTo', jasmine.anything());
+    });
   });
 
   function getHTMLElementFromObj(data: ISliderData): HTMLElement {
