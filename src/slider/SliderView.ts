@@ -22,7 +22,6 @@ class SliderView extends HTMLElement implements ISliderView {
   }
 
   connectedCallback() {
-    this.className = 'input-slider-view';
     this.style.display = 'flex';
     this.style.justifyContent = 'center';
   }

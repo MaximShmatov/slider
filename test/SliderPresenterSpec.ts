@@ -22,7 +22,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     expect(presenter.view).toBeDefined();
   });
   describe('Testing reading properties', () => {
-    const element: HTMLElement = getHTMLElementFromObj(modelData);
+    const element: HTMLElement = getHTMLElementFromObj();
     beforeAll(() => {
       presenter.init(element);
     });
@@ -99,7 +99,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     });
   });
 
-  function getHTMLElementFromObj(data: ISliderData): HTMLElement {
+  function getHTMLElementFromObj(): HTMLElement {
     const element = document.createElement('input');
     element.setAttribute('data-min-value', '5');
     element.setAttribute('data-max-value', '95');

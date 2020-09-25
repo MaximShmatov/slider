@@ -11,7 +11,7 @@ import {SliderView} from "./SliderView";
     if (method === undefined) {
       this.each(function () {
         if (this instanceof SliderView) {
-          viewArr.push(<ISliderView>this);
+          viewArr.push(this);
         }
       });
       return $().pushStack(viewArr);
@@ -20,10 +20,11 @@ import {SliderView} from "./SliderView";
     if (method === 'init') {
       this.each(function () {
         if (this instanceof SliderView) {
-          viewArr.push(<ISliderView>this);
+          viewArr.push(this);
         } else {
           let presenter = new SliderPresenter();
-          $(this).replaceWith(presenter.view);
+          presenter.view.className = this.className;
+          this.replaceWith(presenter.view);
           viewArr.push(presenter.view);
           if (prop === undefined) {
             presenter.init(this);

@@ -1,5 +1,4 @@
 import {SliderModel} from './SliderModel';
-import {SliderView} from './SliderView';
 
 
 class SliderPresenter implements ISliderPresenter {
@@ -8,7 +7,8 @@ class SliderPresenter implements ISliderPresenter {
 
   constructor() {
     this._model = new SliderModel(this.observer.bind(this));
-    this.view = new SliderView(this);
+    this.view = <ISliderView>document.createElement('input-slider');
+    this.view.presenter = this;
     this.view.addEventListener('slider-view', this.handleViewEvents.bind(this));
   }
 
