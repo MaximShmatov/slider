@@ -1,5 +1,5 @@
 'use strict'
-
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
@@ -22,6 +22,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.pug')
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery'
     })
   ],
   module: {

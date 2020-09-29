@@ -1,4 +1,4 @@
-import {SliderPresenter} from "../src/slider/SliderPresenter";
+import {SliderPresenter} from '../src/slider/SliderPresenter';
 
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {

@@ -1,9 +1,8 @@
-import * as jQuery from 'jquery';
+import * as $ from 'jquery';
+import {SliderView} from './SliderView';
 import {SliderPresenter} from './SliderPresenter';
-import {SliderView} from "./SliderView";
 
-
-;(function ($: JQueryStatic): void {
+;(function ($:JQueryStatic): void {
   $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | string | FormData | ISliderData | HTMLElement): any {
 
     let viewArr: ISliderView[] = [];
@@ -53,4 +52,4 @@ import {SliderView} from "./SliderView";
       }
     }
   }
-})(jQuery);
+}($));

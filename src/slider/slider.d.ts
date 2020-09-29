@@ -49,3 +49,7 @@ interface HTMLElementEventMap {
   'slider-view': CustomEvent;
   'slider-data': CustomEvent;
 }
+
+interface Window {
+  $: JQueryStatic;
+}

@@ -1,5 +1,6 @@
 import styles from '../src/slider/slider.module.sass';
-import {data} from "./TestData";
+import {data} from './TestData';
+
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
   const view = <ISliderView>document.createElement('input-slider');
