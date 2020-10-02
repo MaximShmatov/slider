@@ -360,7 +360,7 @@ class Scale extends HTMLElement {
     this._scaleValueItems[3].textContent = max.toFixed();
   }
 
-  private handleMouseDown(evt: MouseEventInit) {
+  private handleMouseDown(evt: MouseEventInit): void {
     const rect = this.getBoundingClientRect();
     let position: number = 0;
     if (evt.clientX && evt.clientY) {
@@ -384,10 +384,13 @@ class Scale extends HTMLElement {
   }
 }
 
-customElements.define('input-slider', SliderView);
-customElements.define('input-slider-view-thumb', Thumb);
-customElements.define('input-slider-view-rail', Rail);
-customElements.define('input-slider-view-scale', Scale);
-customElements.define('input-slider-view-progress', Progress);
+if (!customElements.get('input-slider')) {
+  customElements.define('input-slider', SliderView);
+  customElements.define('input-slider-view-thumb', Thumb);
+  customElements.define('input-slider-view-rail', Rail);
+  customElements.define('input-slider-view-scale', Scale);
+  customElements.define('input-slider-view-progress', Progress);
+}
+
 
 export {SliderView}

@@ -1,5 +1,5 @@
 import {SliderModel} from './SliderModel';
-
+import './SliderView';
 
 class SliderPresenter implements ISliderPresenter {
   readonly view: ISliderView;
@@ -49,7 +49,7 @@ class SliderPresenter implements ISliderPresenter {
     return Math.round(value);
   }
 
-  private observer(key: TMethodsUnion, value: number | boolean | string) {
+  private observer(key: TMethodsUnion, value: number | boolean | string): void {
     this.view.setModelData(key, value);
     this.view.dispatchEvent(new CustomEvent('slider-data', {
       bubbles: true,

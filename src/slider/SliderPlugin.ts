@@ -1,5 +1,4 @@
 import * as $ from 'jquery';
-import {SliderView} from './SliderView';
 import {SliderPresenter} from './SliderPresenter';
 
 ;(function ($:JQueryStatic): void {
@@ -9,7 +8,7 @@ import {SliderPresenter} from './SliderPresenter';
 
     if (method === undefined) {
       this.each(function () {
-        if (this instanceof SliderView) {
+        if (instanceOfSliderView(this)) {
           viewArr.push(this);
         }
       });
@@ -18,7 +17,7 @@ import {SliderPresenter} from './SliderPresenter';
 
     if (method === 'init') {
       this.each(function () {
-        if (this instanceof SliderView) {
+        if (instanceOfSliderView(this)) {
           viewArr.push(this);
         } else {
           let presenter = new SliderPresenter();
@@ -36,13 +35,13 @@ import {SliderPresenter} from './SliderPresenter';
     }
 
     if (method) {
-      if (prop === undefined && this[0] instanceof SliderView) {
+      if (prop === undefined && instanceOfSliderView(this[0])) {
         if(this[0].presenter) {
           return this[0].presenter.getProps(method);
         }
       } else {
         this.each(function () {
-          if (this instanceof SliderView) {
+          if (instanceOfSliderView(this)) {
             if(this.presenter) {
               return this.presenter.setProps(method, <number | boolean | string>prop);
             }
@@ -51,5 +50,9 @@ import {SliderPresenter} from './SliderPresenter';
         return this;
       }
     }
+  }
+
+  function instanceOfSliderView(obj: HTMLElement): obj is ISliderView {
+    return 'presenter' in obj;
   }
 }($));

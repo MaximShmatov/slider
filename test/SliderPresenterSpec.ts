@@ -16,7 +16,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     serverURL: 'http://localhost:9000/slider'
   }
   const props = <TMethodsUnion[]>Object.keys(modelData);
-
+  afterAll(() => {
+    //CustomElementRegistry.
+  });
 
   it('View should be defined', () => {
     expect(presenter.view).toBeDefined();

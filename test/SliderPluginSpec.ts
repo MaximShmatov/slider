@@ -1,4 +1,4 @@
-import {getHTMLElement, data} from "./TestData";
+import {getHTMLElement, data} from './TestData';
 import '../src/slider/SliderPlugin.ts';
 import * as $ from 'jquery';
 
@@ -24,16 +24,16 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPLUGIN.TS', () => {
       $obj = $('.test-element').slider('init');
       expect($obj).toBeInstanceOf($);
       expect($obj.length).toEqual(3);
-      // expect($obj[0]).toBeInstanceOf(SliderView);
-      // expect($obj[1]).toBeInstanceOf(SliderView);
-      // expect($obj[2]).toBeInstanceOf(SliderView);
+      expect($obj[0]).toBeInstanceOf(HTMLElement);
+      expect($obj[1]).toBeInstanceOf(HTMLElement);
+      expect($obj[2]).toBeInstanceOf(HTMLElement);
     });
     it('Plugin should find initialized elements and return them', () => {
       $('.test-element').first().slider('init');
       $obj = $('.test-element').slider();
       expect($obj).toBeInstanceOf($);
       expect($obj.length).toEqual(1);
-      // expect($obj[0]).toBeInstanceOf(SliderView);
+      expect($obj[0]).toBeInstanceOf(HTMLElement);
     });
   });
 
