@@ -1,102 +1,147 @@
-Range Slider Plugin for jQuery
-==============================
-[![Build Status](diagram.svg)](https://travis-ci.org/digitalBush/jquery.maskedinput)
-Overview
+Плагин слайдера для jQuery
+========
+Обзор
 --------
-This is a masked input plugin for the jQuery javascript library. It allows a user to more easily enter fixed width input where you would like them to enter the data in a certain format (dates,phone numbers, etc). It has been tested on Internet Explorer, Firefox, Safari, Opera, and Chrome.  A mask is defined by a format made up of mask literals and mask definitions. Any character not in the definitions list below is considered a mask literal. Mask literals will be automatically entered for the user as they type and will not be able to be removed by the user.The following mask definitions are predefined:
-
-* a - Represents an alpha character (A-Z,a-z)
-* 9 - Represents a numeric character (0-9)
-* \* - Represents an alphanumeric character (A-Z,a-z,0-9)
-
-### Usage
-First, include the jQuery and masked input javascript files.
-
+Это специальный контрол для библиотеки javascript jQuery, 
+который позволяет перетягиванием задавать какое-то целое числовое значение. 
+Он был протестирован в Internet Explorer 11, Opera 70 и Chrome 85. Возможности плагина:
+1. Плагин имеет удобное API для подключения его к элементам на странице. 
+Подключение происходит за счет замены искомого HTML элемента.
+2. Плагин может быть инициализирован: 
+    * из JS-объекта;
+    * из HTML-элемента;
+    * с сервера посредством REST.
+3. Плагин позволяет из JS-скрипта в режиме реального времени задавать следующие настройки:
+    * минимальное и максимальное значение;
+    * размер шага;
+    * вид (вертикальный или горизонтальный);
+    * одиночное значение или интервал;
+    * включать и отключать показ текущего значения над бегунком;
+    * включать и отключать шкалу допустимых значений.
+4. Стили плагина вынесены в отдельный файл, и это позволяет менять его дизайн и оформление.
+### Зависимости    
+* jquery-3.5.1
+### Подключение
 ```html
-<script src="jquery.js" type="text/javascript"></script>
-<script src="jquery.maskedinput.js" type="text/javascript"></script>
+<script type="text/javascript" src="slider/SliderPlugin.js"></script>
 ```
-
-Next, call the mask function for those items you wish to have masked.
-
-```html
-jQuery(function($){
-   $("#date").mask("99/99/9999");
-   $("#phone").mask("(999) 999-9999");
-   $("#tin").mask("99-9999999");
-   $("#ssn").mask("999-99-9999");
+или
+```javascript
+import 'slider/SliderPlugin.js';
+```
+### Инициализация
+```haml
+<div id="slider" data-min-value="-10" data-max-value="100" data-value-from="0" data-step-size="1"></div>
+```
+```javascript
+jQuery('#slider').slider('init');
+```
+или
+```javascript
+jQuery('#slider').slider('init', {
+    minValue:-10,
+    maxValue: 100,
+    valueFrom: 0,
+    valueTo: 10,
+    stepSize: 1,
+    onRange: true,
+    onVertical: true,
+    onTooltip: true,
+    onScale: true,
+    serverURL: 'http://server/slider'
 });
 ```
-
-Optionally, if you are not satisfied with the underscore ('_') character as a placeholder, you may pass an optional argument to the maskedinput method.
-
-```html
-jQuery(function($){
-   $("#product").mask("99/99/9999",{placeholder:" "});
-});
+или
+```javascript
+obj = new FormData();
+obj.set('uri', 'http://server/slider');
+jQuery('#slider').slider('init', obj);
 ```
-
-Optionally, if you would like to execute a function once the mask has been completed, you can specify that function as an optional argument to the maskedinput method.
-
-```html
-jQuery(function($){
-   $("#product").mask("99/99/9999",{completed:function(){alert("You typed the following: "+this.val());}});
-});
+### Установа / получение свойств
+```javascript
+$obj = jQuery('#slider').slider('init');
+$obj.slider('minValue', '10');
+let minValue = $obj.slider('minValue');
 ```
+--------------
+Архитектура
+--------------
+Плагин реализован на языке TypeScript с применением шаблона проектирования MVP.  
+Тесты к плагину прилагаются, и используют фреймворки Jasmine и Karma. 
+Команда запуска тестов `npm run test`.
+Плагин состоит из шести файлов:
+* SliderModel.ts - содержит класс модели с логикой валидации свойств; 
+* SliderView.ts - содержит классы пользовательских веб-компонентов;
+* SliderPresenter.ts - контроллер или презентер,
+ реализует API плагина (инициализация, установка и чтение опций), а также расчитывает значение бегунка;
+* SliderPlugin.ts - собственно сам плагин. Присоединяет функцию "Slider" к jQuery объекту;
+* slider.module.sass - стили плагина. Также сожержат модификаторы для вертикального состояния;
+* slider.d.ts - файл деклараций. Содержит интерфейсы и определения типов;
+### SliderModel.ts
+Файл содержит в себе реализацию "Model" шаблона проектирования MVP.
+Класс модели содержит в себе свойства и состояния плагина, а также методы инициализации. 
+При создании объекта в конструктор передается функция, 
+которая вызывается в случае изменения значения свойства.
+Для инициализации плагина модель может принимать объект (HTMLElement | FormData | ISliderData). 
+При установке свойства, сетеры проверяют переданное им значение на корректнось 
+(установа значения проходит валидацию). Объект модели представлен следующими свойствами:
+* _minValue: number - минимальное значение;
+* _maxValue: number - максимальное значение;
+* _valueFrom: number - текущее значение (если "onRange = true", то начальное значение);
+* _valueTo: number - если "onRange = true", то конечное значение, иначе игнорируется;
+* _stepSize: number - размер шага. Размер шага не может быть меньше единицы;
+* _onRange: boolean - вкл/выкл диапазона слайдера;
+* _onTooltip: boolean - вкл/выкл табло значения над бегунком;
+* _onScale: boolean - вкл/выкл шкалу слайдера;
+* _onVertical: boolean - вкл/выкл вертикальное состояние;
+* _serverURL: string - адрес сервера в случае инициализации по сети;
+* _observer: function - функция обратного вызова;
+### SliderView.ts
+Файл содержит в себе реализацию "View" шаблона проектирования MVP, и содержит в себе пять классов веб-компонентов.
+В случае изменения значения слайдера пользователем посредством перетаскивания бегунка,
+генерирует событие "slider-view". Событие содержит в себе объект: "{name: string, value: number}".
+В образовательных целях вид слайдера реализован посредством веб-компонентов и разбит на "subView".
+Для поддержки браузерами веб-компонентов к "View" были подключены 
+[полифилы](https://www.webcomponents.org/polyfills). Файл стилей импортируется как модуль.
+Это исключает конфликт имен классов в случае, если на странице странице подключено несколько слайдеров.
+"View" реализован посредством следующих классов:
+* SliderView - агрегирует все кастомные элементы и встраивает их в ShadowRoot;
+* Scale - представляет собой шкалу слайдера;
+* Rail - реализует рельс по которому двигается ползунок;
+* Progress - визуально выделяет текущее значение слайдера;
+* Thumb - собственно, сам ползунок.
+### SliderPresenter.ts
+Файл содержит в себе реализацию "Presenter" шаблона проектирования MVP. 
+Презентер является связующим звеном между моделью и представлением. Устанавливает или читает свойства 
+модели и затем обновляет вид.
 
-Optionally, if you would like to disable the automatic discarding of the uncomplete input, you may pass an optional argument to the maskedinput method
-```html
-jQuery(function($){
-   $("#product").mask("99/99/9999",{autoclear: false});
-});
-```
+**Сздание объекта класа "SliderPresenter" происходит в следующем порядке:**
+1. Создает объект модели и передает в неё функцию обратного вызова.
+2. Создает пользовательский элемент "input-slider" и помещает в него ссылку на себя.
+3. На созданный объект "view" устанавливает прослушку события "slider-view".
 
-You can now supply your own mask definitions.
-```html
-jQuery(function($){
-   $.mask.definitions['~']='[+-]';
-   $("#eyescript").mask("~9.99 ~9.99 999");
-});
-```
+**Установка свойств слайдера или его инициализация происходит в следующем порядке:**
+1. Вызывается метод установки свойства или инициализации модели.
+2. Если значение свойства модели изменилось, вызывается функция презентера "observer".
+3. Функция "observer" вызывает метод представления для установки нового значения атрибутов.
+4. Функция "observer" генерирует событие "slider-data" для оповещения внешнего кода об изменениях.
 
-You can have part of your mask be optional. Anything listed after '?' within the mask is considered optional user input. The common example for this is phone number + optional extension.
+**Реакция презентера на действия пользователя происходит в следующем порядке:**
+1. Презентер слушает событие "slider-view" на представлении.
+2. Извлекает из объекта события координаты бегунка и расчитывает значение слайдера.
+3. Устанавливает в свойство модели расчитанное значение.
+4. Генерирует событие "slider-data" для оповещения внешнего кода об изменениях.
+### SliderPlugin.ts
+Файл содержит в себе код расщирения jQuery объекта перегруженой функцией "slider". 
+Функция имеет следующие реализации:
+* `slider(method: 'init'): JQuery` - возвращает jQuery объект с инициализированными элементами;
+* `slider(method: TMethodsUnion): number | boolean | string` - возвращает значение свойства плагина;
+* `slider(method: TMethodsUnion, prop: number | boolean | string): void` - устанавливает свойство плагина;
+* `slider(): JQuery` - возвращает jQuery объект с ранее инициализированными элементами;
+* `slider(method: 'init', prop: HTMLElement | ISliderData | FormData): JQuery` - инициализирует элементы 
+из заданного объекта;
 
-```html
-jQuery(function($){
-   $("#phone").mask("(999) 999-9999? x99999");
-});
-```
-
-If your requirements aren't met by the predefined placeholders, you can always add your own. For example, maybe you need a mask to only allow hexadecimal characters. You can add your own definition for a placeholder, say 'h', like so: `$.mask.definitions['h'] = "[A-Fa-f0-9]";` Then you can use that to mask for something like css colors in hex with a `mask "#hhhhhh"`.
-
-```html
-jQuery(function($){
-   $("#phone").mask("#hhhhhh");
-});
-```
-
-
-By design, this plugin will reject input which doesn't complete the mask. You can bypass this by using a '?' character at the position where you would like to consider input optional. For example, a mask of "(999) 999-9999? x99999" would require only the first 10 digits of a phone number with extension being optional.
-
-
-Getting the bits
-----------------
-We generally recommend that you use [bower](http://bower.io) to install jquery.maskedinput plugin.
-
-    $ bower install --save jquery.maskedinput
-
-
-Setting up your Developer Environment
--------------------------------------
-jQuery Masked Input uses [NodeJS](http://www.nodejs.org) and [GruntJS](http://www.gruntjs.com) as it's developer platform and build automation tool.
-
-To get your environment setup correctly, you'll need nodejs version 0.8.25 or greater installed. You'll also need to install the grunt command line tool:
-
-    $ sudo npm install -g grunt-cli
-
-Once node is installed on your system all that you need to do is install the developer dependencies and run the grunt build:
-
-    $ npm install
-    $ grunt
-
-All of the tests for jQuery Masked Input are run using the [jasmine](http://jasmine.github.io/) test runner.
+--------------
+UML-диаграмма классов
+--------------
+[![Build Status](diagram.png)](https://travis-ci.org/digitalBush/jquery.maskedinput)

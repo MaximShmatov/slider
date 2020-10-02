@@ -1,5 +1,5 @@
 import './index.sass';
-import './slider/SliderPlugin'
+import './slider/SliderPlugin';
 
 
 class ControlPanel {
