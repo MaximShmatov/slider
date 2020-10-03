@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.config.js",
-    "test": "karma start karma.conf.js"
+    "test": "karma start karma.conf.js",
+    "build": "webpack --config webpack.build.config.js"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,6 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "html-webpack-plugin": "^4.4.1",
-    "jquery": "^3.5.1",
     "karma": "^5.2.2",
     "karma-chrome-launcher": "^3.1.0",
     "karma-cli": "^2.0.0",
@@ -53,6 +53,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "jquery": "^3.5.1",
     "@webcomponents/webcomponentsjs": "^2.4.4"
   }
 }

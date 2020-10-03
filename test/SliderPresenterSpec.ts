@@ -16,25 +16,25 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     serverURL: 'http://localhost:9000/slider'
   }
   const props = <TMethodsUnion[]>Object.keys(modelData);
-  afterAll(() => {
-    //CustomElementRegistry.
-  });
+
 
   it('View should be defined', () => {
     expect(presenter.view).toBeDefined();
   });
+
   describe('Testing reading properties', () => {
     const element: HTMLElement = getHTMLElementFromObj();
+
     beforeAll(() => {
       presenter.init(element);
     });
     for (let key of props) {
       it(`getProps("${key}") should return ${element.dataset[key]}`, () => {
-        expect(element.dataset[key]).toBeDefined();
         expect(String(presenter.getProps(key))).toEqual(String(element.dataset[key]));
       });
     }
   });
+
   describe('Testing setting properties', () => {
     let spySetModelData: jasmine.Spy;
     const dataModelEvt: { name: string, value: number | boolean | string }[] = [];

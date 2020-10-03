@@ -1,6 +1,6 @@
 Плагин слайдера для jQuery
 ========
-Обзор
+Обзор ([демонстрационная страница плагина](dist/index.html))
 --------
 Это специальный контрол для библиотеки javascript jQuery, 
 который позволяет перетягиванием задавать какое-то целое числовое значение. 
@@ -144,4 +144,4 @@ let minValue = $obj.slider('minValue');
 --------------
 UML-диаграмма классов
 --------------
-[![Build Status](diagram.png)](https://travis-ci.org/digitalBush/jquery.maskedinput)
+![UML-диаграмма классов](diagram.png "UML-диаграмма классов")

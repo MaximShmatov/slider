@@ -1,8 +1,8 @@
 const formidable = require('express-formidable');
 const data = {
-  minValue: getRandom(100),
+  minValue: getRandom(10),
   maxValue: getRandom(100),
-  valueFrom: getRandom(100),
+  valueFrom: getRandom(10),
   valueTo: getRandom(100),
   stepSize: getRandom(10),
   onVertical: Math.round(Math.random()) === 1,

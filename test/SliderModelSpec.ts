@@ -300,15 +300,15 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
   function getTestData(func: Function): void {
     const element = getHTMLElement();
     const formData: FormData = new FormData();
-    formData.set('variant', 'random(0 - 100)');
+    formData.set('uri', 'http://localhost:9000/slider');
     const title = [
       `Testing model initialized from the "ISliderData": ${JSON.stringify(data)}`,
-      `Testing model initialized from the server: variant - ${formData.get('variant')}`,
+      `Testing model initialized from the server: address - ${formData.get('uri')}`,
       `Testing model initialized from the "HTMLElement": ${element.outerHTML}`
     ];
     for (let i = 0; i < 2; i++) {
       func(title[0], data);
-      func(title[1], formData);
+      //func(title[1], formData);
       func(title[2], element);
     }
   }

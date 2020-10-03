@@ -1,21 +1,25 @@
 'use strict'
 
-const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
-
+const webpack = require('webpack');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   context: path.resolve(__dirname, 'src'),
   entry: {
+    slider: './slider/SliderPlugin.ts',
     index: './index.ts'
   },
-  resolve: {
-    extensions: ['.ts', '.js'],
+  output: {
+    path: path.resolve(__dirname, 'dist'),
   },
-  devtool: 'inline-source-map',
+  externals: {
+    //jquery: 'jQuery'
+  },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.pug')
@@ -33,7 +37,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: true
-            },
+            }
           },
           'sass-loader'
         ]
@@ -48,6 +52,12 @@ module.exports = {
         ]
       },
       {
+        test: /\.ts$/,
+        use: [
+          'ts-loader'
+        ]
+      },
+      {
         test: /\.pug$/,
         use: {
           loader: 'pug-loader',
@@ -55,22 +65,7 @@ module.exports = {
             pretty: true
           }
         }
-      },
-      {
-        test: /\.ts$/,
-        use: [
-          'ts-loader'
-        ]
       }
     ]
-  },
-  devServer: {
-    //contentBase: path.resolve(__dirname, 'dist'),
-    host: '0.0.0.0',
-    watchContentBase: true,
-    port: 9000,
-    progress: true,
-    hot: true,
-    before: slider
   }
 }

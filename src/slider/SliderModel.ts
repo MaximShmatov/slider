@@ -28,6 +28,7 @@ class SliderModel implements ISliderModel {
   }
 
   private initModelFromServer(form: FormData): Promise<boolean> {
+    this.serverURL = <string>form.get('uri');
     return fetch(this.serverURL, {method: 'POST', body: form})
       .then((res: Response) => res.json())
       .then((data: ISliderData) => {

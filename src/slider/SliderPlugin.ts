@@ -18,6 +18,9 @@ import {SliderPresenter} from './SliderPresenter';
     if (method === 'init') {
       this.each(function () {
         if (instanceOfSliderView(this)) {
+          if(prop && this.presenter) {
+            this.presenter.init(<HTMLElement | FormData | ISliderData>prop)
+          }
           viewArr.push(this);
         } else {
           let presenter = new SliderPresenter();
