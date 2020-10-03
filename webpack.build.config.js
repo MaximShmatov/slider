@@ -22,7 +22,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/index.pug')
+      template: path.resolve(__dirname, './src/index.pug')
     }),
     new webpack.ProvidePlugin({
       $: 'jquery'
