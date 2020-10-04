@@ -3,6 +3,7 @@ import {SliderPresenter} from './SliderPresenter';
 
 ;(function ($:JQueryStatic): void {
   $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | string | FormData | ISliderData | HTMLElement): any {
+    if (this.length === 0) return this;
 
     let viewArr: ISliderView[] = [];
 
