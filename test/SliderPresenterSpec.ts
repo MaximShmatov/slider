@@ -1,5 +1,19 @@
-import {SliderPresenter} from '../src/slider/SliderPresenter';
+import SliderPresenter from '../src/slider/SliderPresenter';
 
+function getHTMLElementFromObj(): HTMLElement {
+  const element = document.createElement('input');
+  element.setAttribute('data-min-value', '5');
+  element.setAttribute('data-max-value', '95');
+  element.setAttribute('data-value-from', '15');
+  element.setAttribute('data-value-to', '85');
+  element.setAttribute('data-step-size', '5');
+  element.setAttribute('data-on-range', 'false');
+  element.setAttribute('data-on-scale', 'false');
+  element.setAttribute('data-on-vertical', 'false');
+  element.setAttribute('data-on-tooltip', 'false');
+  element.setAttribute('data-server-u-r-l', 'test string');
+  return element;
+}
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
   const presenter = new SliderPresenter();
@@ -13,26 +27,25 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     valueFrom: 10,
     valueTo: 90,
     stepSize: 1,
-    serverURL: 'http://localhost:9000/slider'
-  }
+    serverURL: 'http://localhost:9000/slider',
+  };
   const props = <TMethodsUnion[]>Object.keys(modelData);
-
 
   it('View should be defined', () => {
     expect(presenter.view).toBeDefined();
   });
 
   describe('Testing reading properties', () => {
-    const element: HTMLElement = getHTMLElementFromObj();
+    const element = getHTMLElementFromObj();
 
     beforeAll(() => {
       presenter.init(element);
     });
-    for (let key of props) {
+    props.forEach((key) => {
       it(`getProps("${key}") should return ${element.dataset[key]}`, () => {
         expect(String(presenter.getProps(key))).toEqual(String(element.dataset[key]));
       });
-    }
+    });
   });
 
   describe('Testing setting properties', () => {
@@ -51,7 +64,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
       spySetModelData.calls.reset();
       dataModelEvt.length = 0;
     });
-    for (let key of props) {
+    props.forEach((key) => {
       it(`setProps("${key}") should dispatch event "slider-model" and call method "setModelData" with (${key}, ${modelData[key]})`, () => {
         presenter.setProps(key, modelData[key]);
         if (key === 'valueTo' && presenter.getProps('onRange') === false) {
@@ -63,7 +76,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
           expect(spySetModelData).toHaveBeenCalledWith(key, modelData[key]);
         }
       });
-    }
+    });
   });
 
   describe('Testing handle events "slider-view"', () => {
@@ -100,19 +113,4 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
       expect(spySetProps).toHaveBeenCalledWith('valueTo', jasmine.anything());
     });
   });
-
-  function getHTMLElementFromObj(): HTMLElement {
-    const element = document.createElement('input');
-    element.setAttribute('data-min-value', '5');
-    element.setAttribute('data-max-value', '95');
-    element.setAttribute('data-value-from', '15');
-    element.setAttribute('data-value-to', '85');
-    element.setAttribute('data-step-size', '5');
-    element.setAttribute('data-on-range', 'false');
-    element.setAttribute('data-on-scale', 'false');
-    element.setAttribute('data-on-vertical', 'false');
-    element.setAttribute('data-on-tooltip', 'false');
-    element.setAttribute('data-server-u-r-l', 'test string');
-    return element;
-  }
 });

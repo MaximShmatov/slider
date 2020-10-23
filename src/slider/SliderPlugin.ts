@@ -1,11 +1,17 @@
-import * as $ from 'jquery';
-import {SliderPresenter} from './SliderPresenter';
+import SliderPresenter from './SliderPresenter';
 
-;(function ($:JQueryStatic): void {
+(function (jquery: JQueryStatic): void {
+  if (!jquery) return;
+  const $ = jquery;
+
+  function instanceOfSliderView(obj: HTMLElement): obj is ISliderView {
+    return 'presenter' in obj;
+  }
+
   $.fn.slider = function (method?: TMethodsUnion | 'init', prop?: number | boolean | string | FormData | ISliderData | HTMLElement): any {
     if (this.length === 0) return this;
 
-    let viewArr: ISliderView[] = [];
+    const viewArr: ISliderView[] = [];
 
     if (method === undefined) {
       this.each(function () {
@@ -19,12 +25,12 @@ import {SliderPresenter} from './SliderPresenter';
     if (method === 'init') {
       this.each(function () {
         if (instanceOfSliderView(this)) {
-          if(prop && this.presenter) {
-            this.presenter.init(<HTMLElement | FormData | ISliderData>prop)
+          if (prop && this.presenter) {
+            this.presenter.init(<HTMLElement | FormData | ISliderData>prop);
           }
           viewArr.push(this);
         } else {
-          let presenter = new SliderPresenter();
+          const presenter = new SliderPresenter();
           presenter.view.className = this.className;
           this.replaceWith(presenter.view);
           viewArr.push(presenter.view);
@@ -40,13 +46,13 @@ import {SliderPresenter} from './SliderPresenter';
 
     if (method) {
       if (prop === undefined && instanceOfSliderView(this[0])) {
-        if(this[0].presenter) {
+        if (this[0].presenter) {
           return this[0].presenter.getProps(method);
         }
       } else {
         this.each(function () {
           if (instanceOfSliderView(this)) {
-            if(this.presenter) {
+            if (this.presenter) {
               return this.presenter.setProps(method, <number | boolean | string>prop);
             }
           }
@@ -54,9 +60,5 @@ import {SliderPresenter} from './SliderPresenter';
         return this;
       }
     }
-  }
-
-  function instanceOfSliderView(obj: HTMLElement): obj is ISliderView {
-    return 'presenter' in obj;
-  }
-}($));
+  };
+}(window.jQuery));

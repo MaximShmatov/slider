@@ -1,6 +1,6 @@
 // Karma configuration
 // Generated on Wed Sep 16 2020 12:16:17 GMT+0300 (Москва, стандартное время)
-const webpackConfig = require('./webpack.dev.config');
+const webpackConfig = require('./webpack.config');
 
 module.exports = function (config) {
   config.set({
@@ -10,7 +10,7 @@ module.exports = function (config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jquery-3.4.0', 'jasmine'],
 
     // list of files / patterns to load in the browser
     files: [

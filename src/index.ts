@@ -1,50 +1,58 @@
 import './index.sass';
-import './slider/SliderPlugin';
-
 
 class ControlPanel {
   private readonly $slider: JQuery;
+
   private readonly $minValue: JQuery;
+
   private readonly $maxValue: JQuery;
+
   private readonly $stepSize: JQuery;
+
   private readonly $valueFrom: JQuery;
+
   private readonly $valueTo: JQuery;
+
   private readonly $valueRange: JQuery;
+
   private readonly $onScale: JQuery;
+
   private readonly $onTooltip: JQuery;
+
   private readonly $onRange: JQuery;
+
   private readonly $onVertical: JQuery;
 
-  constructor(container: HTMLElement) {
-    this.$minValue = $(container)
+  constructor($container: JQuery) {
+    this.$minValue = $container
       .find('.control__min-value')
       .on('blur', this.setMinValue.bind(this));
-    this.$maxValue = $(container)
+    this.$maxValue = $container
       .find('.control__max-value')
       .on('blur', this.setMaxValue.bind(this));
-    this.$stepSize = $(container)
+    this.$stepSize = $container
       .find('.control__step-size')
       .on('blur', this.setStepSize.bind(this));
-    this.$valueFrom = $(container)
+    this.$valueFrom = $container
       .find('.control__value-from')
       .on('blur', this.setValueFrom.bind(this));
-    this.$valueTo = $(container)
+    this.$valueTo = $container
       .find('.control__value-to')
       .on('blur', this.setValueTo.bind(this));
-    this.$valueRange = $(container).find('.control__value-range');
-    this.$onTooltip = $(container)
+    this.$valueRange = $container.find('.control__value-range');
+    this.$onTooltip = $container
       .find('.control__on-tooltip')
       .on('change', this.toggleTooltip.bind(this));
-    this.$onVertical = $(container)
+    this.$onVertical = $container
       .find('.control__on-vertical')
       .on('change', this.toggleVertical.bind(this));
-    this.$onRange = $(container)
+    this.$onRange = $container
       .find('.control__on-range')
       .on('change', this.toggleRange.bind(this));
-    this.$onScale = $(container)
+    this.$onScale = $container
       .find('.control__on-scale')
       .on('change', this.toggleScale.bind(this));
-    this.$slider = $(container)
+    this.$slider = $container
       .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
       .find('.input-slider-plugin')
       .slider('init');
@@ -120,23 +128,27 @@ class ControlPanel {
         break;
       case 'onVertical':
         this.$onVertical.prop('checked', evt.detail.value);
+        break;
+      default:
     }
   }
 }
 
-$('.container').each(function () {
-  new ControlPanel(this);
+const plugins = [];
+
+window.jQuery('.container').each(function () {
+  plugins.push(new ControlPanel(window.jQuery(this)));
 });
 
-$('.init-from-object').slider('init', {
-    minValue: 0,
-    maxValue: 100,
-    valueFrom: 10,
-    valueTo: 80,
-    stepSize: 1,
-    onVertical: false,
-    onRange: true,
-    onTooltip: true,
-    onScale: true,
-    serverURL: 'http://localhost:9000/slider'
+window.jQuery('.init-from-object').slider('init', {
+  minValue: 0,
+  maxValue: 100,
+  valueFrom: 10,
+  valueTo: 90,
+  stepSize: 1,
+  onVertical: false,
+  onRange: true,
+  onTooltip: true,
+  onScale: true,
+  serverURL: 'http://localhost:9000/slider',
 });

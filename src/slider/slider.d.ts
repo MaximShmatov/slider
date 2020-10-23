@@ -1,7 +1,5 @@
 declare module '*.module.sass';
 
-type TMethodsUnion = keyof ISliderData;
-
 interface ISliderData {
   minValue: number;
   maxValue: number;
@@ -15,14 +13,10 @@ interface ISliderData {
   serverURL: string;
 }
 
+type TMethodsUnion = keyof ISliderData;
+
 interface ISliderModel extends ISliderData {
   init(data: HTMLElement | ISliderData | FormData | null): Promise<boolean>;
-}
-
-interface ISliderView extends HTMLElement {
-  presenter: ISliderPresenter | null;
-
-  setModelData(method: TMethodsUnion, value: number | boolean | string): void;
 }
 
 interface ISliderPresenter {
@@ -31,6 +25,12 @@ interface ISliderPresenter {
   setProps(method: TMethodsUnion, value: number | boolean | string): void
 
   getProps(method: TMethodsUnion): number | boolean | string;
+}
+
+interface ISliderView extends HTMLElement {
+  presenter: ISliderPresenter | null;
+
+  setModelData(method: TMethodsUnion, value: number | boolean | string): void;
 }
 
 interface JQuery {
@@ -51,5 +51,5 @@ interface HTMLElementEventMap {
 }
 
 interface Window {
-  $: JQueryStatic;
+  jQuery: JQueryStatic;
 }

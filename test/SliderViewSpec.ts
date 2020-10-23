@@ -1,6 +1,5 @@
 import styles from '../src/slider/slider.module.sass';
-import {data} from './TestData';
-
+import { data } from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
   const view = <ISliderView>document.createElement('input-slider');
@@ -46,7 +45,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     });
     afterAll(() => {
       slider.remove();
-    })
+    });
     it('Property view.presenter should be set to  null', () => {
       expect(view.presenter).toBeUndefined();
     });
@@ -60,10 +59,10 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
       expect(slider).toBe(view);
     });
     it('The "view.shadowRoot" element must include "input-slider-view-rail"', () => {
-      expect(rail).toBeInstanceOf(HTMLElement)
+      expect(rail).toBeInstanceOf(HTMLElement);
     });
     it('The "view.shadowRoot" element must include "input-slider-view-scale"', () => {
-      expect(scale).toBeInstanceOf(HTMLElement)
+      expect(scale).toBeInstanceOf(HTMLElement);
     });
     it('The "view.shadowRoot" element must include style element', () => {
       expect(shadowRoot.querySelector('style')).toBeInstanceOf(HTMLElement);
@@ -77,21 +76,21 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     });
 
     describe('Testing element "input-slider-view-rail"', () => {
-      const positionFrom: number = (data.valueFrom - data.minValue) / ((data.maxValue - data.minValue) / 100);
-      const positionTo: number = (data.valueTo - data.minValue) / ((data.maxValue - data.minValue) / 100);
+      let positionFrom = (data.valueFrom - data.minValue);
+      positionFrom /= (data.maxValue - data.minValue) / 100;
+      let positionTo = (data.valueTo - data.minValue);
+      positionTo /= ((data.maxValue - data.minValue) / 100);
       let thumbFrom: HTMLElement;
       let thumbTo: HTMLElement;
       let progress: HTMLElement;
       beforeAll(() => {
-        const thumbs = rail.querySelectorAll('input-slider-view-thumb');
-        if (thumbs[0] instanceof HTMLElement) thumbFrom = thumbs[0];
-        if (thumbs[1] instanceof HTMLElement) thumbTo = thumbs[1];
-        let element = rail.querySelector('input-slider-view-progress');
+        [thumbFrom, thumbTo] = <HTMLElement[]>Array.from(rail.querySelectorAll('input-slider-view-thumb'));
+        const element = rail.querySelector('input-slider-view-progress');
         if (element instanceof HTMLElement) progress = element;
       });
       it('Must include element "input-slider-view-progress"', () => {
         expect(progress).toBeInstanceOf(HTMLElement);
-      })
+      });
       it('Must include "input-slider-view-thumb" (thumb from)', () => {
         expect(thumbFrom).toBeInstanceOf(HTMLElement);
       });
@@ -252,8 +251,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
             expect(tooltipTo.style.display).toEqual('none');
           }
         });
-        it(`On event "mouseup->mousemove" should dispatch event "slider-view" from thumbFrom`, () => {
-          let customEvent: CustomEvent | undefined = undefined;
+        it('On event "mouseup->mousemove" should dispatch event "slider-view" from thumbFrom', () => {
+          let customEvent: CustomEvent | undefined;
+          // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
           thumbFrom.addEventListener('slider-view', (evt: CustomEvent) => {
             customEvent = evt;
           });
@@ -261,8 +261,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           document.dispatchEvent(new Event('mousemove'));
           expect(customEvent).toBeDefined();
         });
-        it(`On event "mouseup->mousemove" should dispatch event "slider-view" from thumbTo`, () => {
-          let customEvent: CustomEvent | undefined = undefined;
+        it('On event "mouseup->mousemove" should dispatch event "slider-view" from thumbTo', () => {
+          let customEvent: CustomEvent | undefined;
+          // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
           thumbTo.addEventListener('slider-view', (evt: CustomEvent) => {
             customEvent = evt;
           });
@@ -325,8 +326,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
       it(`The last element with class "scale_valuesItem" must have text content ${data.maxValue}`, () => {
         expect(valuesItem[valuesItem.length - 1].textContent).toEqual(data.maxValue.toString());
       });
-      it(`On event "mousedown" should dispatch event "slider-view"`, () => {
-        let customEvent: CustomEvent | undefined = undefined;
+      it('On event "mousedown" should dispatch event "slider-view"', () => {
+        let customEvent: CustomEvent | undefined;
+        // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
         scale.addEventListener('slider-view', (evt: CustomEvent) => {
           customEvent = evt;
         });

@@ -1,0 +1,32 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:fsd/all",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "fsd",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "linebreak-style": "off",
+    "import/no-dynamic-require": "off",
+    "no-underscore-dangle": "off",
+    "max-classes-per-file": "off",
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "consistent-return": "off",
+    "func-names": "off",
+    "fsd/jq-cache-dom-elements": "off",
+    "fsd/jq-use-js-prefix-in-selector": "off"
+  }
+}

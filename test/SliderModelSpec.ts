@@ -1,6 +1,23 @@
-import {SliderModel} from '../src/slider/SliderModel';
-import {getHTMLElement, data} from "./TestData";
+import SliderModel from '../src/slider/SliderModel';
+import { getHTMLElement, data } from './TestData';
 
+type Func = (title: string, initObj: HTMLElement | ISliderData | FormData) => void
+
+function getTestData(func: Func): void {
+  const element = getHTMLElement();
+  const formData: FormData = new FormData();
+  formData.set('uri', 'http://localhost:9000/slider');
+  const title = [
+    `Testing model initialized from the "ISliderData": ${JSON.stringify(data)}`,
+    `Testing model initialized from the server: address - ${formData.get('uri')}`,
+    `Testing model initialized from the "HTMLElement": ${element.outerHTML}`,
+  ];
+  for (let i = 0; i < 2; i += 1) {
+    func(title[0], data);
+    // func(title[1], formData);
+    func(title[2], element);
+  }
+}
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
   const spyCallback = jasmine.createSpy('spyCallback');
@@ -13,31 +30,31 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
           spyCallback.calls.reset();
           await expectAsync(model.init(initObj)).toBeResolvedTo(true);
         });
-        it(`Should be execute callback for "minValue"`, () => {
+        it('Should be execute callback for "minValue"', () => {
           expect(spyCallback).toHaveBeenCalledWith('minValue', jasmine.anything());
         });
-        it(`Should be execute callback for "maxValue"`, () => {
+        it('Should be execute callback for "maxValue"', () => {
           expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
         });
-        it(`Should be execute callback for "valueFrom"`, () => {
+        it('Should be execute callback for "valueFrom"', () => {
           expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
         });
-        it(`Should be execute callback for "stepSize"`, () => {
+        it('Should be execute callback for "stepSize"', () => {
           expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
         });
-        it(`Should be execute callback for "onVertical"`, () => {
+        it('Should be execute callback for "onVertical"', () => {
           expect(spyCallback).toHaveBeenCalledWith('onVertical', jasmine.anything());
         });
-        it(`Should be execute callback for "onTooltip"`, () => {
+        it('Should be execute callback for "onTooltip"', () => {
           expect(spyCallback).toHaveBeenCalledWith('onTooltip', jasmine.anything());
         });
-        it(`Should be execute callback for "onRange"`, () => {
+        it('Should be execute callback for "onRange"', () => {
           expect(spyCallback).toHaveBeenCalledWith('onRange', jasmine.anything());
         });
-        it(`Should be execute callback for "onScale"`, () => {
+        it('Should be execute callback for "onScale"', () => {
           expect(spyCallback).toHaveBeenCalledWith('onScale', jasmine.anything());
         });
-        it(`Should be execute callback for "serverURL"`, () => {
+        it('Should be execute callback for "serverURL"', () => {
           expect(spyCallback).toHaveBeenCalledWith('serverURL', jasmine.anything());
         });
 
@@ -48,13 +65,13 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
           expect(model.onTooltip).toBeDefined();
         });
         it('Property "onRange" must be defined', () => {
-          expect(model.onRange).toBeDefined()
+          expect(model.onRange).toBeDefined();
         });
         it('Property "onScale" must be defined', () => {
-          expect(model.onScale).toBeDefined()
+          expect(model.onScale).toBeDefined();
         });
         it('Property "serverURL" must be defined', () => {
-          expect(model.serverURL).toBeDefined()
+          expect(model.serverURL).toBeDefined();
         });
 
         it('"stepSize" should be > 0', () => {
@@ -70,7 +87,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
           expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
         });
         if (model.onRange) {
-          it(`Should be execute callback for "valueTo"`, () => {
+          it('Should be execute callback for "valueTo"', () => {
             expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
           });
           it('"valueTo" should be <= "maxValue"', () => {
@@ -296,20 +313,4 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
       });
     });
   });
-
-  function getTestData(func: Function): void {
-    const element = getHTMLElement();
-    const formData: FormData = new FormData();
-    formData.set('uri', 'http://localhost:9000/slider');
-    const title = [
-      `Testing model initialized from the "ISliderData": ${JSON.stringify(data)}`,
-      `Testing model initialized from the server: address - ${formData.get('uri')}`,
-      `Testing model initialized from the "HTMLElement": ${element.outerHTML}`
-    ];
-    for (let i = 0; i < 2; i++) {
-      func(title[0], data);
-      //func(title[1], formData);
-      func(title[2], element);
-    }
-  }
 });
