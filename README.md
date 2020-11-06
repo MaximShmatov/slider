@@ -25,7 +25,7 @@
 
 Следующие комманды требую наличие установленной Node.js v.14 и git 2.27.
 
-### `git clone https://github.com/MaximShmatov/toxin.git`
+### `git clone https://github.com/MaximShmatov/slider.git`
 
 Клонирует репозиторий.\
 После клонирования необходимо перейти в каталог /toxin
