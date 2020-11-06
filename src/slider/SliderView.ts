@@ -1,5 +1,3 @@
-import '../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import '../../node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf';
 import styles from './slider.module.sass';
 
 class Progress extends HTMLElement {

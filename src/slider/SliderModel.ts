@@ -139,18 +139,18 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    if (this._onRange && maxValue <= this._valueTo) {
-      this._maxValue = this._valueTo;
-    } else if (maxValue <= this._valueFrom) {
-      this._maxValue = this._valueFrom;
-    } else {
-      this._maxValue = Math.round((maxValue - this._minValue) / this._stepSize);
-      this._maxValue = this._maxValue * this._stepSize + this._minValue;
-    }
-    if (this._maxValue === this._minValue) {
-      this._maxValue += this._stepSize;
-    }
-    this._observer('maxValue', this._maxValue);
+      if (this._onRange && maxValue <= this._valueTo) {
+        this._maxValue = this._valueTo;
+      } else if (maxValue <= this._valueFrom) {
+        this._maxValue = this._valueFrom;
+      } else {
+        this._maxValue = Math.round((maxValue - this._minValue) / this._stepSize);
+        this._maxValue = this._maxValue * this._stepSize + this._minValue;
+      }
+      if (this._maxValue === this._minValue) {
+        this._maxValue += this._stepSize;
+      }
+      this._observer('maxValue', this._maxValue);
   }
 
   get valueFrom(): number {

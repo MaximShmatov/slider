@@ -1,3 +1,5 @@
+import '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
+import '../node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js';
 import '../src/slider/SliderPlugin';
 import { getHTMLElement, data } from './TestData';
 
