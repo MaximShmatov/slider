@@ -54,7 +54,7 @@ class ControlPanel {
       .on('change', this.toggleScale.bind(this));
     this.$slider = $container
       .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
-      .find('.input-slider-plugin')
+      .find('.input-range-slider-plugin')
       .slider('init');
   }
 

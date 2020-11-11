@@ -1,4 +1,4 @@
-import SliderPresenter from '../src/slider/SliderPresenter';
+import SliderPresenter from '../src/components/range-slider/SliderPresenter';
 
 function getHTMLElementFromObj(): HTMLElement {
   const element = document.createElement('input');
@@ -79,7 +79,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     });
   });
 
-  describe('Testing handle events "slider-view"', () => {
+  describe('Testing handle events "range-slider-view"', () => {
     let spySetProps: jasmine.Spy;
     let dataViewEvt: CustomEvent;
     const spyViewEvt = jasmine.createSpy('spyViewEvt').and.callFake((evt) => {
@@ -98,14 +98,14 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
       spyViewEvt.calls.reset();
       spySetProps.calls.reset();
     });
-    it('Events "mousedown (from)"->"mousemove" should dispatch event "slider-view" and call method "setProps" with (valueFrom)', () => {
+    it('Events "mousedown (from)"->"mousemove" should dispatch event "range-slider-view" and call method "setProps" with (valueFrom)', () => {
       thumbs[0].dispatchEvent(new MouseEvent('mousedown'));
       document.dispatchEvent(new MouseEvent('mousemove'));
       expect(spyViewEvt).toHaveBeenCalled();
       expect(dataViewEvt.detail.name).toEqual('valueFrom');
       expect(spySetProps).toHaveBeenCalledWith('valueFrom', jasmine.anything());
     });
-    it('Events "mousedown (to)"->"mousemove" should dispatch event "slider-view" and call method "setProps with (valueTo)"', () => {
+    it('Events "mousedown (to)"->"mousemove" should dispatch event "range-slider-view" and call method "setProps with (valueTo)"', () => {
       thumbs[1].dispatchEvent(new MouseEvent('mousedown'));
       document.dispatchEvent(new MouseEvent('mousemove'));
       expect(spyViewEvt).toHaveBeenCalled();

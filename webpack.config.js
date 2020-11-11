@@ -5,23 +5,19 @@ const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   context: path.resolve(__dirname, 'src'),
   entry: {
-    index: './index',
-    slider: './slider/SliderPlugin',
+    index: './pages/index',
+    slider: './components/range-slider/SliderPlugin',
   },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'docs'),
-    publicPath: '',
-  },
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.js'],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'index.pug',
+      template: 'pages/index.pug',
       filename: 'index.html',
       chunks: ['index'],
       inject: 'body',
@@ -30,23 +26,15 @@ module.exports = {
       patterns: [
         {
           from: '../node_modules/jquery/dist/jquery.min.js',
-          to: '',
+          to: 'vendor',
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
           from: '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
-          to: '',
+          to: 'vendor',
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
           from: '../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js',
-          to: '',
+          to: 'vendor',
         },
       ],
     }),

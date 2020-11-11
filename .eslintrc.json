@@ -28,5 +28,8 @@
     "func-names": "off",
     "fsd/jq-cache-dom-elements": "off",
     "fsd/jq-use-js-prefix-in-selector": "off"
-  }
+  },
+  "ignorePatterns": [
+    "vendor"
+  ]
 }

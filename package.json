@@ -1,15 +1,17 @@
 {
-  "name": "slider",
+  "name": "range-slider-112020",
   "version": "1.0.0",
   "description": "jQuery plugin",
-  "main": "index.ts",
+  "main": "pages/index.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "start": "webpack serve",
     "test": "karma start karma.conf.js",
-    "build": "webpack --mode=production"
+    "build": "webpack --config=webpack.prod.config.js",
+    "lint": "eslint src --ext .ts",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,7 @@
     "@types/jquery": "^3.5.1",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
+    "@webcomponents/webcomponentsjs": "^2.4.4",
     "autoprefixer": "^10.0.1",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
@@ -43,6 +46,7 @@
     "eslint-plugin-import": "^2.22.1",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^4.4.1",
     "jquery": "^3.5.1",
     "karma": "^5.2.2",
@@ -63,8 +67,6 @@
     "typescript": "^4.0.2",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.11.0",
-    "@webcomponents/webcomponentsjs": "^2.4.4"
-  },
-  "dependencies": {}
+    "webpack-dev-server": "^3.11.0"
+  }
 }

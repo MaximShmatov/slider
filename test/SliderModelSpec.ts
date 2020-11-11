@@ -1,4 +1,4 @@
-import SliderModel from '../src/slider/SliderModel';
+import SliderModel from '../src/components/range-slider/SliderModel';
 import { getHTMLElement, data } from './TestData';
 
 type Func = (title: string, initObj: HTMLElement | ISliderData | FormData) => void

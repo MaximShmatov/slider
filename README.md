@@ -1,4 +1,4 @@
-Плагин слайдера для jQuery
+jQuery плагин слайдера диапазона - [посмотреть](https://maximshmatov.github.io/slider/) 
 ========
 
 ## Обзор
@@ -51,6 +51,14 @@
 
 Запускает тестирование.
 
+### `npm run lint`
+
+Запускает линтер.
+
+### `npm run deploy`
+
+Публикация проекта на github pages.
+
 ## Подключение
 
 ```html
@@ -58,7 +66,7 @@
 ```
 или
 ```javascript
-import 'slider/SliderPlugin.js';
+import 'range-slider/SliderPlugin.js';
 ```
 ## Инициализация
 
@@ -66,11 +74,11 @@ import 'slider/SliderPlugin.js';
 <div id="slider" data-min-value="-10" data-max-value="100" data-value-from="0" data-step-size="1"></div>
 ```
 ```javascript
-jQuery('#slider').slider('init');
+jQuery('#range-slider').slider('init');
 ```
 или
 ```javascript
-jQuery('#slider').slider('init', {
+jQuery('#range-slider').slider('init', {
     minValue:-10,
     maxValue: 100,
     valueFrom: 0,
@@ -87,13 +95,13 @@ jQuery('#slider').slider('init', {
 ```javascript
 obj = new FormData();
 obj.set('uri', 'http://server/slider');
-jQuery('#slider').slider('init', obj);
+jQuery('#range-slider').slider('init', obj);
 ```
 
 ### Установа / получение свойств
 
 ```javascript
-$obj = jQuery('#slider').slider('init');
+$obj = jQuery('#range-slider').slider('init');
 $obj.slider('minValue', '10');
 let minValue = $obj.slider('minValue');
 ```
@@ -111,7 +119,7 @@ let minValue = $obj.slider('minValue');
  реализует API плагина (инициализация, установка и чтение опций), а также расчитывает значение бегунка;
 * SliderPlugin.ts - собственно сам плагин. Присоединяет функцию "Slider" к jQuery объекту;
 * slider.module.sass - стили плагина. Также сожержат модификаторы для вертикального состояния;
-* slider.d.ts - файл деклараций. Содержит интерфейсы и определения типов;
+* index.d.ts - файл деклараций. Содержит интерфейсы и определения типов;
 ## SliderModel.ts
 Файл содержит в себе реализацию "Model" шаблона проектирования MVP.
 Класс модели содержит в себе свойства и состояния плагина, а также методы инициализации. 
