@@ -8,10 +8,8 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     publicPath: '',
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
+  externals: {
+    //jquery: 'jQuery'
   },
   devtool: false,
 }

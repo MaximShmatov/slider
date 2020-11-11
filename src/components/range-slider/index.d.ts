@@ -51,5 +51,5 @@ interface HTMLElementEventMap {
 }
 
 interface Window {
-  jQuery: JQueryStatic;
+  $: JQueryStatic;
 }

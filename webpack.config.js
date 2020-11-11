@@ -1,8 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const webpack = require('webpack');
 const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -22,21 +21,8 @@ module.exports = {
       chunks: ['index'],
       inject: 'body',
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: '../node_modules/jquery/dist/jquery.min.js',
-          to: 'vendor',
-        },
-        {
-          from: '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js',
-          to: 'vendor',
-        },
-        {
-          from: '../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js',
-          to: 'vendor',
-        },
-      ],
+    new webpack.ProvidePlugin({
+      '$': 'jquery',
     }),
   ],
   module: {

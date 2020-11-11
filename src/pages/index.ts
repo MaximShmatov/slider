@@ -1,3 +1,4 @@
+import '../components/range-slider/SliderPlugin';
 import './index.sass';
 
 class ControlPanel {
@@ -136,11 +137,11 @@ class ControlPanel {
 
 const plugins = [];
 
-window.jQuery('.container').each(function () {
-  plugins.push(new ControlPanel(window.jQuery(this)));
+$('.container').each(function () {
+  plugins.push(new ControlPanel($(this)));
 });
 
-window.jQuery('.init-from-object').slider('init', {
+$('.init-from-object').slider('init', {
   minValue: 0,
   maxValue: 100,
   valueFrom: 10,

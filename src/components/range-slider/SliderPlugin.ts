@@ -61,4 +61,4 @@ import SliderPresenter from './SliderPresenter';
       }
     }
   };
-}(window.jQuery));
+}($));
