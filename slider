@@ -1,0 +1,1098 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.i, "._33YSygM38CLBfTNJ3mhoi8{display:flex;position:relative;align-items:center;background:#fff;height:6px;border:1px solid rgba(31,32,65,.25);border-radius:3px;box-sizing:border-box;cursor:pointer}._3qGyLWPQctFS4nltA9gUD6{flex-direction:column;width:6px;height:100%}.aLNS_y4EtyN7ANCv62qMz{display:flex;z-index:10;position:absolute;margin-left:-8px;margin-top:-6px;background:linear-gradient(180deg,#6fcf97,#66d2ea);border:2px solid #fff;border-radius:10px;padding:6px}._3s2yijtLMJfxtrZYql4tWb{margin-left:-6px;margin-top:-7px}.YWn4yGrmvQ8FGQF1KISQg{position:absolute;z-index:10;display:flex;align-items:center;justify-content:center;width:30px;height:20px;top:-30px;left:-10px;border:2px solid #66d2ea;background-color:#6fcf97;opacity:.5;border-radius:5px}.udG4LuaXJbVO0hmtsz6QY{left:-40px;top:-5px}._1gX1oWBAT6Lzh_PnJP_OJo{position:absolute;background:linear-gradient(180deg,#6fcf97,#66d2ea);border-radius:3px;height:100%}._3wkLEx_VaNwkhKfdSlWhcO{width:100%;height:auto}._3gbX0zekKxeQezw-fnu4Ik{display:block;margin-top:5px;cursor:pointer}._3nn4ZyjxO_Fnw8cIPMByFJ{display:flex;height:100%;margin-left:5px;margin-top:0}.Jp5D073hvS7tue-KF-h0A{display:flex;justify-content:space-between}._3KwJSgmGipJ8SbGjG5oMHP{flex-direction:column}.jDlvwpVJerXIL_OUhdmCQ{display:flex;justify-content:space-around;align-items:flex-end;width:100%;height:8px;border-bottom:2px solid #66d2ea;border-right:2px solid #66d2ea;padding-bottom:2px}._30LEyrzSn4b98FdsCoZqeV{flex-direction:column;border-right:2px solid #66d2ea;border-top:2px solid #66d2ea;padding-right:2px;width:8px;height:100%;border-bottom:none;padding-bottom:0}.jDlvwpVJerXIL_OUhdmCQ:first-child{border-left:2px solid #66d2ea}._30LEyrzSn4b98FdsCoZqeV:last-child{border-bottom:2px solid #66d2ea}._30LEyrzSn4b98FdsCoZqeV:first-child{border-left:none}._1GJo8UkrHAud_dvhwh7eQr{width:100%;height:5px}._3COtZ15-HuEVf7WXJWM2x6{width:5px;height:100%}._1GJo8UkrHAud_dvhwh7eQr:not(:first-child){border-left:1px solid #66d2ea}._3COtZ15-HuEVf7WXJWM2x6:not(:last-child){border-bottom:1px solid #66d2ea}._3COtZ15-HuEVf7WXJWM2x6:not(:first-child){border-left:none}.TVVfaQvZXsjE4FiRy-u4V{display:flex;justify-content:space-between}._1hruPC0mzWxRRZv-yhWZWK{flex-direction:column}._2wR6L7z1JB_ivHXOJMF2ae{display:flex;justify-content:center;width:0;color:#6fcf97}._1oTbLflV8exRdMMjI4lf3q{align-items:center;height:0;width:auto}", ""]);
+// Exports
+___CSS_LOADER_EXPORT___.locals = {
+	"rail": "_33YSygM38CLBfTNJ3mhoi8",
+	"rail_ver": "_3qGyLWPQctFS4nltA9gUD6",
+	"thumb": "aLNS_y4EtyN7ANCv62qMz",
+	"thumb_ver": "_3s2yijtLMJfxtrZYql4tWb",
+	"thumb__tooltip": "YWn4yGrmvQ8FGQF1KISQg",
+	"thumb__tooltip_ver": "udG4LuaXJbVO0hmtsz6QY",
+	"progress": "_1gX1oWBAT6Lzh_PnJP_OJo",
+	"progress_ver": "_3wkLEx_VaNwkhKfdSlWhcO",
+	"scale": "_3gbX0zekKxeQezw-fnu4Ik",
+	"scale_ver": "_3nn4ZyjxO_Fnw8cIPMByFJ",
+	"scale__wrapper": "Jp5D073hvS7tue-KF-h0A",
+	"scale__wrapper_ver": "_3KwJSgmGipJ8SbGjG5oMHP",
+	"scale__division": "jDlvwpVJerXIL_OUhdmCQ",
+	"scale__division_ver": "_30LEyrzSn4b98FdsCoZqeV",
+	"scale__subdivision": "_1GJo8UkrHAud_dvhwh7eQr",
+	"scale__subdivision_ver": "_3COtZ15-HuEVf7WXJWM2x6",
+	"scale__values": "TVVfaQvZXsjE4FiRy-u4V",
+	"scale__values_ver": "_1hruPC0mzWxRRZv-yhWZWK",
+	"scale__valuesItem": "_2wR6L7z1JB_ivHXOJMF2ae",
+	"scale__valuesItem_ver": "_1oTbLflV8exRdMMjI4lf3q"
+};
+/* harmony default export */ __webpack_exports__["a"] = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+// eslint-disable-next-line func-names
+module.exports = function (cssWithMappingToString) {
+  var list = []; // return the list of modules as css string
+
+  list.toString = function toString() {
+    return this.map(function (item) {
+      var content = cssWithMappingToString(item);
+
+      if (item[2]) {
+        return "@media ".concat(item[2], " {").concat(content, "}");
+      }
+
+      return content;
+    }).join('');
+  }; // import a list of modules into the list
+  // eslint-disable-next-line func-names
+
+
+  list.i = function (modules, mediaQuery, dedupe) {
+    if (typeof modules === 'string') {
+      // eslint-disable-next-line no-param-reassign
+      modules = [[null, modules, '']];
+    }
+
+    var alreadyImportedModules = {};
+
+    if (dedupe) {
+      for (var i = 0; i < this.length; i++) {
+        // eslint-disable-next-line prefer-destructuring
+        var id = this[i][0];
+
+        if (id != null) {
+          alreadyImportedModules[id] = true;
+        }
+      }
+    }
+
+    for (var _i = 0; _i < modules.length; _i++) {
+      var item = [].concat(modules[_i]);
+
+      if (dedupe && alreadyImportedModules[item[0]]) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      if (mediaQuery) {
+        if (!item[2]) {
+          item[2] = mediaQuery;
+        } else {
+          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
+        }
+      }
+
+      list.push(item);
+    }
+  };
+
+  return list;
+};
+
+/***/ }),
+/* 2 */,
+/* 3 */,
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// CONCATENATED MODULE: ./components/range-slider/SliderModel.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var SliderModel = /** @class */ (function () {
+    function SliderModel(observer) {
+        this._minValue = 0;
+        this._maxValue = 100;
+        this._valueFrom = 0;
+        this._valueTo = 100;
+        this._stepSize = 1;
+        this._onRange = false;
+        this._onTooltip = false;
+        this._onVertical = false;
+        this._onScale = false;
+        this._serverURL = 'http://localhost:9000/slider';
+        this._observer = observer;
+    }
+    SliderModel.prototype.init = function (data) {
+        if (data instanceof HTMLElement) {
+            return this.initModelFromElement(data);
+        }
+        if (data instanceof FormData) {
+            return this.initModelFromServer(data);
+        }
+        return this.initModelFromObject(data);
+    };
+    SliderModel.prototype.initModelFromServer = function (form) {
+        var _this = this;
+        this.serverURL = form.get('uri');
+        return fetch(this.serverURL, { method: 'POST', body: form })
+            .then(function (res) { return res.json(); })
+            .then(function (data) { return _this.initModelFromObject(data); });
+    };
+    SliderModel.prototype.initModelFromObject = function (sliderData) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                data = sliderData;
+                this._serverURL = data.serverURL;
+                this._observer('serverURL', this._serverURL);
+                this._onVertical = data.onVertical;
+                this._observer('onVertical', this._onVertical);
+                this._onRange = data.onRange;
+                this._observer('onRange', this._onRange);
+                this._onTooltip = data.onTooltip;
+                this._observer('onTooltip', this._onTooltip);
+                this._onScale = data.onScale;
+                this._observer('onScale', this._onScale);
+                if (data.minValue) {
+                    this._minValue = data.minValue;
+                }
+                else {
+                    this._minValue = 0;
+                }
+                this._observer('minValue', this._minValue);
+                data.stepSize = Math.round(Math.abs(data.stepSize));
+                if (data.stepSize > 0) {
+                    this._stepSize = data.stepSize;
+                }
+                else {
+                    this._stepSize = 1;
+                }
+                this._observer('stepSize', this._stepSize);
+                if (data.maxValue > (this._minValue + this._stepSize)) {
+                    this._maxValue = Math.round((data.maxValue - this._minValue) / this._stepSize);
+                    this._maxValue = this.maxValue * this._stepSize + this._minValue;
+                }
+                else {
+                    this._maxValue = this._stepSize + this._minValue;
+                }
+                this._observer('maxValue', this._maxValue);
+                if (data.valueFrom > this._minValue && data.valueFrom < this._maxValue) {
+                    this._valueFrom = Math.round((data.valueFrom - this._minValue) / this._stepSize);
+                    this._valueFrom = this._valueFrom * this._stepSize + this._minValue;
+                }
+                else if (data.valueFrom >= this._maxValue) {
+                    this._valueFrom = this._maxValue;
+                }
+                else {
+                    this._valueFrom = this._minValue;
+                }
+                this._observer('valueFrom', this._valueFrom);
+                if (data.valueTo > this._valueFrom && data.valueTo < this._maxValue) {
+                    this._valueTo = Math.round((data.valueTo - this._minValue) / this._stepSize);
+                    this._valueTo = this._valueTo * this._stepSize + this._minValue;
+                }
+                else if (data.valueTo >= this._maxValue) {
+                    this._valueTo = this._maxValue;
+                }
+                else {
+                    this._valueTo = this._valueFrom;
+                }
+                this._observer('valueTo', this._valueTo);
+                return [2 /*return*/, true];
+            });
+        });
+    };
+    SliderModel.prototype.initModelFromElement = function (element) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                data = {
+                    onVertical: (element.dataset.onVertical === 'true'),
+                    onRange: (element.dataset.onRange === 'true'),
+                    onTooltip: (element.dataset.onTooltip === 'true'),
+                    onScale: (element.dataset.onScale === 'true'),
+                    minValue: Number(element.dataset.minValue),
+                    maxValue: Number(element.dataset.maxValue),
+                    valueFrom: Number(element.dataset.valueFrom),
+                    valueTo: Number(element.dataset.valueTo),
+                    stepSize: Number(element.dataset.stepSize),
+                    serverURL: String(element.dataset.serverURL),
+                };
+                return [2 /*return*/, this.initModelFromObject(data)];
+            });
+        });
+    };
+    Object.defineProperty(SliderModel.prototype, "minValue", {
+        get: function () {
+            return this._minValue;
+        },
+        set: function (minValue) {
+            if (minValue < this._valueFrom) {
+                var step = Math.round((this._valueFrom - minValue) / this._stepSize) * this._stepSize;
+                this._minValue = this._valueFrom - step;
+            }
+            else {
+                this._minValue = this._valueFrom;
+            }
+            if (this._minValue === this._maxValue) {
+                this._minValue -= this._stepSize;
+            }
+            this._observer('minValue', this._minValue);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "maxValue", {
+        get: function () {
+            return this._maxValue;
+        },
+        set: function (maxValue) {
+            if (this._onRange && maxValue <= this._valueTo) {
+                this._maxValue = this._valueTo;
+            }
+            else if (maxValue <= this._valueFrom) {
+                this._maxValue = this._valueFrom;
+            }
+            else {
+                this._maxValue = Math.round((maxValue - this._minValue) / this._stepSize);
+                this._maxValue = this._maxValue * this._stepSize + this._minValue;
+            }
+            if (this._maxValue === this._minValue) {
+                this._maxValue += this._stepSize;
+            }
+            this._observer('maxValue', this._maxValue);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "valueFrom", {
+        get: function () {
+            return this._valueFrom;
+        },
+        set: function (valueFrom) {
+            if (valueFrom <= this._minValue) {
+                this._valueFrom = this._minValue;
+            }
+            else if (this._onRange && valueFrom >= this._valueTo) {
+                this._valueFrom = this._valueTo;
+            }
+            else if (valueFrom >= this._maxValue) {
+                this._valueFrom = this._maxValue;
+            }
+            else {
+                this._valueFrom = Math.round((valueFrom - this._minValue) / this._stepSize);
+                this._valueFrom = this._valueFrom * this._stepSize + this._minValue;
+            }
+            this._observer('valueFrom', this._valueFrom);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "valueTo", {
+        get: function () {
+            return this._valueTo;
+        },
+        set: function (valueTo) {
+            if (this._onRange) {
+                if (valueTo > this._valueFrom && valueTo < this._maxValue) {
+                    this._valueTo = Math.round((valueTo - this._valueFrom) / this._stepSize);
+                    this._valueTo = this._valueTo * this._stepSize + this._valueFrom;
+                }
+                else if (valueTo >= this._maxValue) {
+                    this._valueTo = this._maxValue;
+                }
+                else {
+                    this._valueTo = this._valueFrom;
+                }
+                this._observer('valueTo', this._valueTo);
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "stepSize", {
+        get: function () {
+            return this._stepSize;
+        },
+        set: function (stepSize) {
+            var maxStep = Math.abs(this._maxValue - this._minValue);
+            if (stepSize < maxStep && stepSize > 0) {
+                this._stepSize = Math.round(stepSize);
+            }
+            else if (stepSize >= maxStep) {
+                this._stepSize = maxStep;
+            }
+            else {
+                this._stepSize = 1;
+            }
+            this._observer('stepSize', this._stepSize);
+            if (this._valueFrom > this._minValue) {
+                this._valueFrom = Math.round((this._valueFrom - this._minValue) / this._stepSize);
+                this._valueFrom = this._valueFrom * this._stepSize + this._minValue;
+            }
+            else {
+                this._valueFrom = this._minValue;
+            }
+            this._observer('valueFrom', this._valueFrom);
+            if (this._onRange) {
+                if (this._valueTo > this._valueFrom) {
+                    this._valueTo = Math.round((this._valueTo - this._minValue) / this._stepSize);
+                    this._valueTo = this._valueTo * this._stepSize + this._minValue;
+                }
+                else {
+                    this._valueTo = this._valueFrom;
+                }
+                this._observer('valueTo', this._valueTo);
+            }
+            // this.maxValue = this.maxValue;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "onVertical", {
+        get: function () {
+            return this._onVertical;
+        },
+        set: function (onVertical) {
+            this._onVertical = onVertical;
+            this._observer('onVertical', this._onVertical);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "onRange", {
+        get: function () {
+            return this._onRange;
+        },
+        set: function (onRange) {
+            this._onRange = onRange;
+            this._observer('onRange', this._onRange);
+            this.valueTo = this._valueTo;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "onTooltip", {
+        get: function () {
+            return this._onTooltip;
+        },
+        set: function (onTooltip) {
+            this._onTooltip = onTooltip;
+            this._observer('onTooltip', this._onTooltip);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "onScale", {
+        get: function () {
+            return this._onScale;
+        },
+        set: function (onScale) {
+            this._onScale = onScale;
+            this._observer('onScale', this._onScale);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(SliderModel.prototype, "serverURL", {
+        get: function () {
+            return this._serverURL;
+        },
+        set: function (serverURL) {
+            this._serverURL = serverURL;
+            this._observer('serverURL', this._serverURL);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return SliderModel;
+}());
+/* harmony default export */ var range_slider_SliderModel = (SliderModel);
+
+// EXTERNAL MODULE: ./components/range-slider/slider.module.sass
+var slider_module = __webpack_require__(0);
+
+// CONCATENATED MODULE: ./components/range-slider/SliderView.ts
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var SliderView_Progress = /** @class */ (function (_super) {
+    __extends(Progress, _super);
+    function Progress() {
+        var _this = _super.call(this) || this;
+        _this._leftOrTop = 'left';
+        _this._rightOrBottom = 'right';
+        _this.className = slider_module["a" /* default */].locals.progress;
+        return _this;
+    }
+    Object.defineProperty(Progress, "observedAttributes", {
+        get: function () {
+            return ['data-position-from', 'data-position-to', 'data-on-range', 'data-on-vertical'];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Progress.prototype.attributeChangedCallback = function (prop) {
+        switch (prop) {
+            case 'data-position-from':
+                this.setPosFrom();
+                break;
+            case 'data-position-to':
+                this.setPosTo();
+                break;
+            case 'data-on-range':
+                this.setPosTo();
+                break;
+            case 'data-on-vertical':
+                if (this.dataset.onVertical === 'true')
+                    $(this).addClass(slider_module["a" /* default */].locals.progress_ver);
+                else
+                    $(this).removeClass(slider_module["a" /* default */].locals.progress_ver);
+                this.setDirection();
+                this.setPosFrom();
+                this.setPosTo();
+                break;
+            default:
+        }
+    };
+    Progress.prototype.setPosFrom = function () {
+        $(this).css("" + this._leftOrTop, this.dataset.positionFrom + "%");
+    };
+    Progress.prototype.setPosTo = function () {
+        if (this.dataset.onRange === 'true') {
+            $(this).css("" + this._rightOrBottom, 100 - (Number(this.dataset.positionTo)) + "%");
+        }
+        else {
+            $(this).css("" + this._rightOrBottom, '0');
+        }
+    };
+    Progress.prototype.setDirection = function () {
+        if (this.dataset.onVertical === 'true') {
+            this._leftOrTop = 'top';
+            this._rightOrBottom = 'bottom';
+            this.style.left = '0';
+        }
+        else {
+            this._leftOrTop = 'left';
+            this._rightOrBottom = 'right';
+            this.style.top = '0';
+        }
+    };
+    return Progress;
+}(HTMLElement));
+var SliderView_Thumb = /** @class */ (function (_super) {
+    __extends(Thumb, _super);
+    function Thumb(name) {
+        var _this = _super.call(this) || this;
+        _this._position = 0;
+        _this._clientXorY = 'clientX';
+        _this._offsetXorY = 0;
+        _this._widthOrHeight = 0;
+        _this._direction = 'left';
+        _this._tooltip = document.createElement('div');
+        _this._mouseMove = _this.onMouseMove.bind(_this);
+        _this._mouseUp = _this.onMouseUp.bind(_this);
+        _this._name = name;
+        _this.className = slider_module["a" /* default */].locals.thumb;
+        _this._tooltip.className = slider_module["a" /* default */].locals.thumb__tooltip;
+        _this.appendChild(_this._tooltip);
+        _this.setHandlesEvents();
+        return _this;
+    }
+    Object.defineProperty(Thumb, "observedAttributes", {
+        get: function () {
+            return ['data-value', 'data-position', 'data-on-vertical', 'data-on-tooltip'];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Thumb.prototype.attributeChangedCallback = function (prop) {
+        switch (prop) {
+            case 'data-value':
+                this._tooltip.textContent = this.dataset.value;
+                break;
+            case 'data-position':
+                this._position = Number(this.dataset.position);
+                this.moveToPosition(this._position);
+                break;
+            case 'data-on-vertical':
+                if (this.dataset.onVertical === 'true') {
+                    $(this).addClass(slider_module["a" /* default */].locals.thumb_ver);
+                    $(this._tooltip).addClass(slider_module["a" /* default */].locals.thumb__tooltip_ver);
+                }
+                else {
+                    $(this).removeClass(slider_module["a" /* default */].locals.thumb_ver);
+                    $(this._tooltip).removeClass(slider_module["a" /* default */].locals.thumb__tooltip_ver);
+                }
+                this.setPosition();
+                this.moveToPosition(this._position);
+                break;
+            case 'data-on-tooltip':
+                if (this.dataset.onTooltip === 'false')
+                    $(this._tooltip).hide();
+                else
+                    $(this._tooltip).show();
+                break;
+            default:
+        }
+    };
+    Thumb.prototype.setHandlesEvents = function () {
+        this.addEventListener('mousedown', this.onMouseDown.bind(this));
+    };
+    Thumb.prototype.moveToPosition = function (position) {
+        $(this).css("" + this._direction, position + "%");
+    };
+    Thumb.prototype.setPosition = function () {
+        if (this.parentElement) {
+            var rect = this.parentElement.getBoundingClientRect();
+            if (this.dataset.onVertical === 'true') {
+                this._clientXorY = 'clientY';
+                this._direction = 'top';
+                this._offsetXorY = rect.top;
+                this._widthOrHeight = rect.height;
+                this.style.left = '0';
+            }
+            else {
+                this._clientXorY = 'clientX';
+                this._direction = 'left';
+                this._offsetXorY = rect.left;
+                this._widthOrHeight = rect.width;
+                this.style.top = '0';
+            }
+        }
+    };
+    Thumb.prototype.onMouseDown = function (evt) {
+        evt.preventDefault();
+        this.setPosition();
+        document.addEventListener('mousemove', this._mouseMove);
+        document.addEventListener('mouseup', this._mouseUp);
+    };
+    Thumb.prototype.onMouseMove = function (evt) {
+        this._position = (evt[this._clientXorY] - this._offsetXorY);
+        this._position /= (this._widthOrHeight / 100);
+        if (this._position < 0)
+            this._position = 0;
+        if (this._position > 100)
+            this._position = 100;
+        this.dispatchEvent(new CustomEvent('slider-view', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            detail: { name: this._name, value: this._position },
+        }));
+    };
+    Thumb.prototype.onMouseUp = function () {
+        document.removeEventListener('mousemove', this._mouseMove);
+        document.removeEventListener('mouseup', this._mouseUp);
+    };
+    return Thumb;
+}(HTMLElement));
+var SliderView_Rail = /** @class */ (function (_super) {
+    __extends(Rail, _super);
+    function Rail() {
+        var _this = _super.call(this) || this;
+        _this._thumbFrom = new SliderView_Thumb('valueFrom');
+        _this._thumbTo = new SliderView_Thumb('valueTo');
+        _this._progress = new SliderView_Progress();
+        _this.className = slider_module["a" /* default */].locals.rail;
+        _this.appendChild(_this._thumbFrom);
+        _this.appendChild(_this._thumbTo);
+        _this.appendChild(_this._progress);
+        return _this;
+    }
+    Object.defineProperty(Rail, "observedAttributes", {
+        get: function () {
+            return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-tooltip', 'data-on-range', 'data-on-vertical'];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Rail.prototype.attributeChangedCallback = function (prop) {
+        switch (prop) {
+            case 'data-min-value':
+            case 'data-max-value':
+                this._thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
+                this._progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
+                this._thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
+                this._progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
+                break;
+            case 'data-on-tooltip':
+                this._thumbFrom.setAttribute('data-on-tooltip', this.dataset.onTooltip);
+                this._thumbTo.setAttribute('data-on-tooltip', this.dataset.onTooltip);
+                break;
+            case 'data-on-range':
+                this._progress.setAttribute('data-on-range', this.dataset.onRange);
+                if (this.dataset.onRange === 'false')
+                    $(this._thumbTo).hide();
+                else
+                    $(this._thumbTo).show();
+                break;
+            case 'data-on-vertical':
+                this._thumbFrom.setAttribute('data-on-vertical', this.dataset.onVertical);
+                this._progress.setAttribute('data-on-vertical', this.dataset.onVertical);
+                this._thumbTo.setAttribute('data-on-vertical', this.dataset.onVertical);
+                if (this.dataset.onVertical === 'true')
+                    $(this).addClass(slider_module["a" /* default */].locals.rail_ver);
+                else
+                    $(this).removeClass(slider_module["a" /* default */].locals.rail_ver);
+                break;
+            case 'data-value-from':
+                this._thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
+                this._thumbFrom.setAttribute('data-value', Number(this.dataset.valueFrom).toFixed());
+                this._progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
+                break;
+            case 'data-value-to':
+                this._thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
+                this._thumbTo.setAttribute('data-value', Number(this.dataset.valueTo).toFixed());
+                this._progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
+                break;
+            default:
+        }
+    };
+    Rail.prototype.calcThumbPosition = function (thumb) {
+        var min = Number(this.dataset.minValue);
+        var max = Number(this.dataset.maxValue);
+        var target = 0;
+        if (thumb === 'from')
+            target = Number(this.dataset.valueFrom);
+        else
+            target = Number(this.dataset.valueTo);
+        return ((target - min) / ((max - min) / 100));
+    };
+    return Rail;
+}(HTMLElement));
+var SliderView_Scale = /** @class */ (function (_super) {
+    __extends(Scale, _super);
+    function Scale() {
+        var _this = _super.call(this) || this;
+        _this._scaleValueItems = [];
+        _this._name = 'valueTo';
+        _this.className = slider_module["a" /* default */].locals.scale;
+        _this.createScaleDOM();
+        return _this;
+    }
+    Object.defineProperty(Scale, "observedAttributes", {
+        get: function () {
+            return ['data-min-value', 'data-max-value', 'data-on-vertical'];
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Scale.prototype.attributeChangedCallback = function (prop) {
+        switch (prop) {
+            case 'data-min-value':
+                this.render();
+                break;
+            case 'data-max-value':
+                this.render();
+                break;
+            case 'data-on-vertical':
+                if (this.dataset.onVertical === 'true') {
+                    $(this).addClass(slider_module["a" /* default */].locals.scale_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__wrapper).addClass(slider_module["a" /* default */].locals.scale__wrapper_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__values).addClass(slider_module["a" /* default */].locals.scale__values_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__valuesItem).addClass(slider_module["a" /* default */].locals.scale__valuesItem_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__division).addClass(slider_module["a" /* default */].locals.scale__division_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__subdivision).addClass(slider_module["a" /* default */].locals.scale__subdivision_ver);
+                }
+                else {
+                    $(this).removeClass(slider_module["a" /* default */].locals.scale_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__wrapper).removeClass(slider_module["a" /* default */].locals.scale__wrapper_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__values).removeClass(slider_module["a" /* default */].locals.scale__values_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__valuesItem).removeClass(slider_module["a" /* default */].locals.scale__valuesItem_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__division).removeClass(slider_module["a" /* default */].locals.scale__division_ver);
+                    $(this).find("." + slider_module["a" /* default */].locals.scale__subdivision).removeClass(slider_module["a" /* default */].locals.scale__subdivision_ver);
+                }
+                break;
+            default:
+        }
+    };
+    Scale.prototype.createScaleDOM = function () {
+        for (var i = 0; i < 4; i += 1) {
+            this._scaleValueItems[i] = document.createElement('span');
+            this._scaleValueItems[i].className = slider_module["a" /* default */].locals.scale__valuesItem;
+        }
+        var scaleValues = document.createElement('div');
+        scaleValues.className = slider_module["a" /* default */].locals.scale__values;
+        this._scaleValueItems.forEach(function (item) {
+            scaleValues.appendChild(item);
+        });
+        this.innerHTML = "      \n      <div class=\"" + slider_module["a" /* default */].locals.scale__wrapper + "\">\n        <div class=\"" + slider_module["a" /* default */].locals.scale__division + "\">\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n        </div>\n        <div class=\"" + slider_module["a" /* default */].locals.scale__division + "\">\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n        </div>\n        <div class=\"" + slider_module["a" /* default */].locals.scale__division + "\">\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n          <span class=\"" + slider_module["a" /* default */].locals.scale__subdivision + "\"></span>\n        </div>\n      </div>";
+        this.appendChild(scaleValues);
+        this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
+    };
+    Scale.prototype.render = function () {
+        var min = Number(this.dataset.minValue);
+        var max = Number(this.dataset.maxValue);
+        var scaleValue = (max - min) / 3;
+        this._scaleValueItems[0].textContent = min.toFixed();
+        this._scaleValueItems[1].textContent = (min + scaleValue).toFixed();
+        this._scaleValueItems[2].textContent = (min + scaleValue + scaleValue).toFixed();
+        this._scaleValueItems[3].textContent = max.toFixed();
+    };
+    Scale.prototype.handleScaleMouseDown = function (evt) {
+        var rect = this.getBoundingClientRect();
+        var position = 0;
+        if (evt.clientX && evt.clientY) {
+            if (this.dataset.onVertical === 'true') {
+                position = (evt.clientY - rect.top) / (rect.height / 100);
+            }
+            else {
+                position = (evt.clientX - rect.left) / (rect.width / 100);
+            }
+        }
+        if (this.dataset.onRange === 'true') {
+            if (this._name === 'valueFrom')
+                this._name = 'valueTo';
+            else
+                this._name = 'valueFrom';
+        }
+        else {
+            this._name = 'valueFrom';
+        }
+        this.dispatchEvent(new CustomEvent('slider-view', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            detail: { name: this._name, value: position },
+        }));
+    };
+    return Scale;
+}(HTMLElement));
+var SliderView_SliderView = /** @class */ (function (_super) {
+    __extends(SliderView, _super);
+    function SliderView(presenter) {
+        var _this = _super.call(this) || this;
+        _this.rail = new SliderView_Rail();
+        _this.scale = new SliderView_Scale();
+        _this.styles = document.createElement('style');
+        _this.presenter = presenter;
+        _this.styles.innerHTML = slider_module["a" /* default */];
+        _this.attachShadow({ mode: 'open' });
+        if (_this.shadowRoot) {
+            _this.shadowRoot.appendChild(_this.styles);
+            _this.shadowRoot.appendChild(_this.rail);
+            _this.shadowRoot.appendChild(_this.scale);
+        }
+        return _this;
+    }
+    SliderView.prototype.connectedCallback = function () {
+        this.style.display = 'flex';
+        this.style.justifyContent = 'center';
+    };
+    SliderView.prototype.setModelData = function (method, value) {
+        switch (method) {
+            case 'minValue':
+                this.rail.setAttribute('data-min-value', value.toString());
+                this.scale.setAttribute('data-min-value', value.toString());
+                break;
+            case 'maxValue':
+                this.rail.setAttribute('data-max-value', value.toString());
+                this.scale.setAttribute('data-max-value', value.toString());
+                break;
+            case 'valueFrom':
+                this.rail.setAttribute('data-value-from', value.toString());
+                break;
+            case 'valueTo':
+                this.rail.setAttribute('data-value-to', value.toString());
+                break;
+            case 'onScale':
+                if (value)
+                    $(this.scale).show();
+                else
+                    $(this.scale).hide();
+                break;
+            case 'onTooltip':
+                this.rail.setAttribute('data-on-tooltip', value.toString());
+                break;
+            case 'onRange':
+                this.rail.setAttribute('data-on-range', value.toString());
+                this.scale.setAttribute('data-on-range', value.toString());
+                break;
+            case 'onVertical':
+                if (value)
+                    this.style.flexDirection = 'row';
+                else
+                    this.style.flexDirection = 'column';
+                this.rail.setAttribute('data-on-vertical', value.toString());
+                this.scale.setAttribute('data-on-vertical', value.toString());
+                break;
+            default:
+        }
+    };
+    return SliderView;
+}(HTMLElement));
+if (!customElements.get('input-slider')) {
+    customElements.define('input-slider', SliderView_SliderView);
+    customElements.define('input-slider-view-thumb', SliderView_Thumb);
+    customElements.define('input-slider-view-rail', SliderView_Rail);
+    customElements.define('input-slider-view-scale', SliderView_Scale);
+    customElements.define('input-slider-view-progress', SliderView_Progress);
+}
+/* harmony default export */ var range_slider_SliderView = (SliderView_SliderView);
+
+// CONCATENATED MODULE: ./components/range-slider/SliderPresenter.ts
+
+
+var SliderPresenter_SliderPresenter = /** @class */ (function () {
+    function SliderPresenter() {
+        this._model = new range_slider_SliderModel(this.observer.bind(this));
+        this.view = document.createElement('input-slider');
+        this.view.presenter = this;
+        this.setHandlesEvents();
+    }
+    SliderPresenter.prototype.init = function (obj) {
+        this._model.init(obj)
+            .then(function () { return true; })
+            .catch(function () { return false; });
+    };
+    SliderPresenter.prototype.setProps = function (method, value) {
+        this._model[method] = value;
+    };
+    SliderPresenter.prototype.getProps = function (method) {
+        return this._model[method];
+    };
+    SliderPresenter.prototype.handleViewEvents = function (evt) {
+        evt.stopPropagation();
+        switch (evt.detail.name) {
+            case 'valueFrom':
+            case 'valueTo':
+                this.setProps(evt.detail.name, this.calcFromToValues(evt));
+                break;
+            default:
+        }
+    };
+    SliderPresenter.prototype.calcFromToValues = function (evt) {
+        var value = (this._model.maxValue - this._model.minValue) / 100;
+        var step = this._model.stepSize / value;
+        step *= Math.round(evt.detail.value / step);
+        value = value * step + this._model.minValue;
+        return Math.round(value);
+    };
+    SliderPresenter.prototype.setHandlesEvents = function () {
+        this.view.addEventListener('slider-view', this.handleViewEvents.bind(this));
+    };
+    SliderPresenter.prototype.observer = function (key, value) {
+        this.view.setModelData(key, value);
+        this.view.dispatchEvent(new CustomEvent('slider-data', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            detail: { name: key, value: value },
+        }));
+    };
+    return SliderPresenter;
+}());
+/* harmony default export */ var range_slider_SliderPresenter = (SliderPresenter_SliderPresenter);
+
+// CONCATENATED MODULE: ./components/range-slider/SliderPlugin.ts
+
+(function (jquery) {
+    if (!jquery)
+        return;
+    var $ = jquery;
+    function instanceOfSliderView(obj) {
+        return 'presenter' in obj;
+    }
+    $.fn.slider = function (method, prop) {
+        if (this.length === 0)
+            return this;
+        var viewArr = [];
+        if (method === undefined) {
+            this.each(function () {
+                if (instanceOfSliderView(this)) {
+                    viewArr.push(this);
+                }
+            });
+            return $().pushStack(viewArr);
+        }
+        if (method === 'init') {
+            this.each(function () {
+                if (instanceOfSliderView(this)) {
+                    if (prop && this.presenter) {
+                        this.presenter.init(prop);
+                    }
+                    viewArr.push(this);
+                }
+                else {
+                    var presenter = new range_slider_SliderPresenter();
+                    presenter.view.className = this.className;
+                    this.replaceWith(presenter.view);
+                    viewArr.push(presenter.view);
+                    if (prop === undefined) {
+                        presenter.init(this);
+                    }
+                    else {
+                        presenter.init(prop);
+                    }
+                }
+            });
+            return $().pushStack(viewArr);
+        }
+        if (method) {
+            if (prop === undefined && instanceOfSliderView(this[0])) {
+                if (this[0].presenter) {
+                    return this[0].presenter.getProps(method);
+                }
+            }
+            else {
+                this.each(function () {
+                    if (instanceOfSliderView(this)) {
+                        if (this.presenter) {
+                            return this.presenter.setProps(method, prop);
+                        }
+                    }
+                });
+                return this;
+            }
+        }
+    };
+}(window.jQuery));
+
+
+/***/ })
+/******/ ]);
