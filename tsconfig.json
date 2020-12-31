@@ -3,10 +3,9 @@
     "sourceMap": true,
     "target": "es5",
     "module": "esnext",
-    "removeComments": false,
+    "removeComments": true,
     "strict": true
   },
   "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules"],
-  "typeRoots": ["node_modules/@types"]
+  "exclude": ["node_modules"]
 }

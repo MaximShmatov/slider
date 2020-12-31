@@ -13,7 +13,7 @@ class Progress extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data-position-from', 'data-position-to', 'data-on-range', 'data-on-vertical'];
+    return ['data-position-from', 'data-position-to', 'data-is-range', 'data-is-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
@@ -24,11 +24,11 @@ class Progress extends HTMLElement {
       case 'data-position-to':
         this.setPosTo();
         break;
-      case 'data-on-range':
+      case 'data-is-range':
         this.setPosTo();
         break;
-      case 'data-on-vertical':
-        if (this.dataset.onVertical === 'true') $(this).addClass(styles.locals.progress_ver);
+      case 'data-is-vertical':
+        if (this.dataset.isVertical === 'true') $(this).addClass(styles.locals.progress_ver);
         else $(this).removeClass(styles.locals.progress_ver);
         this.setDirection();
         this.setPosFrom();
@@ -43,7 +43,7 @@ class Progress extends HTMLElement {
   }
 
   private setPosTo() {
-    if (this.dataset.onRange === 'true') {
+    if (this.dataset.isRange === 'true') {
       $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
     } else {
       $(this).css(`${this._rightOrBottom}`, '0');
@@ -51,7 +51,7 @@ class Progress extends HTMLElement {
   }
 
   private setDirection() {
-    if (this.dataset.onVertical === 'true') {
+    if (this.dataset.isVertical === 'true') {
       this._leftOrTop = 'top';
       this._rightOrBottom = 'bottom';
       this.style.left = '0';
@@ -92,7 +92,7 @@ class Thumb extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data-value', 'data-position', 'data-on-vertical', 'data-on-tooltip'];
+    return ['data-value', 'data-position', 'data-is-vertical', 'data-is-tooltip'];
   }
 
   attributeChangedCallback(prop: string) {
@@ -104,8 +104,8 @@ class Thumb extends HTMLElement {
         this._position = Number(this.dataset.position);
         this.moveToPosition(this._position);
         break;
-      case 'data-on-vertical':
-        if (this.dataset.onVertical === 'true') {
+      case 'data-is-vertical':
+        if (this.dataset.isVertical === 'true') {
           $(this).addClass(styles.locals.thumb_ver);
           $(this._tooltip).addClass(styles.locals.thumb__tooltip_ver);
         } else {
@@ -115,8 +115,8 @@ class Thumb extends HTMLElement {
         this.setPosition();
         this.moveToPosition(this._position);
         break;
-      case 'data-on-tooltip':
-        if (this.dataset.onTooltip === 'false') $(this._tooltip).hide();
+      case 'data-is-tooltip':
+        if (this.dataset.isTooltip === 'false') $(this._tooltip).hide();
         else $(this._tooltip).show();
         break;
       default:
@@ -134,7 +134,7 @@ class Thumb extends HTMLElement {
   private setPosition(): void {
     if (this.parentElement) {
       const rect = this.parentElement.getBoundingClientRect();
-      if (this.dataset.onVertical === 'true') {
+      if (this.dataset.isVertical === 'true') {
         this._clientXorY = 'clientY';
         this._direction = 'top';
         this._offsetXorY = rect.top;
@@ -192,7 +192,7 @@ class Rail extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-on-tooltip', 'data-on-range', 'data-on-vertical'];
+    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-is-tooltip', 'data-is-range', 'data-is-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
@@ -204,20 +204,20 @@ class Rail extends HTMLElement {
         this._thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
         this._progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
         break;
-      case 'data-on-tooltip':
-        this._thumbFrom.setAttribute('data-on-tooltip', <string> this.dataset.onTooltip);
-        this._thumbTo.setAttribute('data-on-tooltip', <string> this.dataset.onTooltip);
+      case 'data-is-tooltip':
+        this._thumbFrom.setAttribute('data-is-tooltip', <string> this.dataset.isTooltip);
+        this._thumbTo.setAttribute('data-is-tooltip', <string> this.dataset.isTooltip);
         break;
-      case 'data-on-range':
-        this._progress.setAttribute('data-on-range', <string> this.dataset.onRange);
-        if (this.dataset.onRange === 'false') $(this._thumbTo).hide();
+      case 'data-is-range':
+        this._progress.setAttribute('data-is-range', <string> this.dataset.isRange);
+        if (this.dataset.isRange === 'false') $(this._thumbTo).hide();
         else $(this._thumbTo).show();
         break;
-      case 'data-on-vertical':
-        this._thumbFrom.setAttribute('data-on-vertical', <string> this.dataset.onVertical);
-        this._progress.setAttribute('data-on-vertical', <string> this.dataset.onVertical);
-        this._thumbTo.setAttribute('data-on-vertical', <string> this.dataset.onVertical);
-        if (this.dataset.onVertical === 'true') $(this).addClass(styles.locals.rail_ver);
+      case 'data-is-vertical':
+        this._thumbFrom.setAttribute('data-is-vertical', <string> this.dataset.isVertical);
+        this._progress.setAttribute('data-is-vertical', <string> this.dataset.isVertical);
+        this._thumbTo.setAttribute('data-is-vertical', <string> this.dataset.isVertical);
+        if (this.dataset.isVertical === 'true') $(this).addClass(styles.locals.rail_ver);
         else $(this).removeClass(styles.locals.rail_ver);
         break;
       case 'data-value-from':
@@ -256,7 +256,7 @@ class Scale extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data-min-value', 'data-max-value', 'data-on-vertical'];
+    return ['data-min-value', 'data-max-value', 'data-is-vertical'];
   }
 
   attributeChangedCallback(prop: string) {
@@ -267,8 +267,8 @@ class Scale extends HTMLElement {
       case 'data-max-value':
         this.render();
         break;
-      case 'data-on-vertical':
-        if (this.dataset.onVertical === 'true') {
+      case 'data-is-vertical':
+        if (this.dataset.isVertical === 'true') {
           $(this).addClass(styles.locals.scale_ver);
           $(this).find(`.${styles.locals.scale__wrapper}`).addClass(styles.locals.scale__wrapper_ver);
           $(this).find(`.${styles.locals.scale__values}`).addClass(styles.locals.scale__values_ver);
@@ -340,13 +340,13 @@ class Scale extends HTMLElement {
     const rect = this.getBoundingClientRect();
     let position = 0;
     if (evt.clientX && evt.clientY) {
-      if (this.dataset.onVertical === 'true') {
+      if (this.dataset.isVertical === 'true') {
         position = (evt.clientY - rect.top) / (rect.height / 100);
       } else {
         position = (evt.clientX - rect.left) / (rect.width / 100);
       }
     }
-    if (this.dataset.onRange === 'true') {
+    if (this.dataset.isRange === 'true') {
       if (this._name === 'valueFrom') this._name = 'valueTo';
       else this._name = 'valueFrom';
     } else {
@@ -403,22 +403,22 @@ class SliderView extends HTMLElement implements ISliderView {
       case 'valueTo':
         this.rail.setAttribute('data-value-to', value.toString());
         break;
-      case 'onScale':
+      case 'isScale':
         if (value) $(this.scale).show();
         else $(this.scale).hide();
         break;
-      case 'onTooltip':
-        this.rail.setAttribute('data-on-tooltip', value.toString());
+      case 'isTooltip':
+        this.rail.setAttribute('data-is-tooltip', value.toString());
         break;
-      case 'onRange':
-        this.rail.setAttribute('data-on-range', value.toString());
-        this.scale.setAttribute('data-on-range', value.toString());
+      case 'isRange':
+        this.rail.setAttribute('data-is-range', value.toString());
+        this.scale.setAttribute('data-is-range', value.toString());
         break;
-      case 'onVertical':
+      case 'isVertical':
         if (value) this.style.flexDirection = 'row';
         else this.style.flexDirection = 'column';
-        this.rail.setAttribute('data-on-vertical', value.toString());
-        this.scale.setAttribute('data-on-vertical', value.toString());
+        this.rail.setAttribute('data-is-vertical', value.toString());
+        this.scale.setAttribute('data-is-vertical', value.toString());
         break;
       default:
     }

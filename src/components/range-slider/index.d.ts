@@ -6,10 +6,10 @@ interface ISliderData {
   valueFrom: number;
   valueTo: number;
   stepSize: number;
-  onVertical: boolean;
-  onRange: boolean;
-  onTooltip: boolean;
-  onScale: boolean;
+  isVertical: boolean;
+  isRange: boolean;
+  isTooltip: boolean;
+  isScale: boolean;
   serverURL: string;
 }
 

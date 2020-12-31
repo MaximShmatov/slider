@@ -9,13 +9,13 @@ class SliderModel implements ISliderModel {
 
   private _stepSize = 1;
 
-  private _onRange = false;
+  private _isRange = false;
 
-  private _onTooltip = false;
+  private _isTooltip = false;
 
-  private _onVertical = false;
+  private _isVertical = false;
 
-  private _onScale = false;
+  private _isScale = false;
 
   private _serverURL = 'http://localhost:9000/slider';
 
@@ -46,14 +46,14 @@ class SliderModel implements ISliderModel {
     const data = sliderData;
     this._serverURL = data.serverURL;
     this._observer('serverURL', this._serverURL);
-    this._onVertical = data.onVertical;
-    this._observer('onVertical', this._onVertical);
-    this._onRange = data.onRange;
-    this._observer('onRange', this._onRange);
-    this._onTooltip = data.onTooltip;
-    this._observer('onTooltip', this._onTooltip);
-    this._onScale = data.onScale;
-    this._observer('onScale', this._onScale);
+    this._isVertical = data.isVertical;
+    this._observer('isVertical', this._isVertical);
+    this._isRange = data.isRange;
+    this._observer('isRange', this._isRange);
+    this._isTooltip = data.isTooltip;
+    this._observer('isTooltip', this._isTooltip);
+    this._isScale = data.isScale;
+    this._observer('isScale', this._isScale);
 
     if (data.minValue) {
       this._minValue = data.minValue;
@@ -103,10 +103,10 @@ class SliderModel implements ISliderModel {
 
   private async initModelFromElement(element: HTMLElement): Promise<boolean> {
     const data = {
-      onVertical: (element.dataset.onVertical === 'true'),
-      onRange: (element.dataset.onRange === 'true'),
-      onTooltip: (element.dataset.onTooltip === 'true'),
-      onScale: (element.dataset.onScale === 'true'),
+      isVertical: (element.dataset.isVertical === 'true'),
+      isRange: (element.dataset.isRange === 'true'),
+      isTooltip: (element.dataset.isTooltip === 'true'),
+      isScale: (element.dataset.isScale === 'true'),
       minValue: Number(element.dataset.minValue),
       maxValue: Number(element.dataset.maxValue),
       valueFrom: Number(element.dataset.valueFrom),
@@ -139,7 +139,7 @@ class SliderModel implements ISliderModel {
   }
 
   set maxValue(maxValue: number) {
-    if (this._onRange && maxValue <= this._valueTo) {
+    if (this._isRange && maxValue <= this._valueTo) {
       this._maxValue = this._valueTo;
     } else if (maxValue <= this._valueFrom) {
       this._maxValue = this._valueFrom;
@@ -160,7 +160,7 @@ class SliderModel implements ISliderModel {
   set valueFrom(valueFrom: number) {
     if (valueFrom <= this._minValue) {
       this._valueFrom = this._minValue;
-    } else if (this._onRange && valueFrom >= this._valueTo) {
+    } else if (this._isRange && valueFrom >= this._valueTo) {
       this._valueFrom = this._valueTo;
     } else if (valueFrom >= this._maxValue) {
       this._valueFrom = this._maxValue;
@@ -176,7 +176,7 @@ class SliderModel implements ISliderModel {
   }
 
   set valueTo(valueTo: number) {
-    if (this._onRange) {
+    if (this._isRange) {
       if (valueTo > this._valueFrom && valueTo < this._maxValue) {
         this._valueTo = Math.round((valueTo - this._valueFrom) / this._stepSize);
         this._valueTo = this._valueTo * this._stepSize + this._valueFrom;
@@ -212,7 +212,7 @@ class SliderModel implements ISliderModel {
     }
     this._observer('valueFrom', this._valueFrom);
 
-    if (this._onRange) {
+    if (this._isRange) {
       if (this._valueTo > this._valueFrom) {
         this._valueTo = Math.round((this._valueTo - this._minValue) / this._stepSize);
         this._valueTo = this._valueTo * this._stepSize + this._minValue;
@@ -224,41 +224,41 @@ class SliderModel implements ISliderModel {
     // this.maxValue = this.maxValue;
   }
 
-  get onVertical(): boolean {
-    return this._onVertical;
+  get isVertical(): boolean {
+    return this._isVertical;
   }
 
-  set onVertical(onVertical: boolean) {
-    this._onVertical = onVertical;
-    this._observer('onVertical', this._onVertical);
+  set isVertical(isVertical: boolean) {
+    this._isVertical = isVertical;
+    this._observer('isVertical', this._isVertical);
   }
 
-  get onRange(): boolean {
-    return this._onRange;
+  get isRange(): boolean {
+    return this._isRange;
   }
 
-  set onRange(onRange: boolean) {
-    this._onRange = onRange;
-    this._observer('onRange', this._onRange);
+  set isRange(isRange: boolean) {
+    this._isRange = isRange;
+    this._observer('isRange', this._isRange);
     this.valueTo = this._valueTo;
   }
 
-  get onTooltip(): boolean {
-    return this._onTooltip;
+  get isTooltip(): boolean {
+    return this._isTooltip;
   }
 
-  set onTooltip(onTooltip: boolean) {
-    this._onTooltip = onTooltip;
-    this._observer('onTooltip', this._onTooltip);
+  set isTooltip(isTooltip: boolean) {
+    this._isTooltip = isTooltip;
+    this._observer('isTooltip', this._isTooltip);
   }
 
-  get onScale(): boolean {
-    return this._onScale;
+  get isScale(): boolean {
+    return this._isScale;
   }
 
-  set onScale(onScale: boolean) {
-    this._onScale = onScale;
-    this._observer('onScale', this._onScale);
+  set isScale(isScale: boolean) {
+    this._isScale = isScale;
+    this._observer('isScale', this._isScale);
   }
 
   get serverURL(): string {

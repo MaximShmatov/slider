@@ -42,33 +42,33 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Should be execute callback for "stepSize"', () => {
           expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
         });
-        it('Should be execute callback for "onVertical"', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onVertical', jasmine.anything());
+        it('Should be execute callback for "isVertical"', () => {
+          expect(spyCallback).toHaveBeenCalledWith('isVertical', jasmine.anything());
         });
-        it('Should be execute callback for "onTooltip"', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onTooltip', jasmine.anything());
+        it('Should be execute callback for "isTooltip"', () => {
+          expect(spyCallback).toHaveBeenCalledWith('isTooltip', jasmine.anything());
         });
-        it('Should be execute callback for "onRange"', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onRange', jasmine.anything());
+        it('Should be execute callback for "isRange"', () => {
+          expect(spyCallback).toHaveBeenCalledWith('isRange', jasmine.anything());
         });
-        it('Should be execute callback for "onScale"', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onScale', jasmine.anything());
+        it('Should be execute callback for "isScale"', () => {
+          expect(spyCallback).toHaveBeenCalledWith('isScale', jasmine.anything());
         });
         it('Should be execute callback for "serverURL"', () => {
           expect(spyCallback).toHaveBeenCalledWith('serverURL', jasmine.anything());
         });
 
-        it('Property "onVertical" must be defined', () => {
-          expect(model.onVertical).toBeDefined();
+        it('Property "isVertical" must be defined', () => {
+          expect(model.isVertical).toBeDefined();
         });
-        it('Property "onTooltip" must be defined', () => {
-          expect(model.onTooltip).toBeDefined();
+        it('Property "isTooltip" must be defined', () => {
+          expect(model.isTooltip).toBeDefined();
         });
-        it('Property "onRange" must be defined', () => {
-          expect(model.onRange).toBeDefined();
+        it('Property "isRange" must be defined', () => {
+          expect(model.isRange).toBeDefined();
         });
-        it('Property "onScale" must be defined', () => {
-          expect(model.onScale).toBeDefined();
+        it('Property "isScale" must be defined', () => {
+          expect(model.isScale).toBeDefined();
         });
         it('Property "serverURL" must be defined', () => {
           expect(model.serverURL).toBeDefined();
@@ -86,7 +86,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('"valueFrom" should be <= "maxValue"', () => {
           expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
         });
-        if (model.onRange) {
+        if (model.isRange) {
           it('Should be execute callback for "valueTo"', () => {
             expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
           });
@@ -154,7 +154,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
         });
-        if (model.onRange) {
+        if (model.isRange) {
           it('"maxValue" should be >= "valueTo"', () => {
             expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
           });
@@ -179,7 +179,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
         });
-        if (model.onRange) {
+        if (model.isRange) {
           it('"valueFrom" should be <= "valueTo"', () => {
             expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
           });
@@ -204,7 +204,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it(`Should be called setter with ${num}`, () => {
           expect(spySet).toHaveBeenCalledWith(num);
         });
-        if (model.onRange) {
+        if (model.isRange) {
           it('Should be execute callback', () => {
             expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
           });
@@ -217,79 +217,79 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         }
       });
 
-      describe('Testing setter and getter for "onVertical" property', () => {
+      describe('Testing setter and getter for "isVertical" property', () => {
         const bool = (Math.round(Math.random()) === 0);
         let spySet: jasmine.Spy;
         beforeAll(() => {
-          spySet = spyOnProperty(model, 'onVertical', 'set').and.callThrough();
+          spySet = spyOnProperty(model, 'isVertical', 'set').and.callThrough();
           spyCallback.calls.reset();
-          model.onVertical = bool;
+          model.isVertical = bool;
         });
         it(`Should be called setter with ${bool}`, () => {
           expect(spySet).toHaveBeenCalledWith(bool);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onVertical', bool);
+          expect(spyCallback).toHaveBeenCalledWith('isVertical', bool);
         });
         it(`Should be setting ${bool}`, () => {
-          expect(model.onVertical).toBe(bool);
+          expect(model.isVertical).toBe(bool);
         });
       });
 
-      describe('Testing setter and getter for "onRange" property', () => {
+      describe('Testing setter and getter for "isRange" property', () => {
         const bool = (Math.round(Math.random()) === 0);
         let spySet: jasmine.Spy;
         beforeAll(() => {
-          spySet = spyOnProperty(model, 'onRange', 'set').and.callThrough();
+          spySet = spyOnProperty(model, 'isRange', 'set').and.callThrough();
           spyCallback.calls.reset();
-          model.onRange = bool;
+          model.isRange = bool;
         });
         it(`Should be called setter with ${bool}`, () => {
           expect(spySet).toHaveBeenCalledWith(bool);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onRange', bool);
+          expect(spyCallback).toHaveBeenCalledWith('isRange', bool);
         });
         it(`Should be setting ${bool}`, () => {
-          expect(model.onRange).toBe(bool);
+          expect(model.isRange).toBe(bool);
         });
       });
 
-      describe('Testing setter and getter for "onScale" property', () => {
+      describe('Testing setter and getter for "isScale" property', () => {
         const bool = (Math.round(Math.random()) === 0);
         let spySet: jasmine.Spy;
         beforeAll(() => {
-          spySet = spyOnProperty(model, 'onScale', 'set').and.callThrough();
+          spySet = spyOnProperty(model, 'isScale', 'set').and.callThrough();
           spyCallback.calls.reset();
-          model.onScale = bool;
+          model.isScale = bool;
         });
         it(`Should be called setter with ${bool}`, () => {
           expect(spySet).toHaveBeenCalledWith(bool);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onScale', bool);
+          expect(spyCallback).toHaveBeenCalledWith('isScale', bool);
         });
         it(`Should be setting ${bool}`, () => {
-          expect(model.onScale).toBe(bool);
+          expect(model.isScale).toBe(bool);
         });
       });
 
-      describe('Testing setter and getter for "onTooltip" property', () => {
+      describe('Testing setter and getter for "isTooltip" property', () => {
         const bool = (Math.round(Math.random()) === 0);
         let spySet: jasmine.Spy;
         beforeAll(() => {
-          spySet = spyOnProperty(model, 'onTooltip', 'set').and.callThrough();
+          spySet = spyOnProperty(model, 'isTooltip', 'set').and.callThrough();
           spyCallback.calls.reset();
-          model.onTooltip = bool;
+          model.isTooltip = bool;
         });
         it(`Should be called setter with ${bool}`, () => {
           expect(spySet).toHaveBeenCalledWith(bool);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('onTooltip', bool);
+          expect(spyCallback).toHaveBeenCalledWith('isTooltip', bool);
         });
         it(`Should be setting ${bool}`, () => {
-          expect(model.onTooltip).toBe(bool);
+          expect(model.isTooltip).toBe(bool);
         });
       });
 

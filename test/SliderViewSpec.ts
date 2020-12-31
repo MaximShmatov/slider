@@ -12,10 +12,10 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     view.setModelData('maxValue', data.maxValue);
     view.setModelData('valueFrom', data.valueFrom);
     view.setModelData('valueTo', data.valueTo);
-    view.setModelData('onScale', data.onScale);
-    view.setModelData('onRange', data.onRange);
-    view.setModelData('onVertical', data.onVertical);
-    view.setModelData('onTooltip', data.onTooltip);
+    view.setModelData('isScale', data.isScale);
+    view.setModelData('isRange', data.isRange);
+    view.setModelData('isVertical', data.isVertical);
+    view.setModelData('isTooltip', data.isTooltip);
   });
   afterAll(() => {
     view.remove();
@@ -68,7 +68,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
       expect(shadowRoot.querySelector('style')).toBeInstanceOf(HTMLElement);
     });
     it('Should switch on/off scale', () => {
-      if (data.onScale) {
+      if (data.isScale) {
         expect(scale.style.display).toEqual('');
       } else {
         expect(scale.style.display).toEqual('none');
@@ -112,24 +112,24 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
       it(`The attribute "data-value-to" must be set to "${data.valueTo}"`, () => {
         expect(rail.getAttribute('data-value-to')).toEqual(data.valueTo.toString());
       });
-      it(`The attribute "data-on-tooltip" must be set to "${data.onTooltip}"`, () => {
-        expect(rail.getAttribute('data-on-tooltip')).toEqual(String(data.onTooltip));
+      it(`The attribute "data-on-tooltip" must be set to "${data.isTooltip}"`, () => {
+        expect(rail.getAttribute('data-on-tooltip')).toEqual(String(data.isTooltip));
       });
-      it(`The attribute "data-on-range" must be set to "${data.onRange}"`, () => {
-        expect(rail.getAttribute('data-on-range')).toEqual(String(data.onRange));
+      it(`The attribute "data-on-range" must be set to "${data.isRange}"`, () => {
+        expect(rail.getAttribute('data-on-range')).toEqual(String(data.isRange));
       });
-      it(`The attribute "data-on-vertical" must be set to "${data.onVertical}"`, () => {
-        expect(rail.getAttribute('data-on-vertical')).toEqual(String(data.onVertical));
+      it(`The attribute "data-on-vertical" must be set to "${data.isVertical}"`, () => {
+        expect(rail.getAttribute('data-on-vertical')).toEqual(String(data.isVertical));
       });
       it('Should switch to horizontal or vertical position', () => {
-        if (data.onVertical) {
+        if (data.isVertical) {
           expect(rail).toHaveClass(styles.locals.rail_ver);
         } else {
           expect(rail).not.toHaveClass(styles.locals.rail_ver);
         }
       });
       it('Should switch on/off thumbTo', () => {
-        if (data.onRange) {
+        if (data.isRange) {
           expect(thumbTo.style.display).not.toEqual('none');
         } else {
           expect(thumbTo.style.display).toEqual('none');
@@ -146,30 +146,30 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
         it(`The attribute "data-position-to" must be set to "${positionTo}"`, () => {
           expect(progress.getAttribute('data-position-to')).toEqual(positionTo.toString());
         });
-        it(`The attribute "data-on-range" must be set to "${data.onRange}"`, () => {
-          expect(progress.getAttribute('data-on-range')).toEqual(String(data.onRange));
+        it(`The attribute "data-on-range" must be set to "${data.isRange}"`, () => {
+          expect(progress.getAttribute('data-on-range')).toEqual(String(data.isRange));
         });
-        it(`The attribute "data-on-vertical" must be set to "${data.onVertical}"`, () => {
-          expect(progress.getAttribute('data-on-vertical')).toEqual(String(data.onVertical));
+        it(`The attribute "data-on-vertical" must be set to "${data.isVertical}"`, () => {
+          expect(progress.getAttribute('data-on-vertical')).toEqual(String(data.isVertical));
         });
         it('Should switch to horizontal or vertical position', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(progress).toHaveClass(styles.locals.progress_ver);
           } else {
             expect(progress).not.toHaveClass(styles.locals.rail_ver);
           }
         });
         it('Positions (top, right, bottom, lef) must be set ', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(Number(progress.style.top.slice(0, -1))).toBeCloseTo(positionFrom);
-            if (data.onRange) {
+            if (data.isRange) {
               expect(Number(progress.style.bottom.slice(0, -1))).toBeCloseTo(100 - positionTo);
             } else {
               expect(progress.style.bottom).toEqual('0px');
             }
           } else {
             expect(Number(progress.style.left.slice(0, -1))).toBeCloseTo(positionFrom);
-            if (data.onRange) {
+            if (data.isRange) {
               expect(Number(progress.style.right.slice(0, -1))).toBeCloseTo(100 - positionTo);
             } else {
               expect(progress.style.right).toEqual('0px');
@@ -204,20 +204,20 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           expect(thumbFrom.getAttribute('data-position')).toEqual(positionFrom.toString());
           expect(thumbTo.getAttribute('data-position')).toEqual(positionTo.toString());
         });
-        it(`The attribute "data-on-vertical" must be set to "${data.onVertical}"`, () => {
-          expect(thumbFrom.getAttribute('data-on-vertical')).toEqual(String(data.onVertical));
-          expect(thumbTo.getAttribute('data-on-vertical')).toEqual(String(data.onVertical));
+        it(`The attribute "data-on-vertical" must be set to "${data.isVertical}"`, () => {
+          expect(thumbFrom.getAttribute('data-on-vertical')).toEqual(String(data.isVertical));
+          expect(thumbTo.getAttribute('data-on-vertical')).toEqual(String(data.isVertical));
         });
-        it(`The attribute "data-on-tooltip" must be set to "${data.onTooltip}"`, () => {
-          expect(thumbFrom.getAttribute('data-on-tooltip')).toEqual(String(data.onTooltip));
-          expect(thumbTo.getAttribute('data-on-tooltip')).toEqual(String(data.onTooltip));
+        it(`The attribute "data-on-tooltip" must be set to "${data.isTooltip}"`, () => {
+          expect(thumbFrom.getAttribute('data-on-tooltip')).toEqual(String(data.isTooltip));
+          expect(thumbTo.getAttribute('data-on-tooltip')).toEqual(String(data.isTooltip));
         });
         it(`Must be set text content from tooltipFrom (${data.valueFrom}) or tooltipTo (${data.valueTo})`, () => {
           expect(tooltipFrom.textContent).toEqual(data.valueFrom.toFixed());
           expect(tooltipTo.textContent).toEqual(data.valueTo.toFixed());
         });
         it('Should be set left or top positions ', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(Number(thumbFrom.style.top.slice(0, -1))).toBeCloseTo(positionFrom);
             expect(Number(thumbTo.style.top.slice(0, -1))).toBeCloseTo(positionTo);
             expect(thumbFrom.style.left).toEqual('0px');
@@ -230,7 +230,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           }
         });
         it('Should switch to horizontal or vertical position', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(thumbFrom).toHaveClass(styles.locals.thumb_ver);
             expect(thumbTo).toHaveClass(styles.locals.thumb_ver);
             expect(tooltipFrom).toHaveClass(styles.locals.thumb__tooltip_ver);
@@ -243,7 +243,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           }
         });
         it('Should switch on/off tooltip', () => {
-          if (data.onTooltip) {
+          if (data.isTooltip) {
             expect(tooltipFrom.style.display).toEqual('');
             expect(tooltipTo.style.display).toEqual('');
           } else {
@@ -314,11 +314,11 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
       it(`The attribute "data-max-value" must be set to "${data.maxValue}"`, () => {
         expect(scale.getAttribute('data-max-value')).toEqual(data.maxValue.toString());
       });
-      it(`The attribute "data-on-vertical" must be set to "${data.onVertical}"`, () => {
-        expect(scale.getAttribute('data-on-vertical')).toEqual(String(data.onVertical));
+      it(`The attribute "data-on-vertical" must be set to "${data.isVertical}"`, () => {
+        expect(scale.getAttribute('data-on-vertical')).toEqual(String(data.isVertical));
       });
-      it(`The attribute "data-on-range" must be set to "${data.onRange}"`, () => {
-        expect(scale.getAttribute('data-on-range')).toEqual(String(data.onRange));
+      it(`The attribute "data-on-range" must be set to "${data.isRange}"`, () => {
+        expect(scale.getAttribute('data-on-range')).toEqual(String(data.isRange));
       });
       it(`The first element with class "scale_valuesItem" must have text content ${data.minValue}`, () => {
         expect(valuesItem[0].textContent).toEqual(data.minValue.toString());
@@ -338,28 +338,28 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
 
       describe('Vertical and horizontal switching tests', () => {
         it('The "scale_ver" class must be toggled for the "scale" element', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(scale).toHaveClass(styles.locals.scale_ver);
           } else {
             expect(scale).not.toHaveClass(styles.locals.scale_ver);
           }
         });
         it('The "wrapper_ver" class must be toggled for the "wrapper" element', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(wrapper).toHaveClass(styles.locals.scale__wrapper_ver);
           } else {
             expect(wrapper).not.toHaveClass(styles.locals.scale__wrapper_ver);
           }
         });
         it('The "scale__values_ver" class must be toggled for the "values" element', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             expect(values).toHaveClass(styles.locals.scale__values_ver);
           } else {
             expect(values).not.toHaveClass(styles.locals.scale__values_ver);
           }
         });
         it('The "scale__valuesItem_ver" class must be toggled for the all "valuesItem" elements', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             valuesItem.forEach((element) => {
               expect(element).toHaveClass(styles.locals.scale__valuesItem_ver);
             });
@@ -370,7 +370,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           }
         });
         it('The "scale__division_ver" class must be toggled for the all "division" elements', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             division.forEach((element) => {
               expect(element).toHaveClass(styles.locals.scale__division_ver);
             });
@@ -381,7 +381,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           }
         });
         it('The "scale__subdivision_ver" class must be toggled for the all "subdivision" elements', () => {
-          if (data.onVertical) {
+          if (data.isVertical) {
             subdivision.forEach((element) => {
               expect(element).toHaveClass(styles.locals.scale__subdivision_ver);
             });

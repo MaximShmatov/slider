@@ -12,10 +12,10 @@ const data: ISliderData = {
   valueFrom: getRandom(100),
   valueTo: getRandom(100),
   stepSize: getRandom(10),
-  onVertical: Math.round(Math.random()) === 1,
-  onRange: Math.round(Math.random()) === 1,
-  onTooltip: Math.round(Math.random()) === 1,
-  onScale: Math.round(Math.random()) === 1,
+  isVertical: Math.round(Math.random()) === 1,
+  isRange: Math.round(Math.random()) === 1,
+  isTooltip: Math.round(Math.random()) === 1,
+  isScale: Math.round(Math.random()) === 1,
   serverURL: 'http://localhost:9000/slider',
 };
 
@@ -27,10 +27,10 @@ function getHTMLElement(): HTMLElement {
   element.setAttribute('data-value-from', data.valueFrom.toString());
   element.setAttribute('data-value-to', data.valueTo.toString());
   element.setAttribute('data-step-size', data.stepSize.toString());
-  element.setAttribute('data-on-range', data.onRange.toString());
-  element.setAttribute('data-on-scale', data.onScale.toString());
-  element.setAttribute('data-on-vertical', data.onVertical.toString());
-  element.setAttribute('data-on-tooltip', data.onTooltip.toString());
+  element.setAttribute('data-on-range', data.isRange.toString());
+  element.setAttribute('data-on-scale', data.isScale.toString());
+  element.setAttribute('data-on-vertical', data.isVertical.toString());
+  element.setAttribute('data-on-tooltip', data.isTooltip.toString());
   element.setAttribute('data-server-u-r-l', data.serverURL.toString());
   return element;
 }

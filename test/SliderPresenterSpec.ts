@@ -18,10 +18,10 @@ function getHTMLElementFromObj(): HTMLElement {
 describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
   const presenter = new SliderPresenter();
   const modelData = {
-    onVertical: true,
-    onScale: true,
-    onRange: true,
-    onTooltip: true,
+    isVertical: true,
+    isScale: true,
+    isRange: true,
+    isTooltip: true,
     minValue: 0,
     maxValue: 100,
     valueFrom: 10,
@@ -67,7 +67,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     props.forEach((key) => {
       it(`setProps("${key}") should dispatch event "slider-model" and call method "setModelData" with (${key}, ${modelData[key]})`, () => {
         presenter.setProps(key, modelData[key]);
-        if (key === 'valueTo' && presenter.getProps('onRange') === false) {
+        if (key === 'valueTo' && presenter.getProps('isRange') === false) {
           expect(spyModelEvt).not.toHaveBeenCalled();
         } else {
           expect(spyModelEvt).toHaveBeenCalled();

@@ -16,13 +16,13 @@ class ControlPanel {
 
   private readonly $valueRange: JQuery;
 
-  private readonly $onScale: JQuery;
+  private readonly $isScale: JQuery;
 
-  private readonly $onTooltip: JQuery;
+  private readonly $isTooltip: JQuery;
 
-  private readonly $onRange: JQuery;
+  private readonly $isRange: JQuery;
 
-  private readonly $onVertical: JQuery;
+  private readonly $isVertical: JQuery;
 
   constructor($container: JQuery) {
     this.$minValue = $container
@@ -41,17 +41,17 @@ class ControlPanel {
       .find('.control__value-to')
       .on('blur', this.setValueTo.bind(this));
     this.$valueRange = $container.find('.control__value-range');
-    this.$onTooltip = $container
-      .find('.control__on-tooltip')
+    this.$isTooltip = $container
+      .find('.control__is-tooltip')
       .on('change', this.toggleTooltip.bind(this));
-    this.$onVertical = $container
-      .find('.control__on-vertical')
+    this.$isVertical = $container
+      .find('.control__is-vertical')
       .on('change', this.toggleVertical.bind(this));
-    this.$onRange = $container
-      .find('.control__on-range')
+    this.$isRange = $container
+      .find('.control__is-range')
       .on('change', this.toggleRange.bind(this));
-    this.$onScale = $container
-      .find('.control__on-scale')
+    this.$isScale = $container
+      .find('.control__is-scale')
       .on('change', this.toggleScale.bind(this));
     this.$slider = $container
       .on('slider-data', this.handleContainerEvents.bind(this) as EventListener)
@@ -80,19 +80,19 @@ class ControlPanel {
   }
 
   private toggleScale(): void {
-    this.$slider.slider('onScale', !this.$slider.slider('onScale'));
+    this.$slider.slider('isScale', !this.$slider.slider('isScale'));
   }
 
   private toggleTooltip(): void {
-    this.$slider.slider('onTooltip', !this.$slider.slider('onTooltip'));
+    this.$slider.slider('isTooltip', !this.$slider.slider('isTooltip'));
   }
 
   private toggleVertical(): void {
-    this.$slider.slider('onVertical', !this.$slider.slider('onVertical'));
+    this.$slider.slider('isVertical', !this.$slider.slider('isVertical'));
   }
 
   private toggleRange(): void {
-    this.$slider.slider('onRange', !this.$slider.slider('onRange'));
+    this.$slider.slider('isRange', !this.$slider.slider('isRange'));
   }
 
   private setRangeValue() {
@@ -118,17 +118,17 @@ class ControlPanel {
       case 'stepSize':
         this.$stepSize.val(evt.detail.value);
         break;
-      case 'onScale':
-        this.$onScale.prop('checked', evt.detail.value);
+      case 'isScale':
+        this.$isScale.prop('checked', evt.detail.value);
         break;
-      case 'onTooltip':
-        this.$onTooltip.prop('checked', evt.detail.value);
+      case 'isTooltip':
+        this.$isTooltip.prop('checked', evt.detail.value);
         break;
-      case 'onRange':
-        this.$onRange.prop('checked', evt.detail.value);
+      case 'isRange':
+        this.$isRange.prop('checked', evt.detail.value);
         break;
-      case 'onVertical':
-        this.$onVertical.prop('checked', evt.detail.value);
+      case 'isVertical':
+        this.$isVertical.prop('checked', evt.detail.value);
         break;
       default:
     }
@@ -147,9 +147,9 @@ $('.init-from-object').slider('init', {
   valueFrom: 10,
   valueTo: 90,
   stepSize: 1,
-  onVertical: false,
-  onRange: true,
-  onTooltip: true,
-  onScale: true,
+  isVertical: false,
+  isRange: true,
+  isTooltip: true,
+  isScale: true,
   serverURL: 'http://localhost:9000/slider',
 });

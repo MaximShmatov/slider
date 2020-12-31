@@ -5,13 +5,13 @@ mixin control
         h3 Control panel
       div.control
         label Scale on/off
-          input(type="checkbox").control__on-scale
+          input(type="checkbox").control__is-scale
         label Vertical on/off
-          input(type="checkbox").control__on-vertical
+          input(type="checkbox").control__is-vertical
         label Tooltip on/off
-          input(type="checkbox").control__on-tooltip
+          input(type="checkbox").control__is-tooltip
         label Range mode
-          input(type="checkbox").control__on-range
+          input(type="checkbox").control__is-range
         label Minimum value
           input(type="number").control__min-value
         label Maximum value
@@ -39,10 +39,10 @@ html(lang="ru" dir="ltr")
         data-value-from=`${Math.round(Math.random() * 100) * -1}`
         data-value-to=`${Math.round(Math.random() * 100)}`
         data-step-size=`${Math.round(Math.random() * 10)}`
-        data-on-vertical="false"
-        data-on-scale="true"
-        data-on-range="true"
-        data-on-tooltip="true")
+        data-is-vertical="false"
+        data-is-scale="true"
+        data-is-range="true"
+        data-is-tooltip="true")
       +control
     div.container
       input(
@@ -52,10 +52,10 @@ html(lang="ru" dir="ltr")
         data-value-from=`${Math.round(Math.random() * 100) * -1}`
         data-value-to=`${Math.round(Math.random() * 100)}`
         data-step-size=`${Math.round(Math.random() * 10)}`
-        data-on-vertical="true"
-        data-on-scale="true"
-        data-on-range="true"
-        data-on-tooltip="true")
+        data-is-vertical="true"
+        data-is-scale="true"
+        data-is-range="true"
+        data-is-tooltip="true")
       +control
     div.container
       input(class="input-range-slider-plugin init-from-object")
