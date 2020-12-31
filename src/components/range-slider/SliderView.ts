@@ -98,7 +98,7 @@ class Thumb extends HTMLElement {
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-value':
-        this._tooltip.textContent = <string> this.dataset.value;
+        this._tooltip.textContent = <string>this.dataset.value;
         break;
       case 'data-position':
         this._position = Number(this.dataset.position);
@@ -166,7 +166,7 @@ class Thumb extends HTMLElement {
       bubbles: true,
       cancelable: true,
       composed: true,
-      detail: { name: this._name, value: this._position },
+      detail: {name: this._name, value: this._position},
     }));
   }
 
@@ -183,7 +183,7 @@ class Rail extends HTMLElement {
 
   private _progress = new Progress();
 
-  constructor() {
+  constructor(func: TCallback) {
     super();
     this.className = styles.locals.rail;
     this.appendChild(this._thumbFrom);
@@ -205,18 +205,18 @@ class Rail extends HTMLElement {
         this._progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
         break;
       case 'data-is-tooltip':
-        this._thumbFrom.setAttribute('data-is-tooltip', <string> this.dataset.isTooltip);
-        this._thumbTo.setAttribute('data-is-tooltip', <string> this.dataset.isTooltip);
+        this._thumbFrom.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
+        this._thumbTo.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
         break;
       case 'data-is-range':
-        this._progress.setAttribute('data-is-range', <string> this.dataset.isRange);
+        this._progress.setAttribute('data-is-range', <string>this.dataset.isRange);
         if (this.dataset.isRange === 'false') $(this._thumbTo).hide();
         else $(this._thumbTo).show();
         break;
       case 'data-is-vertical':
-        this._thumbFrom.setAttribute('data-is-vertical', <string> this.dataset.isVertical);
-        this._progress.setAttribute('data-is-vertical', <string> this.dataset.isVertical);
-        this._thumbTo.setAttribute('data-is-vertical', <string> this.dataset.isVertical);
+        this._thumbFrom.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
+        this._progress.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
+        this._thumbTo.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
         if (this.dataset.isVertical === 'true') $(this).addClass(styles.locals.rail_ver);
         else $(this).removeClass(styles.locals.rail_ver);
         break;
@@ -245,27 +245,36 @@ class Rail extends HTMLElement {
 }
 
 class Scale extends HTMLElement {
-  private _scaleValueItems: HTMLSpanElement[] = [];
 
-  private _name: 'valueFrom' | 'valueTo' = 'valueTo';
+  private readonly callback: TCallback;
 
-  constructor() {
+  private readonly valueItems: NodeListOf<HTMLElement>;
+
+  constructor(func: TCallback) {
     super();
+    this.callback = func;
     this.className = styles.locals.scale;
     this.createScaleDOM();
+    this.valueItems = this.querySelectorAll(styles.locals.scale__valuesItem);
+    this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
   }
 
   static get observedAttributes() {
-    return ['data-min-value', 'data-max-value', 'data-is-vertical'];
+    return [
+      'data-min-value',
+      'data-max-value',
+      'data-is-vertical',
+    ];
   }
 
   attributeChangedCallback(prop: string) {
     switch (prop) {
       case 'data-min-value':
-        this.render();
-        break;
       case 'data-max-value':
-        this.render();
+        this.setScaleValues();
+        const range = Number(this.dataset.maxValue) - Number(this.dataset.minValue);
+        this.valueItems[3].style.display = (range < 4) ? 'none' : 'block';
+        this.valueItems[2].style.display = (range < 3) ? 'none' : 'block';
         break;
       case 'data-is-vertical':
         if (this.dataset.isVertical === 'true') {
@@ -289,92 +298,68 @@ class Scale extends HTMLElement {
   }
 
   private createScaleDOM() {
+    let subdivisions = `<span class="${styles.locals.scale__subdivision}"></span>`;
     for (let i = 0; i < 4; i += 1) {
-      this._scaleValueItems[i] = document.createElement('span');
-      this._scaleValueItems[i].className = styles.locals.scale__valuesItem;
+      subdivisions += subdivisions;
     }
-    const scaleValues: HTMLElement = document.createElement('div');
-    scaleValues.className = styles.locals.scale__values;
-    this._scaleValueItems.forEach((item) => {
-      scaleValues.appendChild(item);
-    });
-    this.innerHTML = `      
-      <div class="${styles.locals.scale__wrapper}">
-        <div class="${styles.locals.scale__division}">
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-        </div>
-        <div class="${styles.locals.scale__division}">
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-        </div>
-        <div class="${styles.locals.scale__division}">
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-          <span class="${styles.locals.scale__subdivision}"></span>
-        </div>
-      </div>`;
-    this.appendChild(scaleValues);
-    this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
-  }
+    let divisions = `<div class="${styles.locals.scale__division}">${subdivisions}</div>`;
+    divisions += divisions + divisions;
+    const scale = `<div class="${styles.locals.scale__wrapper}">${divisions}</div>`;
 
-  private render(): void {
-    const min = Number(this.dataset.minValue);
-    const max = Number(this.dataset.maxValue);
-    const scaleValue = (max - min) / 3;
-    this._scaleValueItems[0].textContent = min.toFixed();
-    this._scaleValueItems[1].textContent = (min + scaleValue).toFixed();
-    this._scaleValueItems[2].textContent = (min + scaleValue + scaleValue).toFixed();
-    this._scaleValueItems[3].textContent = max.toFixed();
+    let valueItems = `<span class="${styles.locals.scale__valuesItem}"></span>`;
+    valueItems += valueItems + valueItems + valueItems;
+    const values = `<div class="${styles.locals.scale__values}">${valueItems}</div>`;
+
+    this.innerHTML = scale + values;
+    this.setScaleValues();
   }
 
   private handleScaleMouseDown(evt: MouseEventInit): void {
     const rect = this.getBoundingClientRect();
-    let position = 0;
     if (evt.clientX && evt.clientY) {
-      if (this.dataset.isVertical === 'true') {
-        position = (evt.clientY - rect.top) / (rect.height / 100);
+      const offset = Boolean(this.dataset.isVertical) ? evt.clientY : evt.clientX;
+      const position = (offset - rect.top) / (rect.height / 100);
+
+      if (Boolean(this.dataset.isRange)) {
+        const distanceFrom = position - Number(this.dataset.valueFrom);
+        const distanceTo = Number(this.dataset.valueTo) - position;
+        const nearThumb = (distanceFrom < distanceTo) ? 'valueFrom' : 'valueTo';
+        this.callback(nearThumb, position);
       } else {
-        position = (evt.clientX - rect.left) / (rect.width / 100);
+        this.callback('valueFrom', position);
       }
     }
-    if (this.dataset.isRange === 'true') {
-      if (this._name === 'valueFrom') this._name = 'valueTo';
-      else this._name = 'valueFrom';
-    } else {
-      this._name = 'valueFrom';
-    }
-    this.dispatchEvent(new CustomEvent('slider-view', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: { name: this._name, value: position },
-    }));
+  }
+
+  private setScaleValues(): void {
+    const min = Number(this.dataset.minValue);
+    const max = Number(this.dataset.maxValue);
+    const scaleValue = (max - min) / 3;
+    this.valueItems[0].textContent = min.toFixed();
+    this.valueItems[1].textContent = (min + scaleValue).toFixed();
+    this.valueItems[2].textContent = (min + scaleValue + scaleValue).toFixed();
+    this.valueItems[3].textContent = max.toFixed();
   }
 }
 
 class SliderView extends HTMLElement implements ISliderView {
-  readonly presenter: ISliderPresenter | null;
 
-  private readonly rail = new Rail();
+  private readonly callback: TCallback;
 
-  private readonly scale = new Scale();
+  private readonly rail: HTMLElement;
 
-  private readonly styles = document.createElement('style');
+  private readonly scale: HTMLElement;
 
-  constructor(presenter: ISliderPresenter | null) {
+  private readonly styles: HTMLElement;
+
+  constructor(func: TCallback) {
     super();
-    this.presenter = presenter;
+    this.callback = func;
+    this.rail = new Rail(func);
+    this.scale = new Scale(func);
+    this.styles = document.createElement('style');
     this.styles.innerHTML = styles;
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.styles);
       this.shadowRoot.appendChild(this.rail);
@@ -382,55 +367,35 @@ class SliderView extends HTMLElement implements ISliderView {
     }
   }
 
-  connectedCallback() {
-    this.style.display = 'flex';
-    this.style.justifyContent = 'center';
+  static get observedAttributes() {
+    return [
+      'data-min-value',
+      'data-max-value',
+      'data-value-from',
+      'data-value-to',
+      'data-is-range',
+      'data-is-scale',
+      'data-is-tooltip',
+      'data-is-vertical',
+    ];
   }
 
-  setModelData(method: TMethodsUnion, value: number | boolean | string): void {
-    switch (method) {
-      case 'minValue':
-        this.rail.setAttribute('data-min-value', value.toString());
-        this.scale.setAttribute('data-min-value', value.toString());
-        break;
-      case 'maxValue':
-        this.rail.setAttribute('data-max-value', value.toString());
-        this.scale.setAttribute('data-max-value', value.toString());
-        break;
-      case 'valueFrom':
-        this.rail.setAttribute('data-value-from', value.toString());
-        break;
-      case 'valueTo':
-        this.rail.setAttribute('data-value-to', value.toString());
-        break;
-      case 'isScale':
-        if (value) $(this.scale).show();
-        else $(this.scale).hide();
-        break;
-      case 'isTooltip':
-        this.rail.setAttribute('data-is-tooltip', value.toString());
-        break;
-      case 'isRange':
-        this.rail.setAttribute('data-is-range', value.toString());
-        this.scale.setAttribute('data-is-range', value.toString());
-        break;
-      case 'isVertical':
-        if (value) this.style.flexDirection = 'row';
-        else this.style.flexDirection = 'column';
-        this.rail.setAttribute('data-is-vertical', value.toString());
-        this.scale.setAttribute('data-is-vertical', value.toString());
-        break;
-      default:
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    this.rail.setAttribute(name, newValue);
+    this.scale.setAttribute(name, newValue);
+
+    if (name === 'data-is-scale') {
+      this.scale.style.display = Boolean(newValue) ? 'none' : 'block';
     }
   }
 }
 
-if (!customElements.get('input-slider')) {
-  customElements.define('input-slider', SliderView);
-  customElements.define('input-slider-view-thumb', Thumb);
-  customElements.define('input-slider-view-rail', Rail);
-  customElements.define('input-slider-view-scale', Scale);
-  customElements.define('input-slider-view-progress', Progress);
+if (!customElements.get('range-slider')) {
+  customElements.define('range-slider', SliderView);
+  customElements.define('range-slider-view-thumb', Thumb);
+  customElements.define('range-slider-view-rail', Rail);
+  customElements.define('range-slider-view-scale', Scale);
+  customElements.define('range-slider-view-progress', Progress);
 }
 
 export default SliderView;

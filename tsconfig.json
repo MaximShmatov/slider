@@ -6,6 +6,6 @@
     "removeComments": true,
     "strict": true
   },
-  "include": ["src/**/*", "test/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
