@@ -1,160 +1,129 @@
-class SliderModel implements ISliderModel {
+class SliderModel {
 
-  private readonly callback;
+  private readonly callback: TCallback;
 
-  private minValue = 0;
+  private min = 0;
 
-  private maxValue = 100;
+  private max = 100;
 
-  private valueFrom = 0;
+  private from = 0;
 
-  private valueTo = 100;
+  private to = 100;
 
-  private stepSize = 1;
+  private step = 1;
 
   constructor(func: TCallback) {
     this.callback = func;
   }
 
-  init(data: HTMLElement | TModelData) {
-    if (data instanceof HTMLElement) {
-      this.initModelFromElement(data);
+  get minValue(): number {
+    return this.min;
+  }
+
+  set minValue(val: number) {
+    const minValue = isNaN(val) ? this.min : Math.round(val);
+    if (minValue < this.from) {
+      const stepSize = Math.round((this.from - minValue) / this.step) * this.step;
+      this.min = this.from - stepSize;
     } else {
-      this.initModelFromObject(data);
+      this.min = this.from;
     }
+    if (this.min === this.max) {
+      this.min -= this.step;
+    }
+    this.callback('minValue', this.min);
   }
 
-  getMinValue(): number {
-    return this.minValue;
+  get maxValue(): number {
+    return this.max;
   }
 
-  setMinValue(minValue: number) {
-    if (minValue < this.valueFrom) {
-      const step = Math.round((this.valueFrom - minValue) / this.stepSize) * this.stepSize;
-      this.minValue = this.valueFrom - step;
+  set maxValue(val: number) {
+    const maxValue = isNaN(val) ? this.max : Math.round(val);
+    if (maxValue <= this.to) {
+      this.max = this.to;
+    } else if (maxValue <= this.from) {
+      this.max = this.from;
     } else {
-      this.minValue = this.valueFrom;
+      this.max = Math.round((maxValue - this.min) / this.step);
+      this.max = this.max * this.step + this.min;
     }
-    if (this.minValue === this.maxValue) {
-      this.minValue -= this.stepSize;
+    if (this.max === this.min) {
+      this.max += this.step;
     }
+    this.callback('maxValue', this.max);
   }
 
-  getMaxValue(): number {
-    return this.maxValue;
+  get valueFrom(): number {
+    return this.from;
   }
 
-  setMaxValue(maxValue: number) {
-    if (maxValue <= this.valueTo) {
-      this.maxValue = this.valueTo;
-    } else if (maxValue <= this.valueFrom) {
-      this.maxValue = this.valueFrom;
+  set valueFrom(val: number) {
+    const valueFrom = isNaN(val) ? this.from : Math.round(val);
+    if (valueFrom <= this.min) {
+      this.from = this.min;
+    } else if (valueFrom >= this.to) {
+      this.from = this.to;
+    } else if (valueFrom >= this.max) {
+      this.from = this.max;
     } else {
-      this.maxValue = Math.round((maxValue - this.minValue) / this.stepSize);
-      this.maxValue = this.maxValue * this.stepSize + this.minValue;
+      this.from = Math.round((valueFrom - this.min) / this.step);
+      this.from = this.from * this.step + this.min;
     }
-    if (this.maxValue === this.minValue) {
-      this.maxValue += this.stepSize;
-    }
+    this.callback('valueFrom', this.from);
   }
 
-  getValueFrom(): number {
-    return this.valueFrom;
+  get valueTo(): number {
+    return this.to;
   }
 
-  setValueFrom(valueFrom: number) {
-    if (valueFrom <= this.minValue) {
-      this.valueFrom = this.minValue;
-    } else if (valueFrom >= this.valueTo) {
-      this.valueFrom = this.valueTo;
-    } else if (valueFrom >= this.maxValue) {
-      this.valueFrom = this.maxValue;
+  set valueTo(val: number) {
+    const valueTo = isNaN(val) ? this.to : Math.round(val);
+    if (valueTo > this.from && valueTo < this.max) {
+      this.to = Math.round((valueTo - this.from) / this.step);
+      this.to = this.to * this.step + this.from;
+    } else if (valueTo >= this.max) {
+      this.to = this.max;
     } else {
-      this.valueFrom = Math.round((valueFrom - this.minValue) / this.stepSize);
-      this.valueFrom = this.valueFrom * this.stepSize + this.minValue;
+      this.to = this.from;
     }
+    this.callback('valueTo', this.to);
   }
 
-  getValueTo(): number {
-    return this.valueTo;
+  get stepSize(): number {
+    return this.step;
   }
 
-  setValueTo(valueTo: number) {
-    if (valueTo > this.valueFrom && valueTo < this.maxValue) {
-      this.valueTo = Math.round((valueTo - this.valueFrom) / this.stepSize);
-      this.valueTo = this.valueTo * this.stepSize + this.valueFrom;
-    } else if (valueTo >= this.maxValue) {
-      this.valueTo = this.maxValue;
-    } else {
-      this.valueTo = this.valueFrom;
-    }
-  }
+  set stepSize(val: number) {
+    const stepSize = isNaN(val) ? this.step : Math.round(val);
+    const maxStep = Math.abs(this.max - this.min);
+    this.step = Math.abs(stepSize);
 
-  getStepSize(): number {
-    return this.stepSize;
-  }
-
-  setStepSize(stepSize: number) {
-    const maxStep = Math.abs(this.maxValue - this.minValue);
-    stepSize = Math.abs(Math.round(stepSize));
-    if (maxStep % stepSize !== 0) {
-      while (maxStep % stepSize !== 0) {
-        stepSize -= 1;
-        if (stepSize <= 0) {
-          this.stepSize = 1;
-          return this;
-        }
+    if (this.step >= maxStep) this.step = maxStep;
+    while (maxStep % this.step !== 0) {
+      this.step -= 1;
+      if (this.step < 1) {
+        this.step = 1;
+        break;
       }
     }
+    this.callback('stepSize', this.step);
 
-    if (stepSize < maxStep && stepSize > 0) {
-      this.stepSize = Math.round(stepSize);
-    } else if (stepSize >= maxStep) {
-      this.stepSize = maxStep;
+    if (this.from > this.min) {
+      this.from = Math.round((this.from - this.min) / this.step);
+      this.from = this.from * this.step + this.min;
     } else {
-      this.stepSize = 1;
+      this.from = this.min;
     }
+    this.callback('valueFrom', this.from);
 
-    if (this.valueFrom > this.minValue) {
-      this.valueFrom = Math.round((this.valueFrom - this.minValue) / this.stepSize);
-      this.valueFrom = this.valueFrom * this.stepSize + this.minValue;
+    if (this.to > this.from) {
+      this.to = Math.round((this.to - this.min) / this.step);
+      this.to = this.to * this.step + this.min;
     } else {
-      this.valueFrom = this.minValue;
+      this.to = this.from;
     }
-
-    if (this.valueTo > this.valueFrom) {
-      this.valueTo = Math.round((this.valueTo - this.minValue) / this.stepSize);
-      this.valueTo = this.valueTo * this.stepSize + this.minValue;
-    } else {
-      this.valueTo = this.valueFrom;
-    }
-  }
-
-  private initModelFromObject(data: TModelData) {
-    const {
-      minValue,
-      maxValue,
-      valueFrom,
-      valueTo,
-      stepSize,
-    } = data;
-    this.setMinValue(minValue);
-    const inc = (maxValue <= Math.round(minValue)) ? 1 : 0;
-    this.setMaxValue(maxValue + inc);
-    this.setStepSize(stepSize);
-    this.setValueFrom(valueFrom);
-    this.setValueTo(valueTo)
-  }
-
-  private initModelFromElement(element: HTMLElement) {
-    const data = {
-      minValue: Number(element.dataset.minValue),
-      maxValue: Number(element.dataset.maxValue),
-      valueFrom: Number(element.dataset.valueFrom),
-      valueTo: Number(element.dataset.valueTo),
-      stepSize: Number(element.dataset.stepSize),
-    };
-    this.initModelFromObject(data);
+    this.callback('valueTo', this.to);
   }
 }
 

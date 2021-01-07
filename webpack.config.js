@@ -22,6 +22,7 @@ module.exports = {
       inject: 'body',
     }),
     new webpack.ProvidePlugin({
+      'window.$': 'jquery',
       '$': 'jquery',
     }),
   ],
@@ -33,7 +34,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: 'global',
             },
           },
           'postcss-loader',

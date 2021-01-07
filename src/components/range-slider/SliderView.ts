@@ -1,6 +1,6 @@
 import '../../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-import styles from './slider.module.sass';
+import styles from './styles.module.sass';
 
 class Progress extends HTMLElement {
   private _leftOrTop: 'left' | 'top' = 'left';
@@ -9,7 +9,7 @@ class Progress extends HTMLElement {
 
   constructor() {
     super();
-    this.className = styles.locals.progress;
+    this.className = 'slider__progress';
   }
 
   static get observedAttributes() {
@@ -28,8 +28,6 @@ class Progress extends HTMLElement {
         this.setPosTo();
         break;
       case 'data-is-vertical':
-        if (this.dataset.isVertical === 'true') $(this).addClass(styles.locals.progress_ver);
-        else $(this).removeClass(styles.locals.progress_ver);
         this.setDirection();
         this.setPosFrom();
         this.setPosTo();
@@ -85,8 +83,8 @@ class Thumb extends HTMLElement {
   constructor(name: 'valueFrom' | 'valueTo') {
     super();
     this._name = name;
-    this.className = styles.locals.thumb;
-    this._tooltip.className = styles.locals.thumb__tooltip;
+    this.className = 'slider__thumb';
+    this._tooltip.className = 'slider__thumb-tooltip';
     this.appendChild(this._tooltip);
     this.setHandlesEvents();
   }
@@ -105,13 +103,6 @@ class Thumb extends HTMLElement {
         this.moveToPosition(this._position);
         break;
       case 'data-is-vertical':
-        if (this.dataset.isVertical === 'true') {
-          $(this).addClass(styles.locals.thumb_ver);
-          $(this._tooltip).addClass(styles.locals.thumb__tooltip_ver);
-        } else {
-          $(this).removeClass(styles.locals.thumb_ver);
-          $(this._tooltip).removeClass(styles.locals.thumb__tooltip_ver);
-        }
         this.setPosition();
         this.moveToPosition(this._position);
         break;
@@ -177,18 +168,25 @@ class Thumb extends HTMLElement {
 }
 
 class Rail extends HTMLElement {
-  private _thumbFrom = new Thumb('valueFrom');
 
-  private _thumbTo = new Thumb('valueTo');
+  private readonly callback: TCallback;
 
-  private _progress = new Progress();
+  private readonly thumbFrom: HTMLElement;
+
+  private readonly thumbTo: HTMLElement;
+
+  private readonly progress: HTMLElement;
 
   constructor(func: TCallback) {
     super();
-    this.className = styles.locals.rail;
-    this.appendChild(this._thumbFrom);
-    this.appendChild(this._thumbTo);
-    this.appendChild(this._progress);
+    this.callback = func;
+    this.className = 'slider__rail';
+    this.thumbFrom = new Thumb('valueFrom');
+    this.thumbTo = new Thumb('valueTo');
+    this.progress = new Progress();
+    this.appendChild(this.thumbFrom);
+    this.appendChild(this.thumbTo);
+    this.appendChild(this.progress);
   }
 
   static get observedAttributes() {
@@ -199,36 +197,34 @@ class Rail extends HTMLElement {
     switch (prop) {
       case 'data-min-value':
       case 'data-max-value':
-        this._thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
-        this._progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
-        this._thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
-        this._progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
+        this.thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
+        this.progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
+        this.thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
+        this.progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
         break;
       case 'data-is-tooltip':
-        this._thumbFrom.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
-        this._thumbTo.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
+        this.thumbFrom.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
+        this.thumbTo.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
         break;
       case 'data-is-range':
-        this._progress.setAttribute('data-is-range', <string>this.dataset.isRange);
-        if (this.dataset.isRange === 'false') $(this._thumbTo).hide();
-        else $(this._thumbTo).show();
+        this.progress.setAttribute('data-is-range', <string>this.dataset.isRange);
+        if (this.dataset.isRange === 'false') $(this.thumbTo).hide();
+        else $(this.thumbTo).show();
         break;
       case 'data-is-vertical':
-        this._thumbFrom.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
-        this._progress.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
-        this._thumbTo.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
-        if (this.dataset.isVertical === 'true') $(this).addClass(styles.locals.rail_ver);
-        else $(this).removeClass(styles.locals.rail_ver);
+        this.thumbFrom.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
+        this.progress.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
+        this.thumbTo.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
         break;
       case 'data-value-from':
-        this._thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
-        this._thumbFrom.setAttribute('data-value', Number(this.dataset.valueFrom).toFixed());
-        this._progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
+        this.thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
+        this.thumbFrom.setAttribute('data-value', Number(this.dataset.valueFrom).toFixed());
+        this.progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
         break;
       case 'data-value-to':
-        this._thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
-        this._thumbTo.setAttribute('data-value', Number(this.dataset.valueTo).toFixed());
-        this._progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
+        this.thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
+        this.thumbTo.setAttribute('data-value', Number(this.dataset.valueTo).toFixed());
+        this.progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
         break;
       default:
     }
@@ -248,14 +244,15 @@ class Scale extends HTMLElement {
 
   private readonly callback: TCallback;
 
-  private readonly valueItems: NodeListOf<HTMLElement>;
+  private readonly valueItems: NodeListOf<HTMLSpanElement>;
 
   constructor(func: TCallback) {
     super();
     this.callback = func;
-    this.className = styles.locals.scale;
+    this.className = 'slider__scale';
     this.createScaleDOM();
-    this.valueItems = this.querySelectorAll(styles.locals.scale__valuesItem);
+    this.valueItems = this.querySelectorAll('.slider__scale-values-item');
+    this.setScaleValues();
     this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
   }
 
@@ -263,55 +260,33 @@ class Scale extends HTMLElement {
     return [
       'data-min-value',
       'data-max-value',
-      'data-is-vertical',
     ];
   }
 
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    switch (name) {
       case 'data-min-value':
       case 'data-max-value':
         this.setScaleValues();
         const range = Number(this.dataset.maxValue) - Number(this.dataset.minValue);
-        this.valueItems[3].style.display = (range < 4) ? 'none' : 'block';
-        this.valueItems[2].style.display = (range < 3) ? 'none' : 'block';
-        break;
-      case 'data-is-vertical':
-        if (this.dataset.isVertical === 'true') {
-          $(this).addClass(styles.locals.scale_ver);
-          $(this).find(`.${styles.locals.scale__wrapper}`).addClass(styles.locals.scale__wrapper_ver);
-          $(this).find(`.${styles.locals.scale__values}`).addClass(styles.locals.scale__values_ver);
-          $(this).find(`.${styles.locals.scale__valuesItem}`).addClass(styles.locals.scale__valuesItem_ver);
-          $(this).find(`.${styles.locals.scale__division}`).addClass(styles.locals.scale__division_ver);
-          $(this).find(`.${styles.locals.scale__subdivision}`).addClass(styles.locals.scale__subdivision_ver);
-        } else {
-          $(this).removeClass(styles.locals.scale_ver);
-          $(this).find(`.${styles.locals.scale__wrapper}`).removeClass(styles.locals.scale__wrapper_ver);
-          $(this).find(`.${styles.locals.scale__values}`).removeClass(styles.locals.scale__values_ver);
-          $(this).find(`.${styles.locals.scale__valuesItem}`).removeClass(styles.locals.scale__valuesItem_ver);
-          $(this).find(`.${styles.locals.scale__division}`).removeClass(styles.locals.scale__division_ver);
-          $(this).find(`.${styles.locals.scale__subdivision}`).removeClass(styles.locals.scale__subdivision_ver);
-        }
-        break;
+        this.valueItems[2].style.display = (range < 3) ? 'none' : '';
+        this.valueItems[1].style.display = (range < 2) ? 'none' : '';
       default:
     }
   }
 
   private createScaleDOM() {
-    let subdivisions = `<span class="${styles.locals.scale__subdivision}"></span>`;
-    for (let i = 0; i < 4; i += 1) {
-      subdivisions += subdivisions;
-    }
-    let divisions = `<div class="${styles.locals.scale__division}">${subdivisions}</div>`;
+    let subdivisions = '<span class="slider__scale-subdivision"></span>';
+    subdivisions += subdivisions + subdivisions + subdivisions + subdivisions;
+    let divisions = `<div class="slider__scale-division">${subdivisions}</div>`;
     divisions += divisions + divisions;
-    const scale = `<div class="${styles.locals.scale__wrapper}">${divisions}</div>`;
+    const scale = `<div class="slider__scale-wrapper">${divisions}</div>`;
 
-    let valueItems = `<span class="${styles.locals.scale__valuesItem}"></span>`;
+    let valueItems = '<span class="slider__scale-values-item"></span>';
     valueItems += valueItems + valueItems + valueItems;
-    const values = `<div class="${styles.locals.scale__values}">${valueItems}</div>`;
+    const values = `<div class="slider__scale-values">${valueItems}</div>`;
 
     this.innerHTML = scale + values;
-    this.setScaleValues();
   }
 
   private handleScaleMouseDown(evt: MouseEventInit): void {
@@ -342,7 +317,9 @@ class Scale extends HTMLElement {
   }
 }
 
-class SliderView extends HTMLElement implements ISliderView {
+class SliderView extends HTMLElement {
+
+  readonly id: string;
 
   private readonly callback: TCallback;
 
@@ -350,20 +327,26 @@ class SliderView extends HTMLElement implements ISliderView {
 
   private readonly scale: HTMLElement;
 
+  private readonly slider: HTMLElement;
+
   private readonly styles: HTMLElement;
 
-  constructor(func: TCallback) {
+  constructor(func: TCallback = () => {}) {
     super();
+    this.id = String(Math.random());
     this.callback = func;
     this.rail = new Rail(func);
     this.scale = new Scale(func);
     this.styles = document.createElement('style');
     this.styles.innerHTML = styles;
+    this.slider = document.createElement('div');
+    this.slider.className = 'slider';
+    this.slider.appendChild(this.rail);
+    this.slider.appendChild(this.scale);
     this.attachShadow({mode: 'open'});
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(this.styles);
-      this.shadowRoot.appendChild(this.rail);
-      this.shadowRoot.appendChild(this.scale);
+      this.shadowRoot.appendChild(this.slider);
     }
   }
 
@@ -373,6 +356,7 @@ class SliderView extends HTMLElement implements ISliderView {
       'data-max-value',
       'data-value-from',
       'data-value-to',
+      'data-step-size',
       'data-is-range',
       'data-is-scale',
       'data-is-tooltip',
@@ -384,9 +368,19 @@ class SliderView extends HTMLElement implements ISliderView {
     this.rail.setAttribute(name, newValue);
     this.scale.setAttribute(name, newValue);
 
-    if (name === 'data-is-scale') {
-      this.scale.style.display = Boolean(newValue) ? 'none' : 'block';
+    switch (name) {
+      case 'data-is-vertical':
+        if (newValue === 'true') this.slider.classList.add('slider_vertical');
+        else this.slider.classList.remove('slider_vertical');
+      default:
     }
+
+    this.dispatchEvent(new CustomEvent('range-slider', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {name, value: newValue},
+    }));
   }
 }
 
