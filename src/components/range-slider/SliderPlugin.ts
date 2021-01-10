@@ -5,19 +5,19 @@ import SliderPresenter from './SliderPresenter';
 
   const controls = new Map();
 
-  $.fn.slider = function (prop: TRangeSliderKeys | TInit, value?: string): any {
+  $.fn.slider = function (prop: TSliderPropNames | TInit, value?: string): any {
     if (this.length === 0) return this;
     let propValue = null;
 
     this.each(function () {
-      const slider = controls.get(this.id);
+      const presenter = controls.get(this.id);
 
-      if (slider && prop !== 'init') {
+      if (presenter && prop !== 'init') {
         if (value === undefined) {
-          propValue = slider.getProp(prop);
+          propValue = presenter.getProp(prop);
           return false;
         }
-        slider.setProp(prop, value.toString());
+        presenter.setProp(prop, value.toString());
       }
 
       if (prop === 'init') {

@@ -9,27 +9,24 @@ class SliderPresenter {
 
   constructor() {
     this.model = new SliderModel(this.modelCallback.bind(this));
-    this.view = new SliderView(this.viewCallback.bind(this))
+    this.view = new SliderView(this.viewCallback.bind(this));
   }
 
-  setProp(prop: TRangeSliderKeys, value: string): void {
-    switch(prop) {
+  setProp(name: TSliderPropNames, value: string): void {
+    switch(name) {
       case 'minValue':
-        this.model.minValue = Number(value);
-        break;
       case 'maxValue':
-        this.model.maxValue = Number(value);
-        break;
       case 'valueFrom':
-        this.model.valueFrom = Number(value);
-        break;
       case 'valueTo':
-        this.model.valueTo = Number(value);
+        this.model[name] = Number(value);
+        this.initView();
         break;
       case 'stepSize':
-        this.model.stepSize = Number(value);
+        this.model[name] = Number(value);
         break;
       case 'isRange':
+        if (value === 'false') this.model.valueTo = this.model.maxValue;
+        this.view.setAttribute('data-move-to', '100');
         this.view.setAttribute('data-is-range', value);
         break;
       case 'isTooltip':
@@ -40,69 +37,78 @@ class SliderPresenter {
         break;
       case 'isVertical':
         this.view.setAttribute('data-is-vertical', value);
-        break;
-      default:
     }
   }
 
-  getProp(prop: TRangeSliderKeys): number | boolean {
-    switch(prop) {
+  getProp(name: TSliderPropNames): number | boolean {
+    switch(name) {
       case 'minValue':
-        return this.model.minValue
       case 'maxValue':
-        return this.model.maxValue
       case 'valueFrom':
-        return this.model.valueFrom
       case 'valueTo':
-        return this.model.valueTo
       case 'stepSize':
-        return this.model.stepSize
+        return this.model[name]
       case 'isRange':
-        return (this.view.dataset.isRange === 'true');
       case 'isTooltip':
-        return (this.view.dataset.isTooltip === 'true');
       case 'isScale':
-        return (this.view.dataset.isScale === 'true');
       case 'isVertical':
-        return (this.view.dataset.isVertical === 'true');
+        return (this.view.dataset[name] === 'true');
       default:
-        return false;
+        return NaN;
     }
   }
 
   init(obj: object) {
     const data = (obj instanceof HTMLElement) ? {...obj.dataset} : {...obj};
-    for (const key in data) {
-      this.setProp(key as TRangeSliderKeys, String(data[key]));
-    }
+    this.model.minValue = Number(data.minValue);
+    this.model.maxValue = Number(data.maxValue);
+    this.model.valueFrom = Number(data.valueFrom);
+    this.model.valueTo = Number(data.valueTo);
+    this.model.stepSize = Number(data.stepSize);
+    this.view.setAttribute('data-is-vertical', String(data.isVertical));
+    this.view.setAttribute('data-is-scale', String(data.isScale));
+    this.view.setAttribute('data-is-tooltip', String(data.isTooltip));
+    this.view.setAttribute('data-is-range', String(data.isRange));
+    this.initView();
   }
 
-  private modelCallback(prop: TSliderModelKeys, val: number): void {
-    const value = String(val);
-    switch(prop) {
+  private initView() {
+    const min = this.model.minValue;
+    const max = this.model.maxValue;
+    const percentFrom = (min - this.model.valueFrom) / ((max - min) / 100);
+    const percentTo = (min - this.model.valueTo) / ((max - min) / 100);
+    this.view.setAttribute('data-move-from', Math.abs(percentFrom).toString());
+    this.view.setAttribute('data-move-to', Math.abs(percentTo).toString());
+  }
+
+  private modelCallback(name: TModelPropNames, value: number): void {
+    switch(name) {
       case 'minValue':
-        this.view.setAttribute('data-min-value', value);
+        this.view.setAttribute('data-min-value', value.toString());
         break;
       case 'maxValue':
-        this.view.setAttribute('data-max-value', value);
+        this.view.setAttribute('data-max-value', value.toString());
         break;
       case 'valueFrom':
-        this.view.setAttribute('data-value-from', value);
+        this.view.setAttribute('data-value-from', value.toString());
         break;
       case 'valueTo':
-        this.view.setAttribute('data-value-to', value);
-        break;
-      case 'stepSize':
-        this.view.setAttribute('data-step-size', value);
-        break;
-      default:
+        this.view.setAttribute('data-value-to', value.toString());
     }
+    this.view.dispatchEvent(new CustomEvent('range-slider', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {name, value},
+    }));
   }
 
-  private viewCallback(prop: TSliderModelKeys, val: number): void {
-      const range = this.model.maxValue - this.model.minValue;
-      const value = val * (range / 100);
-      this.setProp(prop, String(value));
+  private viewCallback(name: 'valueFrom' | 'valueTo', value: number): void {
+    const range = this.model.maxValue - this.model.minValue;
+    this.model[name] = value * (range / 100) + this.model.minValue;
+
+    const attr = (name === 'valueFrom') ? 'data-move-from' : 'data-move-to';
+    this.view.setAttribute(attr, value.toString());
   }
 }
 

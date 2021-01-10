@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-const slider = require(path.resolve(__dirname, 'api/sliderREST.js'));
 
 module.exports = {
   mode: 'development',
@@ -68,6 +67,5 @@ module.exports = {
     stats: 'errors-warnings',
     progress: true,
     hot: true,
-    before: slider,
   },
 };

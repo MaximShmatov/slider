@@ -2,7 +2,7 @@ import '../components/range-slider/SliderPlugin';
 import './index.sass';
 
 class ControlPanel {
-  private readonly $slider: any;
+  private readonly $slider: JQuery;
 
   private readonly $minValue: JQuery;
 
@@ -57,42 +57,50 @@ class ControlPanel {
       .on('range-slider', this.handleContainerEvents.bind(this) as EventListener)
       .find('.range-slider')
       .slider('init');
+    this.$isScale.prop('checked', this.$slider.slider('isScale'));
+    this.$isTooltip.prop('checked', this.$slider.slider('isTooltip'));
+    this.$isRange.prop('checked', this.$slider.slider('isRange'));
+    this.$isVertical.prop('checked', this.$slider.slider('isVertical'));
   }
 
   private handleMinValueBlur(): void {
-    this.$slider.slider('minValue', Number(this.$minValue.val()));
+    this.$slider.slider('minValue', String(this.$minValue.val()));
   }
 
   private handleMaxValueBlur(): void {
-    this.$slider.slider('maxValue', Number(this.$maxValue.val()));
+    this.$slider.slider('maxValue', String(this.$maxValue.val()));
   }
 
   private handleValueFromBlur(): void {
-    this.$slider.slider('valueFrom', Number(this.$valueFrom.val()));
+    this.$slider.slider('valueFrom', String(this.$valueFrom.val()));
   }
 
   private handleValueToBlur(): void {
-    this.$slider.slider('valueTo', Number(this.$valueTo.val()));
+    this.$slider.slider('valueTo', String(this.$valueTo.val()));
   }
 
   private handleStepSizeBlur(): void {
-    this.$slider.slider('stepSize', Number(this.$stepSize.val()));
+    this.$slider.slider('stepSize', String(this.$stepSize.val()));
   }
 
   private handleIsScaleChange(): void {
-    this.$slider.slider('isScale', !this.$slider.slider('isScale'));
+    const isScale = String(!this.$slider.slider('isScale'));
+    this.$slider.slider('isScale', isScale);
   }
 
   private handleIsTooltipChange(): void {
-    this.$slider.slider('isTooltip', !this.$slider.slider('isTooltip'));
+    const isTooltip = String(!this.$slider.slider('isTooltip'));
+    this.$slider.slider('isTooltip', isTooltip);
   }
 
   private handleIsVerticalChange(): void {
-    this.$slider.slider('isVertical', !this.$slider.slider('isVertical'));
+    const isVertical = String(!this.$slider.slider('isVertical'));
+    this.$slider.slider('isVertical', isVertical);
   }
 
   private handleIsRangeChange(): void {
-    this.$slider.slider('isRange', !this.$slider.slider('isRange'));
+    const isRange = String(!this.$slider.slider('isRange'));
+    this.$slider.slider('isRange', isRange);
   }
 
   private setRangeValue() {
@@ -102,36 +110,22 @@ class ControlPanel {
   private handleContainerEvents(evt: CustomEvent) {
     const {name, value} = evt.detail;
     switch (name) {
-      case 'data-min-value':
+      case 'minValue':
         this.$minValue.val(value);
         break;
-      case 'data-max-value':
+      case 'maxValue':
         this.$maxValue.val(value);
         break;
-      case 'data-value-from':
+      case 'valueFrom':
         this.$valueFrom.val(value);
         this.setRangeValue();
         break;
-      case 'data-value-to':
+      case 'valueTo':
         this.$valueTo.val(value);
         this.setRangeValue();
         break;
-      case 'data-step-size':
+      case 'stepSize':
         this.$stepSize.val(value);
-        break;
-      case 'data-is-scale':
-        this.$isScale.prop('checked', value === 'true');
-        break;
-      case 'data-is-tooltip':
-        this.$isTooltip.prop('checked', value === 'true');
-        break;
-      case 'data-is-range':
-        this.$isRange.prop('checked', value === 'true');
-        break;
-      case 'data-is-vertical':
-        this.$isVertical.prop('checked', value === 'true');
-        break;
-      default:
     }
   }
 }
@@ -142,8 +136,3 @@ window.$('.container').each(function () {
   plugins.push(new ControlPanel(window.$(this)));
 });
 
-//const p = window.$('.range-slider').slider('minValue', '-1').slider('maxValue');
-
-//const c = window.$('.range-slider').slider('maxValue');
-
-//console.log(p)

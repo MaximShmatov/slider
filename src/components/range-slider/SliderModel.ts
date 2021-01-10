@@ -1,6 +1,6 @@
 class SliderModel {
 
-  private readonly callback: TCallback;
+  private readonly callback: TModelCallback;
 
   private min = 0;
 
@@ -12,7 +12,7 @@ class SliderModel {
 
   private step = 1;
 
-  constructor(func: TCallback) {
+  constructor(func: TModelCallback) {
     this.callback = func;
   }
 

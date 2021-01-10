@@ -62,191 +62,180 @@ class Progress extends HTMLElement {
 }
 
 class Thumb extends HTMLElement {
-  private _position = 0;
 
-  private _clientXorY: 'clientX' | 'clientY' = 'clientX';
+  private readonly tooltip: HTMLElement;
 
-  private _offsetXorY = 0;
+  private leftOrTop: 'left' | 'top' = 'left';
 
-  private _widthOrHeight = 0;
-
-  private _direction: 'left' | 'top' = 'left';
-
-  private readonly _name: 'valueFrom' | 'valueTo';
-
-  private readonly _tooltip = document.createElement('div');
-
-  private readonly _mouseMove = this.onMouseMove.bind(this);
-
-  private readonly _mouseUp = this.onMouseUp.bind(this);
-
-  constructor(name: 'valueFrom' | 'valueTo') {
+  constructor() {
     super();
-    this._name = name;
     this.className = 'slider__thumb';
-    this._tooltip.className = 'slider__thumb-tooltip';
-    this.appendChild(this._tooltip);
-    this.setHandlesEvents();
+    this.tooltip = document.createElement('div');
+    this.tooltip.className = 'slider__thumb-tooltip';
+    this.appendChild(this.tooltip);
   }
 
   static get observedAttributes() {
-    return ['data-value', 'data-position', 'data-is-vertical', 'data-is-tooltip'];
+    return [
+      'data-is-vertical',
+      'data-is-tooltip',
+      'data-value',
+      'data-move',
+    ];
   }
 
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-value':
-        this._tooltip.textContent = <string>this.dataset.value;
-        break;
-      case 'data-position':
-        this._position = Number(this.dataset.position);
-        this.moveToPosition(this._position);
-        break;
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    switch (name) {
       case 'data-is-vertical':
-        this.setPosition();
-        this.moveToPosition(this._position);
+        const isVertical = (newValue === 'true');
+        isVertical ? this.style.left = '0' : this.style.top = '0';
+        isVertical ? this.leftOrTop = 'top' : 'left';
         break;
       case 'data-is-tooltip':
-        if (this.dataset.isTooltip === 'false') $(this._tooltip).hide();
-        else $(this._tooltip).show();
+        this.tooltip.style.display = (newValue === 'true') ? '' : 'none';
         break;
-      default:
+      case 'data-value':
+        this.tooltip.textContent = newValue;
+        break;
+      case 'data-move':
+        this.style[this.leftOrTop] = `${newValue}%`;
     }
-  }
-
-  private setHandlesEvents() {
-    this.addEventListener('mousedown', this.onMouseDown.bind(this));
-  }
-
-  private moveToPosition(position: number): void {
-    $(this).css(`${this._direction}`, `${position}%`);
-  }
-
-  private setPosition(): void {
-    if (this.parentElement) {
-      const rect = this.parentElement.getBoundingClientRect();
-      if (this.dataset.isVertical === 'true') {
-        this._clientXorY = 'clientY';
-        this._direction = 'top';
-        this._offsetXorY = rect.top;
-        this._widthOrHeight = rect.height;
-        this.style.left = '0';
-      } else {
-        this._clientXorY = 'clientX';
-        this._direction = 'left';
-        this._offsetXorY = rect.left;
-        this._widthOrHeight = rect.width;
-        this.style.top = '0';
-      }
-    }
-  }
-
-  private onMouseDown(evt: MouseEvent): void {
-    evt.preventDefault();
-    this.setPosition();
-    document.addEventListener('mousemove', this._mouseMove);
-    document.addEventListener('mouseup', this._mouseUp);
-  }
-
-  private onMouseMove(evt: MouseEventInit): void {
-    this._position = (<number>evt[this._clientXorY] - this._offsetXorY);
-    this._position /= (this._widthOrHeight / 100);
-    if (this._position < 0) this._position = 0;
-    if (this._position > 100) this._position = 100;
-    this.dispatchEvent(new CustomEvent('slider-view', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: {name: this._name, value: this._position},
-    }));
-  }
-
-  private onMouseUp(): void {
-    document.removeEventListener('mousemove', this._mouseMove);
-    document.removeEventListener('mouseup', this._mouseUp);
   }
 }
 
 class Rail extends HTMLElement {
 
-  private readonly callback: TCallback;
+  private readonly callback: TViewCallback;
+
+  private readonly progress: HTMLElement;
+
+  private readonly mouseMove = this.handleMouseMove.bind(this);
+
+  private readonly mouseUp = this.handleMouseUp.bind(this);
 
   private readonly thumbFrom: HTMLElement;
 
   private readonly thumbTo: HTMLElement;
 
-  private readonly progress: HTMLElement;
+  private valueFromOrTo: 'valueFrom' | 'valueTo';
 
-  constructor(func: TCallback) {
+  private clientXorY: 'clientX' | 'clientY';
+
+  private offsetXorY = 0;
+
+  private widthOrHeight = 0;
+
+  private moveFrom = 0;
+
+  private moveTo = 0;
+
+  constructor(func: TViewCallback) {
     super();
     this.callback = func;
     this.className = 'slider__rail';
-    this.thumbFrom = new Thumb('valueFrom');
-    this.thumbTo = new Thumb('valueTo');
+    this.thumbFrom = new Thumb();
+    this.thumbTo = new Thumb();
     this.progress = new Progress();
+    this.clientXorY = 'clientX';
+    this.valueFromOrTo = 'valueFrom';
     this.appendChild(this.thumbFrom);
     this.appendChild(this.thumbTo);
     this.appendChild(this.progress);
+    this.addEventListener('mousedown', this.handleMouseDown.bind(this));
   }
 
   static get observedAttributes() {
-    return ['data-min-value', 'data-max-value', 'data-value-from', 'data-value-to', 'data-is-tooltip', 'data-is-range', 'data-is-vertical'];
+    return [
+      'data-value-from',
+      'data-value-to',
+      'data-is-tooltip',
+      'data-is-range',
+      'data-is-vertical',
+      'data-move-from',
+      'data-move-to',
+    ];
   }
 
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-min-value':
-      case 'data-max-value':
-        this.thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
-        this.progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
-        this.thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
-        this.progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
-        break;
-      case 'data-is-tooltip':
-        this.thumbFrom.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
-        this.thumbTo.setAttribute('data-is-tooltip', <string>this.dataset.isTooltip);
-        break;
-      case 'data-is-range':
-        this.progress.setAttribute('data-is-range', <string>this.dataset.isRange);
-        if (this.dataset.isRange === 'false') $(this.thumbTo).hide();
-        else $(this.thumbTo).show();
-        break;
-      case 'data-is-vertical':
-        this.thumbFrom.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
-        this.progress.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
-        this.thumbTo.setAttribute('data-is-vertical', <string>this.dataset.isVertical);
-        break;
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    switch (name) {
       case 'data-value-from':
-        this.thumbFrom.setAttribute('data-position', this.calcThumbPosition('from').toString());
-        this.thumbFrom.setAttribute('data-value', Number(this.dataset.valueFrom).toFixed());
-        this.progress.setAttribute('data-position-from', this.calcThumbPosition('from').toString());
+        this.thumbFrom.setAttribute('data-value', newValue);
         break;
       case 'data-value-to':
-        this.thumbTo.setAttribute('data-position', this.calcThumbPosition('to').toString());
-        this.thumbTo.setAttribute('data-value', Number(this.dataset.valueTo).toFixed());
-        this.progress.setAttribute('data-position-to', this.calcThumbPosition('to').toString());
+        this.thumbTo.setAttribute('data-value', newValue);
         break;
-      default:
+      case 'data-move-from':
+        this.thumbFrom.setAttribute('data-move', newValue);
+        this.moveFrom = Number(newValue);
+        break;
+      case 'data-move-to':
+        this.thumbTo.setAttribute('data-move', newValue);
+        this.moveTo = Number(newValue);
+        break;
+      case 'data-is-vertical':
+        this.progress.setAttribute(name, newValue);
+      case 'data-is-tooltip':
+        this.thumbFrom.setAttribute(name, newValue);
+        this.thumbTo.setAttribute(name, newValue);
+        break;
+      case 'data-is-range':
+        this.progress.setAttribute(name, newValue);
+        this.thumbTo.style.display = (newValue === 'true') ? '' : 'none';
     }
   }
 
-  private calcThumbPosition(thumb: string): number {
-    const min = Number(this.dataset.minValue);
-    const max = Number(this.dataset.maxValue);
-    let target = 0;
-    if (thumb === 'from') target = Number(this.dataset.valueFrom);
-    else target = Number(this.dataset.valueTo);
-    return ((target - min) / ((max - min) / 100));
+  private handleMouseDown(evt: MouseEvent): void {
+    const rect = this.getBoundingClientRect();
+    const isVertical = (this.dataset.isVertical === 'true');
+    this.clientXorY = isVertical ? 'clientY' : 'clientX';
+    this.offsetXorY = isVertical ? rect.top : rect.left;
+    this.widthOrHeight = isVertical ? rect.height : rect.width;
+
+    if (this.dataset.isRange === 'true') {
+      const posXorY = evt[this.clientXorY];
+      if (posXorY) {
+        const posToPercent = (posXorY - this.offsetXorY) / (this.widthOrHeight / 100);
+        const distanceFrom = Math.abs(posToPercent - this.moveFrom);
+        const distanceTo = Math.abs(this.moveTo - posToPercent);
+        const isNearThumb = (distanceFrom < distanceTo);
+        this.valueFromOrTo = isNearThumb ? 'valueFrom' : 'valueTo';
+      }
+    } else {
+      this.valueFromOrTo = 'valueFrom';
+    }
+
+    this.handleMouseMove(evt);
+
+    document.addEventListener('mousemove', this.mouseMove);
+    document.addEventListener('mouseup', this.mouseUp);
+  }
+
+  private handleMouseMove(evt: MouseEvent): void {
+    evt.preventDefault();
+    const position = evt[this.clientXorY];
+    if (position) {
+      let posToPercent = (position - this.offsetXorY) / (this.widthOrHeight / 100);
+      const minPercent = (this.valueFromOrTo === 'valueFrom') ? 0 : this.moveFrom;
+      const maxPercent = (this.valueFromOrTo === 'valueTo') ? 100 : this.moveTo;
+      if (posToPercent < minPercent) posToPercent = minPercent;
+      if (posToPercent > maxPercent) posToPercent = maxPercent;
+      this.callback(this.valueFromOrTo, posToPercent);
+    }
+  }
+
+  private handleMouseUp(): void {
+    document.removeEventListener('mousemove', this.mouseMove);
+    document.removeEventListener('mouseup', this.mouseUp);
   }
 }
 
 class Scale extends HTMLElement {
 
-  private readonly callback: TCallback;
+  private readonly callback: TViewCallback;
 
   private readonly valueItems: NodeListOf<HTMLSpanElement>;
 
-  constructor(func: TCallback) {
+  constructor(func: TViewCallback) {
     super();
     this.callback = func;
     this.className = 'slider__scale';
@@ -264,15 +253,11 @@ class Scale extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    switch (name) {
-      case 'data-min-value':
-      case 'data-max-value':
-        this.setScaleValues();
-        const range = Number(this.dataset.maxValue) - Number(this.dataset.minValue);
-        this.valueItems[2].style.display = (range < 3) ? 'none' : '';
-        this.valueItems[1].style.display = (range < 2) ? 'none' : '';
-      default:
-    }
+    this.setScaleValues();
+    const range = Number(this.dataset.maxValue) - Number(this.dataset.minValue);
+    this.valueItems[2].style.display = (range < 3) ? 'none' : '';
+    this.valueItems[1].style.display = (range < 2) ? 'none' : '';
+
   }
 
   private createScaleDOM() {
@@ -290,18 +275,23 @@ class Scale extends HTMLElement {
   }
 
   private handleScaleMouseDown(evt: MouseEventInit): void {
-    const rect = this.getBoundingClientRect();
     if (evt.clientX && evt.clientY) {
-      const offset = Boolean(this.dataset.isVertical) ? evt.clientY : evt.clientX;
-      const position = (offset - rect.top) / (rect.height / 100);
+      const rect = this.getBoundingClientRect();
+      const isVertical = (this.dataset.isVertical === 'true');
+      const clientXorY = isVertical ? evt.clientY : evt.clientX;
+      const widthOrHeight = isVertical ? rect.height : rect.width;
+      const leftOrTop = isVertical ? rect.top : rect.left;
+      const posToPercent = (clientXorY - leftOrTop) / (widthOrHeight / 100);
 
-      if (Boolean(this.dataset.isRange)) {
-        const distanceFrom = position - Number(this.dataset.valueFrom);
-        const distanceTo = Number(this.dataset.valueTo) - position;
-        const nearThumb = (distanceFrom < distanceTo) ? 'valueFrom' : 'valueTo';
-        this.callback(nearThumb, position);
+      if (this.dataset.isRange === 'true') {
+        const moveFom = Number(this.dataset.moveFrom);
+        const moveTo = Number(this.dataset.moveTo);
+        const distanceFrom = Math.abs(posToPercent - moveFom);
+        const distanceTo = Math.abs(moveTo - posToPercent);
+        const attr = (distanceFrom < distanceTo) ? 'valueFrom' : 'valueTo';
+        this.callback(attr, posToPercent);
       } else {
-        this.callback('valueFrom', position);
+        this.callback('valueFrom', posToPercent);
       }
     }
   }
@@ -321,7 +311,7 @@ class SliderView extends HTMLElement {
 
   readonly id: string;
 
-  private readonly callback: TCallback;
+  private readonly callback: TViewCallback;
 
   private readonly rail: HTMLElement;
 
@@ -331,7 +321,7 @@ class SliderView extends HTMLElement {
 
   private readonly styles: HTMLElement;
 
-  constructor(func: TCallback = () => {}) {
+  constructor(func: TViewCallback = () => {}) {
     super();
     this.id = String(Math.random());
     this.callback = func;
@@ -356,31 +346,39 @@ class SliderView extends HTMLElement {
       'data-max-value',
       'data-value-from',
       'data-value-to',
-      'data-step-size',
       'data-is-range',
       'data-is-scale',
       'data-is-tooltip',
       'data-is-vertical',
+      'data-move-from',
+      'data-move-to',
     ];
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    this.rail.setAttribute(name, newValue);
-    this.scale.setAttribute(name, newValue);
-
     switch (name) {
+      case 'data-is-scale':
+        this.scale.style.display = (newValue === 'true') ? '' : 'none';
+        break;
+      case 'data-min-value':
+      case 'data-max-value':
+        this.scale.setAttribute(name, newValue);
+        break;
+      case 'data-move-from':
+      case 'data-move-to':
+        this.scale.setAttribute(name, newValue);
+      case 'data-value-from':
+      case 'data-value-to':
+      case 'data-is-tooltip':
+        this.rail.setAttribute(name, newValue);
+        break;
       case 'data-is-vertical':
         if (newValue === 'true') this.slider.classList.add('slider_vertical');
         else this.slider.classList.remove('slider_vertical');
-      default:
+      case 'data-is-range':
+        this.rail.setAttribute(name, newValue);
+        this.scale.setAttribute(name, newValue);
     }
-
-    this.dispatchEvent(new CustomEvent('range-slider', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: {name, value: newValue},
-    }));
   }
 }
 

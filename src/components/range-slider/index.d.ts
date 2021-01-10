@@ -1,29 +1,26 @@
 declare module '*.module.sass';
 
 type TInit = 'init';
-type TSliderModelKeys = 'minValue' | 'maxValue' | 'valueFrom' | 'valueTo' | 'stepSize';
-type TSliderViewKeys = 'isRange' | 'isTooltip' | 'isScale' | 'isVertical';
-type TRangeSliderKeys = TSliderModelKeys | TSliderViewKeys;
+
+type TModelPropNames = 'minValue' | 'maxValue' | 'valueFrom' | 'valueTo' | 'stepSize';
+type TViewPropNames = 'isRange' | 'isTooltip' | 'isScale' | 'isVertical';
+type TSliderPropNames = TViewPropNames | TModelPropNames;
 
 type TRangeSliderData = {
-  [P in TRangeSliderKeys]: P extends TSliderModelKeys ? number : P extends TSliderViewKeys ? boolean : null;
+  [P in TSliderPropNames]: P extends TModelPropNames ? number : P extends TViewPropNames ? boolean : null;
 };
 
-type TCallback = (prop: TSliderModelKeys, value: number) => void;
+type TModelCallback = (prop: TModelPropNames, value: number) => void;
+type TViewCallback = (prop: 'valueFrom' | 'valueTo', value: number) => void;
 
 interface JQuery {
   slider: {
-    (prop: TRangeSliderKeys, value: string): JQuery,
+    (prop: TSliderPropNames, value: string): JQuery,
     (prop: TInit): JQuery,
-    (prop: TSliderViewKeys): boolean,
-    (prop: TSliderModelKeys): number,
+    (prop: TViewPropNames): boolean,
+    (prop: TModelPropNames): number,
   }
 }
-
-interface HTMLElementEventMap {
-  'range-slider': CustomEvent;
-}
-
 interface Window {
   $: JQueryStatic;
 }
