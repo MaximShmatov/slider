@@ -61,6 +61,9 @@ class ControlPanel {
     this.$isTooltip.prop('checked', this.$slider.slider('isTooltip'));
     this.$isRange.prop('checked', this.$slider.slider('isRange'));
     this.$isVertical.prop('checked', this.$slider.slider('isVertical'));
+    const isRange = !this.$slider.slider('isRange');
+    this.$valueTo.prop('disabled', isRange);
+    isRange ? this.$valueRange.text('Disabled') : this.setRangeValue();
   }
 
   private handleMinValueBlur(): void {
@@ -99,8 +102,10 @@ class ControlPanel {
   }
 
   private handleIsRangeChange(): void {
-    const isRange = String(!this.$slider.slider('isRange'));
-    this.$slider.slider('isRange', isRange);
+    const isRange = this.$slider.slider('isRange');
+    this.$slider.slider('isRange', String(!isRange));
+    this.$valueTo.prop('disabled', isRange);
+    isRange ? this.$valueRange.text('Disabled') : this.setRangeValue();
   }
 
   private setRangeValue() {

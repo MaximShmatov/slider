@@ -88,8 +88,9 @@ class Thumb extends HTMLElement {
     switch (name) {
       case 'data-is-vertical':
         const isVertical = (newValue === 'true');
-        isVertical ? this.style.left = '0' : this.style.top = '0';
         isVertical ? this.leftOrTop = 'top' : 'left';
+        this.style.left = isVertical ? '0' : `${this.dataset.move}%`;
+        this.style.top = isVertical ? `${this.dataset.move}%` : '0';
         break;
       case 'data-is-tooltip':
         this.tooltip.style.display = (newValue === 'true') ? '' : 'none';
