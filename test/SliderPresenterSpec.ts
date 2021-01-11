@@ -1,4 +1,4 @@
-import SliderPresenter from '../src/components/range-slider/SliderPresenter';
+import Presenter from '../src/components/range-slider/Presenter';
 
 function getHTMLElementFromObj(): HTMLElement {
   const element = document.createElement('input');
@@ -16,7 +16,7 @@ function getHTMLElementFromObj(): HTMLElement {
 }
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
-  const presenter = new SliderPresenter();
+  const presenter = new Presenter();
   const modelData = {
     isVertical: true,
     isScale: true,
@@ -31,7 +31,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
   };
   const props = <TMethodsUnion[]>Object.keys(modelData);
 
-  it('View should be defined', () => {
+  it('View.ts should be defined', () => {
     expect(presenter.view).toBeDefined();
   });
 

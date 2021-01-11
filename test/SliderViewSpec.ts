@@ -20,7 +20,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
   afterAll(() => {
     view.remove();
   });
-  it('View should be defined', () => {
+  it('View.ts should be defined', () => {
     expect(view).toBeDefined();
   });
 
@@ -49,7 +49,7 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     it('Property view.presenter should be set to  null', () => {
       expect(view.presenter).toBeUndefined();
     });
-    it('"View.shadowRoot" element should be defined', () => {
+    it('"View.ts.shadowRoot" element should be defined', () => {
       expect(shadowRoot).toBeInstanceOf(ShadowRoot);
     });
     it('The "setModelData" method must be called 8 times', () => {

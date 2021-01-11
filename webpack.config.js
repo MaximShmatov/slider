@@ -7,7 +7,7 @@ module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
     index: './pages/index',
-    slider: './components/range-slider/SliderPlugin',
+    slider: './components/range-slider/RangeSlider',
   },
   devtool: 'inline-source-map',
   resolve: {

@@ -1,4 +1,4 @@
-import SliderModel from '../src/components/range-slider/SliderModel';
+import Model from '../src/components/range-slider/Model';
 import { getHTMLElement, data } from './TestData';
 
 type Func = (title: string, initObj: HTMLElement | ISliderData | FormData) => void
@@ -21,7 +21,7 @@ function getTestData(func: Func): void {
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
   const spyCallback = jasmine.createSpy('spyCallback');
-  const model: SliderModel = new SliderModel(spyCallback);
+  const model: Model = new Model(spyCallback);
 
   getTestData((title: string, initObj: HTMLElement | ISliderData | FormData) => {
     describe(title, () => {

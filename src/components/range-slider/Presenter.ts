@@ -1,15 +1,15 @@
-import SliderModel from './SliderModel';
-import SliderView from './SliderView';
+import Model from './Model';
+import View from './View';
 
-class SliderPresenter {
+class Presenter {
 
-  readonly model: SliderModel;
+  readonly model: Model;
 
-  readonly view: SliderView;
+  readonly view: View;
 
   constructor() {
-    this.model = new SliderModel(this.modelCallback.bind(this));
-    this.view = new SliderView(this.viewCallback.bind(this));
+    this.model = new Model(this.modelCallback.bind(this));
+    this.view = new View(this.viewCallback.bind(this));
   }
 
   setProp(name: TSliderPropNames, value: string): void {
@@ -25,8 +25,6 @@ class SliderPresenter {
         this.model[name] = Number(value);
         break;
       case 'isRange':
-        if (value === 'false') this.model.valueTo = this.model.maxValue;
-        this.view.setAttribute('data-move-to', '100');
         this.view.setAttribute('data-is-range', value);
         break;
       case 'isTooltip':
@@ -60,15 +58,23 @@ class SliderPresenter {
 
   init(obj: object) {
     const data = (obj instanceof HTMLElement) ? {...obj.dataset} : {...obj};
-    this.model.minValue = Number(data.minValue);
-    this.model.maxValue = Number(data.maxValue);
-    this.model.valueFrom = Number(data.valueFrom);
-    this.model.valueTo = Number(data.valueTo);
-    this.model.stepSize = Number(data.stepSize);
-    this.view.setAttribute('data-is-vertical', String(data.isVertical));
-    this.view.setAttribute('data-is-scale', String(data.isScale));
-    this.view.setAttribute('data-is-tooltip', String(data.isTooltip));
-    this.view.setAttribute('data-is-range', String(data.isRange));
+    const minValue = Number(data.minValue);
+    if (!isNaN(minValue)) this.model.minValue = minValue
+    const maxValue = Number(data.maxValue);
+    if (!isNaN(minValue)) this.model.maxValue = maxValue
+    const valueTo = Number(data.valueTo);
+    if (!isNaN(minValue)) this.model.valueTo = valueTo
+    const valueFrom = Number(data.valueFrom);
+    if (!isNaN(minValue)) this.model.valueFrom = valueFrom
+    const stepSize = Number(data.stepSize);
+    if (!isNaN(minValue)) this.model.stepSize = stepSize
+    this.model.isRange = (data.isRange === 'true');
+    const isVertical =  String(data.isVertical === 'true');
+    this.view.setAttribute('data-is-vertical', isVertical);
+    const isScale =  String(data.isScale === 'true');
+    this.view.setAttribute('data-is-scale', isScale);
+    const isTooltip =  String(data.isTooltip === 'true');
+    this.view.setAttribute('data-is-tooltip', isTooltip);
     this.initView();
   }
 
@@ -81,8 +87,11 @@ class SliderPresenter {
     this.view.setAttribute('data-move-to', Math.abs(percentTo).toString());
   }
 
-  private modelCallback(name: TModelPropNames, value: number): void {
+  private modelCallback(name: TModelPropNames, value: number | boolean): void {
     switch(name) {
+      case 'isRange':
+        this.view.setAttribute('data-is-range', value.toString());
+        break;
       case 'minValue':
         this.view.setAttribute('data-min-value', value.toString());
         break;
@@ -112,4 +121,4 @@ class SliderPresenter {
   }
 }
 
-export default SliderPresenter;
+export default Presenter;

@@ -1,16 +1,18 @@
-class SliderModel {
+class Model {
 
   private readonly callback: TModelCallback;
 
   private min = 0;
 
-  private max = 100;
+  private max = 1;
 
   private from = 0;
 
-  private to = 100;
+  private to = 1;
 
   private step = 1;
+
+  private isTo = true;
 
   constructor(func: TModelCallback) {
     this.callback = func;
@@ -20,8 +22,7 @@ class SliderModel {
     return this.min;
   }
 
-  set minValue(val: number) {
-    const minValue = isNaN(val) ? this.min : Math.round(val);
+  set minValue(minValue: number) {
     if (minValue < this.from) {
       const stepSize = Math.round((this.from - minValue) / this.step) * this.step;
       this.min = this.from - stepSize;
@@ -38,9 +39,8 @@ class SliderModel {
     return this.max;
   }
 
-  set maxValue(val: number) {
-    const maxValue = isNaN(val) ? this.max : Math.round(val);
-    if (maxValue <= this.to) {
+  set maxValue(maxValue: number) {
+    if (this.isTo && maxValue <= this.to) {
       this.max = this.to;
     } else if (maxValue <= this.from) {
       this.max = this.from;
@@ -58,11 +58,10 @@ class SliderModel {
     return this.from;
   }
 
-  set valueFrom(val: number) {
-    const valueFrom = isNaN(val) ? this.from : Math.round(val);
+  set valueFrom(valueFrom: number) {
     if (valueFrom <= this.min) {
       this.from = this.min;
-    } else if (valueFrom >= this.to) {
+    } else if (this.isTo && valueFrom >= this.to) {
       this.from = this.to;
     } else if (valueFrom >= this.max) {
       this.from = this.max;
@@ -77,27 +76,27 @@ class SliderModel {
     return this.to;
   }
 
-  set valueTo(val: number) {
-    const valueTo = isNaN(val) ? this.to : Math.round(val);
-    if (valueTo > this.from && valueTo < this.max) {
-      this.to = Math.round((valueTo - this.from) / this.step);
-      this.to = this.to * this.step + this.from;
-    } else if (valueTo >= this.max) {
-      this.to = this.max;
-    } else {
-      this.to = this.from;
+  set valueTo(valueTo: number) {
+    if (this.isTo) {
+      if (valueTo > this.from && valueTo < this.max) {
+        this.to = Math.round((valueTo - this.from) / this.step);
+        this.to = this.to * this.step + this.from;
+      } else if (valueTo >= this.max) {
+        this.to = this.max;
+      } else {
+        this.to = this.from;
+      }
+      this.callback('valueTo', this.to);
     }
-    this.callback('valueTo', this.to);
   }
 
   get stepSize(): number {
     return this.step;
   }
 
-  set stepSize(val: number) {
-    const stepSize = isNaN(val) ? this.step : Math.round(val);
+  set stepSize(stepSize: number) {
     const maxStep = Math.abs(this.max - this.min);
-    this.step = Math.abs(stepSize);
+    this.step = Math.abs(Math.round(stepSize));
 
     if (this.step >= maxStep) this.step = maxStep;
     while (maxStep % this.step !== 0) {
@@ -109,22 +108,40 @@ class SliderModel {
     }
     this.callback('stepSize', this.step);
 
+    const calcStep = (value: number) => {
+      const valToStep = Math.round((value - this.min) / this.step);
+      return valToStep * this.step + this.min;
+    }
+
     if (this.from > this.min) {
-      this.from = Math.round((this.from - this.min) / this.step);
-      this.from = this.from * this.step + this.min;
+      this.from = calcStep(this.from);
     } else {
       this.from = this.min;
     }
     this.callback('valueFrom', this.from);
 
-    if (this.to > this.from) {
-      this.to = Math.round((this.to - this.min) / this.step);
-      this.to = this.to * this.step + this.min;
-    } else {
-      this.to = this.from;
+    if (this.isTo) {
+      if (this.to > this.from) {
+        this.to = calcStep(this.to);
+      } else {
+        this.to = this.from;
+      }
+      this.callback('valueTo', this.to);
     }
-    this.callback('valueTo', this.to);
+  }
+
+  get isRange(): boolean {
+    return this.isTo;
+  }
+
+  set isRange(isRange: boolean) {
+    if (isRange) {
+      if (this.to > this.max) this.to = this.max;
+      if (this.to < this.from) this.to = this.from;
+    }
+    this.isTo = isRange;
+    this.callback('isRange', this.isTo);
   }
 }
 
-export default SliderModel;
+export default Model;

@@ -1,11 +1,11 @@
-import SliderPresenter from './SliderPresenter';
+import Presenter from './Presenter';
 
 (function ($: JQueryStatic): void {
   if (!$) return;
 
   const controls = new Map();
 
-  $.fn.slider = function (prop: TSliderPropNames | TInit, value?: string): any {
+  $.fn.slider = function (prop: TSliderPropNames | TInit, value?: string | object): any {
     if (this.length === 0) return this;
     let propValue = null;
 
@@ -21,11 +21,11 @@ import SliderPresenter from './SliderPresenter';
       }
 
       if (prop === 'init') {
-        const presenter = new SliderPresenter();
+        const presenter = new Presenter();
         presenter.view.className = this.className;
         this.id = presenter.view.id;
         this.replaceWith(presenter.view);
-        presenter.init(this);
+        (typeof value === 'object') ? presenter.init(value) : presenter.init(this);
         controls.set(presenter.view.id, presenter);
       }
     });

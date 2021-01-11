@@ -1,7 +1,8 @@
-import '../components/range-slider/SliderPlugin';
+import '../components/range-slider/RangeSlider';
 import './index.sass';
 
 class ControlPanel {
+
   private readonly $slider: JQuery;
 
   private readonly $minValue: JQuery;
@@ -141,3 +142,15 @@ window.$('.container').each(function () {
   plugins.push(new ControlPanel(window.$(this)));
 });
 
+const initObj = {
+  minValue: 0,
+  maxValue: 100,
+  valueFrom: 10,
+  valueTo: 90,
+  stepSize: 2,
+  isRange: true,
+  isVertical: false,
+  isScale: true,
+  isTooltip: true,
+}
+window.$('.init-from-object').slider('init', initObj);
