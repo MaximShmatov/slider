@@ -3,9 +3,10 @@ import '../../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundl
 import styles from './styles.module.sass';
 
 class Progress extends HTMLElement {
-  private _leftOrTop: 'left' | 'top' = 'left';
 
-  private _rightOrBottom: 'right' | 'bottom' = 'right';
+  private leftOrTop: 'left' | 'top' = 'left';
+
+  private rightOrBottom: 'right' | 'bottom' = 'right';
 
   constructor() {
     super();
@@ -13,51 +14,41 @@ class Progress extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data-position-from', 'data-position-to', 'data-is-range', 'data-is-vertical'];
+    return [
+      'data-move-from',
+      'data-move-to',
+      'data-is-range',
+      'data-is-vertical',
+    ];
   }
 
-  attributeChangedCallback(prop: string) {
-    switch (prop) {
-      case 'data-position-from':
-        this.setPosFrom();
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    switch (name) {
+      case 'data-move-from':
+        this.moveFrom();
         break;
-      case 'data-position-to':
-        this.setPosTo();
+      case 'data-move-to':
+        if (this.dataset.isRange === 'true') this.moveTo();
         break;
       case 'data-is-range':
-        this.setPosTo();
+        (newValue === 'true') ? this.moveTo() : this.style[this.rightOrBottom] = '0';
         break;
       case 'data-is-vertical':
-        this.setDirection();
-        this.setPosFrom();
-        this.setPosTo();
-        break;
-      default:
+        const isVertical = (newValue === 'true');
+        this.leftOrTop = isVertical ? 'top' : 'left';
+        this.rightOrBottom = isVertical ? 'bottom' : 'right';
+        isVertical ? this.style.left = '0' : this.style.top = '0';
+        this.moveFrom();
+        this.moveTo();
     }
   }
 
-  private setPosFrom() {
-    $(this).css(`${this._leftOrTop}`, `${this.dataset.positionFrom}%`);
+  private moveFrom() {
+    this.style[this.leftOrTop] = `${this.dataset.moveFrom}%`;
   }
 
-  private setPosTo() {
-    if (this.dataset.isRange === 'true') {
-      $(this).css(`${this._rightOrBottom}`, `${100 - (Number(this.dataset.positionTo))}%`);
-    } else {
-      $(this).css(`${this._rightOrBottom}`, '0');
-    }
-  }
-
-  private setDirection() {
-    if (this.dataset.isVertical === 'true') {
-      this._leftOrTop = 'top';
-      this._rightOrBottom = 'bottom';
-      this.style.left = '0';
-    } else {
-      this._leftOrTop = 'left';
-      this._rightOrBottom = 'right';
-      this.style.top = '0';
-    }
+  private moveTo() {
+    this.style[this.rightOrBottom] = `${100 - (Number(this.dataset.moveTo))}%`;
   }
 }
 
@@ -88,7 +79,7 @@ class Thumb extends HTMLElement {
     switch (name) {
       case 'data-is-vertical':
         const isVertical = (newValue === 'true');
-        isVertical ? this.leftOrTop = 'top' : 'left';
+        this.leftOrTop = isVertical ? 'top' : 'left';
         this.style.left = isVertical ? '0' : `${this.dataset.move}%`;
         this.style.top = isVertical ? `${this.dataset.move}%` : '0';
         break;
@@ -167,10 +158,12 @@ class Rail extends HTMLElement {
         break;
       case 'data-move-from':
         this.thumbFrom.setAttribute('data-move', newValue);
+        this.progress.setAttribute(name, newValue);
         this.moveFrom = Number(newValue);
         break;
       case 'data-move-to':
         this.thumbTo.setAttribute('data-move', newValue);
+        this.progress.setAttribute(name, newValue);
         this.moveTo = Number(newValue);
         break;
       case 'data-is-vertical':
