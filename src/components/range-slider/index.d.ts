@@ -1,22 +1,38 @@
 declare module '*.module.sass';
 
-type TInit = 'init';
+type TModelProps =
+  'minValue' |
+  'maxValue' |
+  'valueFrom' |
+  'valueTo' |
+  'stepSize' |
+  'isRange';
 
-type TModelPropNames = 'minValue' | 'maxValue' | 'valueFrom' | 'valueTo' | 'stepSize' | 'isRange';
-type TViewPropNames = 'isTooltip' | 'isScale' | 'isVertical';
-type TSliderPropNames = TViewPropNames | TModelPropNames;
+type TPluginProps = TModelProps | 'isTooltip' | 'isScale' | 'isVertical';
 
-type TModelCallback = (prop: TModelPropNames, value: number | boolean) => void;
-type TViewCallback = (prop: 'valueFrom' | 'valueTo', value: number) => void;
+type TViewProps =
+  'data-min-value' |
+  'data-max-value' |
+  'data-value-from' |
+  'data-value-to' |
+  'data-step-size' |
+  'data-is-range' |
+  'data-is-tooltip' |
+  'data-is-scale' |
+  'data-is-vertical';
+
+type TModelCallback = (prop: TModelProps, value: number | boolean) => void;
+
+type TViewCallback = (prop: 'data-move-from' | 'data-move-to', value: number) => void;
 
 interface JQuery {
   slider: {
-    (prop: TSliderPropNames, value: string): JQuery,
-    (prop: TInit, value?: object): JQuery,
-    (prop: TViewPropNames): boolean,
-    (prop: TModelPropNames): number,
+    (prop: TPluginProps, value: string): JQuery,
+    (prop: 'init', value?: object): JQuery,
+    (prop: TPluginProps): number | boolean,
   }
 }
+
 interface Window {
   $: JQueryStatic;
 }

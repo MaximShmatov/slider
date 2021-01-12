@@ -15,7 +15,7 @@ class ViewRail extends HTMLElement {
 
   private readonly thumbTo: HTMLElement;
 
-  private valueFromOrTo: 'valueFrom' | 'valueTo';
+  private valueFromOrTo: 'data-move-from' | 'data-move-to';
 
   private clientXorY: 'clientX' | 'clientY';
 
@@ -23,9 +23,9 @@ class ViewRail extends HTMLElement {
 
   private widthOrHeight = 0;
 
-  private moveFrom = 0;
+  private minPercent = 0;
 
-  private moveTo = 0;
+  private maxPercent = 0;
 
   constructor(func: TViewCallback) {
     super();
@@ -35,7 +35,7 @@ class ViewRail extends HTMLElement {
     this.thumbTo = new ViewThumb();
     this.progress = new ViewProgress();
     this.clientXorY = 'clientX';
-    this.valueFromOrTo = 'valueFrom';
+    this.valueFromOrTo = 'data-move-from';
     this.appendChild(this.thumbFrom);
     this.appendChild(this.thumbTo);
     this.appendChild(this.progress);
@@ -65,12 +65,10 @@ class ViewRail extends HTMLElement {
       case 'data-move-from':
         this.thumbFrom.setAttribute('data-move', newValue);
         this.progress.setAttribute(name, newValue);
-        this.moveFrom = Number(newValue);
         break;
       case 'data-move-to':
         this.thumbTo.setAttribute('data-move', newValue);
         this.progress.setAttribute(name, newValue);
-        this.moveTo = Number(newValue);
         break;
       case 'data-is-vertical':
         this.progress.setAttribute(name, newValue);
@@ -91,17 +89,22 @@ class ViewRail extends HTMLElement {
     this.offsetXorY = isVertical ? rect.top : rect.left;
     this.widthOrHeight = isVertical ? rect.height : rect.width;
 
-    if (this.dataset.isRange === 'true') {
-      const posXorY = evt[this.clientXorY];
-      if (posXorY) {
-        const posToPercent = (posXorY - this.offsetXorY) / (this.widthOrHeight / 100);
-        const distanceFrom = Math.abs(posToPercent - this.moveFrom);
-        const distanceTo = Math.abs(this.moveTo - posToPercent);
-        const isNearThumb = (distanceFrom < distanceTo);
-        this.valueFromOrTo = isNearThumb ? 'valueFrom' : 'valueTo';
+    const posXorY = evt[this.clientXorY];
+    if (posXorY) {
+      const posToPercent = (posXorY - this.offsetXorY) / (this.widthOrHeight / 100);
+      const moveFrom = Number(this.dataset.moveFrom);
+      const moveTo = Number(this.dataset.moveTo);
+      const distanceFrom = Math.abs(posToPercent - moveFrom);
+      const distanceTo = Math.abs(moveTo - posToPercent);
+      const isNearThumb = (distanceFrom < distanceTo);
+      this.minPercent = isNearThumb ? 0 : moveFrom;
+      if (this.dataset.isRange === 'true') {
+        this.maxPercent = isNearThumb ? moveTo : 100;
+        this.valueFromOrTo = isNearThumb ? 'data-move-from' : 'data-move-to';
+      } else {
+        this.maxPercent = 100;
+        this.valueFromOrTo = 'data-move-from';
       }
-    } else {
-      this.valueFromOrTo = 'valueFrom';
     }
 
     this.handleMouseMove(evt);
@@ -115,10 +118,8 @@ class ViewRail extends HTMLElement {
     const position = evt[this.clientXorY];
     if (position) {
       let posToPercent = (position - this.offsetXorY) / (this.widthOrHeight / 100);
-      const minPercent = (this.valueFromOrTo === 'valueFrom') ? 0 : this.moveFrom;
-      const maxPercent = (this.valueFromOrTo === 'valueTo') ? 100 : this.moveTo;
-      if (posToPercent < minPercent) posToPercent = minPercent;
-      if (posToPercent > maxPercent) posToPercent = maxPercent;
+      if (posToPercent < this.minPercent) posToPercent = this.minPercent;
+      if (posToPercent > this.maxPercent) posToPercent = this.maxPercent;
       this.callback(this.valueFromOrTo, posToPercent);
     }
   }

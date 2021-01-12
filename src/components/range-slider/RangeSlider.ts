@@ -5,7 +5,7 @@ import Presenter from './Presenter';
 
   const controls = new Map();
 
-  $.fn.slider = function (prop: TSliderPropNames | TInit, value?: string | object): any {
+  $.fn.slider = function (prop: TPluginProps | 'init', value?: string | object): any {
     if (this.length === 0) return this;
     let propValue = null;
 

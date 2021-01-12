@@ -8,8 +8,6 @@ class View extends HTMLElement {
 
   readonly id: string;
 
-  private readonly callback: TViewCallback;
-
   private readonly rail: HTMLElement;
 
   private readonly scale: HTMLElement;
@@ -18,12 +16,11 @@ class View extends HTMLElement {
 
   private readonly styles: HTMLElement;
 
-  constructor(func: TViewCallback = () => {}) {
+  constructor() {
     super();
     this.id = String(Math.random());
-    this.callback = func;
-    this.rail = new ViewRail(func);
-    this.scale = new ViewScale(func);
+    this.rail = new ViewRail(this.callback.bind(this));
+    this.scale = new ViewScale(this.callback.bind(this));
     this.styles = document.createElement('style');
     this.styles.innerHTML = styles;
     this.slider = document.createElement('div');
@@ -43,6 +40,7 @@ class View extends HTMLElement {
       'data-max-value',
       'data-value-from',
       'data-value-to',
+      'data-step-size',
       'data-is-range',
       'data-is-scale',
       'data-is-tooltip',
@@ -76,6 +74,16 @@ class View extends HTMLElement {
         this.rail.setAttribute(name, newValue);
         this.scale.setAttribute(name, newValue);
     }
+    this.dispatchEvent(new CustomEvent('range-slider', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {name, value: newValue},
+    }));
+  }
+
+  private callback(name: 'data-move-from' | 'data-move-to', value: number): void {
+    this.setAttribute(name, String(value));
   }
 }
 

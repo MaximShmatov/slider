@@ -57,10 +57,10 @@ class ViewScale extends HTMLElement {
         const moveTo = Number(this.dataset.moveTo);
         const distanceFrom = Math.abs(posToPercent - moveFom);
         const distanceTo = Math.abs(moveTo - posToPercent);
-        const attr = (distanceFrom < distanceTo) ? 'valueFrom' : 'valueTo';
+        const attr = (distanceFrom < distanceTo) ? 'data-move-from' : 'data-move-to';
         this.callback(attr, posToPercent);
       } else {
-        this.callback('valueFrom', posToPercent);
+        this.callback('data-move-from', posToPercent);
       }
     }
   }

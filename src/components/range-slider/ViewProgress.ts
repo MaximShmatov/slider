@@ -19,15 +19,13 @@ class ViewProgress extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    const isRange = (this.dataset.isRange === 'true');
     switch (name) {
       case 'data-move-from':
         this.moveFrom();
         break;
       case 'data-move-to':
-        if (this.dataset.isRange === 'true') this.moveTo();
-        break;
-      case 'data-is-range':
-        (newValue === 'true') ? this.moveTo() : this.style[this.rightOrBottom] = '0';
+        if (isRange) this.moveTo();
         break;
       case 'data-is-vertical':
         const isVertical = (newValue === 'true');
@@ -35,7 +33,8 @@ class ViewProgress extends HTMLElement {
         this.rightOrBottom = isVertical ? 'bottom' : 'right';
         isVertical ? this.style.left = '0' : this.style.top = '0';
         this.moveFrom();
-        this.moveTo();
+      case 'data-is-range':
+        isRange ? this.moveTo() : this.style[this.rightOrBottom] = '0';
     }
   }
 
