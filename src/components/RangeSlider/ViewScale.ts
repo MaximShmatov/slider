@@ -1,5 +1,4 @@
 class ViewScale extends HTMLElement {
-
   private readonly callback: TViewCallback;
 
   private readonly valueItems: NodeListOf<HTMLSpanElement>;
@@ -14,19 +13,18 @@ class ViewScale extends HTMLElement {
     this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
   }
 
-  static get observedAttributes() {
+  static get observedAttributes(): string[] {
     return [
       'data-min-value',
       'data-max-value',
     ];
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(): void {
     this.setScaleValues();
     const range = Number(this.dataset.maxValue) - Number(this.dataset.minValue);
     this.valueItems[2].style.display = (range < 3) ? 'none' : '';
     this.valueItems[1].style.display = (range < 2) ? 'none' : '';
-
   }
 
   private createScaleDOM() {

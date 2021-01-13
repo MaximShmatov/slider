@@ -2,10 +2,10 @@ import Presenter from './Presenter';
 
 (function ($: JQueryStatic): void {
   if (!$) return;
-
+  const jquery = $;
   const controls = new Map();
 
-  $.fn.slider = function (prop: TPluginProps | 'init', value?: string | object): any {
+  jquery.fn.slider = function (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): any {
     if (this.length === 0) return this;
     let propValue = null;
 
@@ -17,19 +17,20 @@ import Presenter from './Presenter';
           propValue = presenter.getProp(prop);
           return false;
         }
-        presenter.setProp(prop, value.toString());
+        presenter.setProp(prop, String(value));
       }
 
       if (prop === 'init') {
-        const presenter = new Presenter();
-        presenter.view.className = this.className;
-        this.id = presenter.view.id;
-        this.replaceWith(presenter.view);
-        (typeof value === 'object') ? presenter.init(value) : presenter.init(this);
-        controls.set(presenter.view.id, presenter);
+        const slider = new Presenter();
+        controls.set(slider.view.id, slider);
+        slider.view.className = this.className;
+        this.id = slider.view.id;
+        this.replaceWith(slider.view);
+        if (typeof value === 'object') slider.init(value);
+        else slider.init(this.dataset);
       }
     });
 
     return (propValue ?? this);
-  }
+  };
 }(window.$));

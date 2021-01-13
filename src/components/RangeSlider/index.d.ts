@@ -1,5 +1,13 @@
 declare module '*.module.sass';
 
+interface Window {
+  $: JQueryStatic;
+}
+
+interface Event {
+  detail: { name: string, value: string };
+}
+
 type TModelProps =
   'minValue' |
   'maxValue' |
@@ -28,11 +36,7 @@ type TViewCallback = (prop: 'data-move-from' | 'data-move-to', value: number) =>
 interface JQuery {
   slider: {
     (prop: TPluginProps, value: string): JQuery,
-    (prop: 'init', value?: object): JQuery,
+    (prop: 'init', value?: Record<string, unknown>): JQuery,
     (prop: TPluginProps): number | boolean,
   }
-}
-
-interface Window {
-  $: JQueryStatic;
 }

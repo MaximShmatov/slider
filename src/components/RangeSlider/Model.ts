@@ -1,5 +1,4 @@
 class Model {
-
   private readonly callback: TModelCallback;
 
   private min = 0;
@@ -26,12 +25,8 @@ class Model {
     if (minValue < this.from) {
       const stepSize = Math.round((this.from - minValue) / this.step) * this.step;
       this.min = this.from - stepSize;
-    } else {
-      this.min = this.from;
-    }
-    if (this.min === this.max) {
-      this.min -= this.step;
-    }
+    } else this.min = this.from;
+    if (this.min === this.max) this.min -= this.step;
     this.callback('minValue', this.min);
   }
 
@@ -40,17 +35,13 @@ class Model {
   }
 
   set maxValue(maxValue: number) {
-    if (this.isTo && maxValue <= this.to) {
-      this.max = this.to;
-    } else if (maxValue <= this.from) {
-      this.max = this.from;
-    } else {
+    if (this.isTo && maxValue <= this.to) this.max = this.to;
+    else if (maxValue <= this.from) this.max = this.from;
+    else {
       this.max = Math.round((maxValue - this.min) / this.step);
       this.max = this.max * this.step + this.min;
     }
-    if (this.max === this.min) {
-      this.max += this.step;
-    }
+    if (this.max === this.min) this.max += this.step;
     this.callback('maxValue', this.max);
   }
 
@@ -59,13 +50,10 @@ class Model {
   }
 
   set valueFrom(valueFrom: number) {
-    if (valueFrom <= this.min) {
-      this.from = this.min;
-    } else if (this.isTo && valueFrom >= this.to) {
-      this.from = this.to;
-    } else if (valueFrom >= this.max) {
-      this.from = this.max;
-    } else {
+    if (valueFrom <= this.min) this.from = this.min;
+    else if (this.isTo && valueFrom >= this.to) this.from = this.to;
+    else if (valueFrom >= this.max) this.from = this.max;
+    else {
       this.from = Math.round((valueFrom - this.min) / this.step);
       this.from = this.from * this.step + this.min;
     }
@@ -83,9 +71,7 @@ class Model {
         this.to = this.to * this.step + this.from;
       } else if (valueTo >= this.max) {
         this.to = this.max;
-      } else {
-        this.to = this.from;
-      }
+      } else this.to = this.from;
       this.callback('valueTo', this.to);
     }
   }
@@ -106,28 +92,20 @@ class Model {
         break;
       }
     }
-    this.callback('stepSize', this.step);
 
     const calcStep = (value: number) => {
       const valToStep = Math.round((value - this.min) / this.step);
       return valToStep * this.step + this.min;
-    }
+    };
 
-    if (this.from > this.min) {
-      this.from = calcStep(this.from);
-    } else {
-      this.from = this.min;
-    }
-    this.callback('valueFrom', this.from);
-
+    if (this.from > this.min) this.valueFrom = calcStep(this.from);
+    else this.valueFrom = this.min;
     if (this.isTo) {
-      if (this.to > this.from) {
-        this.to = calcStep(this.to);
-      } else {
-        this.to = this.from;
-      }
-      this.callback('valueTo', this.to);
+      if (this.to > this.from) this.valueTo = calcStep(this.to);
+      else this.valueTo = this.from;
     }
+
+    this.callback('stepSize', this.step);
   }
 
   get isRange(): boolean {
@@ -136,8 +114,8 @@ class Model {
 
   set isRange(isRange: boolean) {
     if (isRange) {
-      if (this.to > this.max) this.to = this.max;
-      if (this.to < this.from) this.to = this.from;
+      if (this.to > this.max) this.valueTo = this.max;
+      if (this.to < this.from) this.valueTo = this.from;
     }
     this.isTo = isRange;
     this.callback('isRange', this.isTo);

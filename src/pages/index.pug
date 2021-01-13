@@ -1,65 +1,90 @@
 mixin control
-  form
-    fieldset
-      legend
-        h3 Control panel
-      div.control
-        label Scale on/off
-          input(type="checkbox").control__is-scale
-        label Vertical on/off
-          input(type="checkbox").control__is-vertical
-        label Tooltip on/off
-          input(type="checkbox").control__is-tooltip
-        label Range mode
-          input(type="checkbox").control__is-range
-        label Minimum value
-          input(type="number").control__min-value
-        label Maximum value
-          input(type="number").control__max-value
-        label Step size value
-          input(type="number").control__step-size
-        label Value from
-          input(type="number").control__value-from
-        label Value to
-          input(type="number").control__value-to
-        label Range value
-          output(type="number").control__value-range
+  form.control
+    fieldset.control__fieldset
+      legend.control__legend
+        h3.control__title Control panel
+      div.control__block
+        label.control__is Scale on/off
+          input.control__is-scale.js-control__is-scale(type="checkbox")
+        label.control__is Vertical on/off
+          input.control__is-vertical.js-control__is-vertical(type="checkbox")
+        label.control__is Tooltip on/off
+          input.control__is-tooltip.js-control__is-tooltip(type="checkbox")
+        label.control__is Range mode
+          input.control__is-range.js-control__is-range(type="checkbox")
+        label.control__min Minimum value
+          input.control__min-value.js-control__min-value(type="number")
+        label.control__max Maximum value
+          input.control__max-value.js-control__max-value(type="number")
+        label.control__step Step size value
+          input.control__step-size.js-control__step-size(type="number")
+        label.control__from Value from
+          input.control__from-value.js-control__from-value(type="number")
+        label.control__to Value to
+          input.control__to-value.js-control__to-value(type="number")
+        label.control__range Range value
+          output.control__range-value.js-control__range-value(type="number")
 
 doctype html
 html(lang="ru" dir="ltr")
   head
     meta(charset="utf-8")
-    title Slider demo
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="description" lang="ru" content="Range Slider Demonstration")
+    meta(name="keywords" content="range, slider, demo, typescript, plugin, jquery")
+    link(rel="icon" href="favicon.ico")
+    link(rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png")
+    link(rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png")
+    link(rel="manifest" crossorigin = "use-credentials" href="slider.webmanifest")
+    link(rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5")
+    meta(name="msapplication-TileColor" content="#da532c")
+    meta(name="theme-color" content="#ffffff")
+
+    title Range Slider
   body
-    div.container
-      input(
-        class="range-slider"
-        data-min-value=`${Math.round(Math.random() * 100) * -1}`
-        data-max-value=`${Math.round(Math.random() * 100)}`
-        data-value-from=`${Math.round(Math.random() * 100) * -1}`
-        data-value-to=`${Math.round(Math.random() * 100)}`
-        data-step-size=`${Math.round(Math.random() * 10)}`
-        data-is-vertical="false"
-        data-is-scale="true"
-        data-is-range="true"
-        data-is-tooltip="true")
-      +control
-    div.container
-      input(
-        class="range-slider"
-        data-min-value=`${Math.round(Math.random() * 100) * -1}`
-        data-max-value=`${Math.round(Math.random() * 100)}`
-        data-value-from=`${Math.round(Math.random() * 100) * -1}`
-        data-value-to=`${Math.round(Math.random() * 100)}`
-        data-step-size=`${Math.round(Math.random() * 10)}`
-        data-is-vertical="true"
-        data-is-scale="true"
-        data-is-range="false"
-        data-is-tooltip="true")
-      +control
-    div.container
-      input(class="range-slider")
-      +control
-    div.container
-      input(class="range-slider")
-      +control
+    header.header
+      img.header__logo(src="apple-touch-icon.png" alt="logo")
+      h1.header__title Range Slider Demo
+    main.main
+      div.container.js-container
+        input.range-slider.js-range-slider(
+          data-min-value=`${Math.round(Math.random() * 100) * -1}`
+          data-max-value=`${Math.round(Math.random() * 100)}`
+          data-value-from=`${Math.round(Math.random() * 100) * -1}`
+          data-value-to=`${Math.round(Math.random() * 100)}`
+          data-step-size=`${Math.round(Math.random() * 10)}`
+          data-is-vertical="false"
+          data-is-scale="true"
+          data-is-range="true"
+          data-is-tooltip="true")
+        +control
+      div.container.js-container
+        input.range-slider.js-range-slider(
+          data-min-value=`${Math.round(Math.random() * 100) * -1}`
+          data-max-value=`${Math.round(Math.random() * 100)}`
+          data-value-from=`${Math.round(Math.random() * 100) * -1}`
+          data-value-to=`${Math.round(Math.random() * 100)}`
+          data-step-size=`${Math.round(Math.random() * 10)}`
+          data-is-vertical="true"
+          data-is-scale="true"
+          data-is-range="false"
+          data-is-tooltip="true")
+        +control
+      div.container.js-container
+        input.range-slider.js-range-slider(
+          data-min-value="0"
+          data-max-value="1"
+          data-value-from="0"
+          data-value-to="1"
+          data-step-size="1"
+          data-is-vertical="false"
+          data-is-scale="true"
+          data-is-range="true"
+          data-is-tooltip="true")
+        +control
+      div.container.js-container
+        input.range-slider.js-range-slider
+        +control
+      footer.footer
+        img.footer__logo(src="apple-touch-icon.png" alt="logo")

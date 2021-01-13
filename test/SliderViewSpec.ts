@@ -1,4 +1,4 @@
-import styles from '../src/components/range-slider/slider.module.sass';
+import styles from '../src/components/RangeSlider/slider.module.sass';
 import { data } from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {

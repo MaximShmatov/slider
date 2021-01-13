@@ -1,10 +1,47 @@
+html
+  height: 100%
+  background-color: white
+
+body
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  align-items: center
+  max-width: 800px
+  min-height: 100%
+  margin: 0 auto
+  background-color: #CECECE
+
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  flex-wrap: wrap
+  width: 100%
+
+  &__logo
+    width: 40px
+    height: 40px
+    padding: 5px
+
+  &__title
+    flex-grow: 1
+    text-align: center
+    color: #444444
+    margin: 0
+
+.main
+  flex-grow: 1
+  width: 100%
+  background-color: #EFEFEF
+
 .container
   display: flex
   align-items: center
   justify-content: space-around
   max-width: 800px
   border: 1px solid #9F9F9F
-  margin: 10px auto
+  margin: 10px
   padding: 10px
   background-color: #EFEFEF
   & h2
@@ -22,6 +59,9 @@
   display: flex
   flex-direction: column
 
+  &__title
+    margin: 0
+
   & label
     display: flex
     flex-direction: row-reverse
@@ -34,3 +74,13 @@
 
   & output
     margin-left: 20px
+
+.footer
+  display: flex
+  justify-content: center
+  background-color: #CECECE
+
+  &__logo
+    width: 40px
+    height: 40px
+    padding: 5px

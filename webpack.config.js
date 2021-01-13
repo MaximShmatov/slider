@@ -7,7 +7,7 @@ module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
     index: './pages/index',
-    slider: './components/range-slider/RangeSlider',
+    slider: './components/RangeSlider/RangeSlider',
   },
   devtool: 'inline-source-map',
   resolve: {
@@ -22,7 +22,6 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       'window.$': 'jquery',
-      '$': 'jquery',
     }),
   ],
   module: {
@@ -57,6 +56,18 @@ module.exports = {
       {
         test: /\.ts$/,
         use: 'ts-loader',
+      },
+      {
+        test: /\.(ico|png|svg|xml|webmanifest)$/,
+        include: /favicon/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: '.',
+            esModule: false,
+          },
+        },
       },
     ],
   },

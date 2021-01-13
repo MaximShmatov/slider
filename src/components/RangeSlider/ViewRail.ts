@@ -2,7 +2,6 @@ import ViewThumb from './ViewThumb';
 import ViewProgress from './ViewProgress';
 
 class ViewRail extends HTMLElement {
-
   private readonly callback: TViewCallback;
 
   private readonly progress: HTMLElement;
@@ -42,7 +41,7 @@ class ViewRail extends HTMLElement {
     this.addEventListener('mousedown', this.handleMouseDown.bind(this));
   }
 
-  static get observedAttributes() {
+  static get observedAttributes(): string[] {
     return [
       'data-value-from',
       'data-value-to',
@@ -54,7 +53,7 @@ class ViewRail extends HTMLElement {
     ];
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
     switch (name) {
       case 'data-value-from':
         this.thumbFrom.setAttribute('data-value', newValue);
@@ -72,6 +71,9 @@ class ViewRail extends HTMLElement {
         break;
       case 'data-is-vertical':
         this.progress.setAttribute(name, newValue);
+        this.thumbFrom.setAttribute(name, newValue);
+        this.thumbTo.setAttribute(name, newValue);
+        break;
       case 'data-is-tooltip':
         this.thumbFrom.setAttribute(name, newValue);
         this.thumbTo.setAttribute(name, newValue);
@@ -96,7 +98,7 @@ class ViewRail extends HTMLElement {
       const moveTo = Number(this.dataset.moveTo);
       const distanceFrom = Math.abs(posToPercent - moveFrom);
       const distanceTo = Math.abs(moveTo - posToPercent);
-      const isNearThumb = (distanceFrom < distanceTo);
+      const isNearThumb = (distanceFrom <= distanceTo);
       this.minPercent = isNearThumb ? 0 : moveFrom;
       if (this.dataset.isRange === 'true') {
         this.maxPercent = isNearThumb ? moveTo : 100;
@@ -108,7 +110,6 @@ class ViewRail extends HTMLElement {
     }
 
     this.handleMouseMove(evt);
-
     document.addEventListener('mousemove', this.mouseMove);
     document.addEventListener('mouseup', this.mouseUp);
   }

@@ -1,0 +1,14 @@
+import './favicon.ico';
+import './favicon-16x16.png';
+import './favicon-32x32.png';
+import './android-chrome-192x192.png';
+import './android-chrome-512x512.png';
+import './toxin.webmanifest';
+import './safari-pinned-tab.svg';
+import './apple-touch-icon.png';
+import './mstile-70x70.png';
+import './mstile-144x144.png';
+import './mstile-150x150.png';
+import './mstile-310x150.png';
+import './mstile-310x310.png';
+import './browserconfig.xml';

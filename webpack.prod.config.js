@@ -9,7 +9,7 @@ module.exports = {
     publicPath: '',
   },
   externals: {
-    //jquery: 'jQuery'
+    //  jquery: 'jQuery'
   },
   devtool: false,
-}
+};

@@ -1,5 +1,4 @@
 class ViewThumb extends HTMLElement {
-
   private readonly tooltip: HTMLElement;
 
   private leftOrTop: 'left' | 'top' = 'left';
@@ -12,7 +11,7 @@ class ViewThumb extends HTMLElement {
     this.appendChild(this.tooltip);
   }
 
-  static get observedAttributes() {
+  static get observedAttributes(): string[] {
     return [
       'data-is-vertical',
       'data-is-tooltip',
@@ -21,13 +20,18 @@ class ViewThumb extends HTMLElement {
     ];
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
     switch (name) {
       case 'data-is-vertical':
-        const isVertical = (newValue === 'true');
-        this.leftOrTop = isVertical ? 'top' : 'left';
-        this.style.left = isVertical ? '0' : `${this.dataset.move}%`;
-        this.style.top = isVertical ? `${this.dataset.move}%` : '0';
+        if (newValue === 'true') {
+          this.leftOrTop = 'top';
+          this.style.left = '0';
+          this.style.top = `${this.dataset.move}%`;
+        } else {
+          this.leftOrTop = 'left';
+          this.style.left = `${this.dataset.move}%`;
+          this.style.top = '0';
+        }
         break;
       case 'data-is-tooltip':
         this.tooltip.style.display = (newValue === 'true') ? '' : 'none';

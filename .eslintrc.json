@@ -27,7 +27,8 @@
     "consistent-return": "off",
     "func-names": "off",
     "fsd/jq-cache-dom-elements": "off",
-    "fsd/jq-use-js-prefix-in-selector": "off"
+    "fsd/jq-use-js-prefix-in-selector": "off",
+    "default-case": "off"
   },
   "ignorePatterns": [
     "vendor"

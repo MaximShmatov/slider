@@ -2,7 +2,6 @@ import Model from './Model';
 import View from './View';
 
 class Presenter {
-
   private readonly props: Map<TPluginProps, TViewProps> = new Map([
     ['minValue', 'data-min-value'],
     ['maxValue', 'data-max-value'],
@@ -22,7 +21,7 @@ class Presenter {
   constructor() {
     this.view = new View();
     this.model = new Model(this.modelCallback.bind(this));
-    this.view.addEventListener('range-slider', this.handleViewEvent.bind(this) as EventListener)
+    this.setEventHandlers();
   }
 
   getProp(name: TPluginProps): number | boolean {
@@ -36,51 +35,43 @@ class Presenter {
   }
 
   setProp(name: TPluginProps, value: string): void {
-    switch(name) {
-      case 'isRange':
-        this.model[name] = (value === 'true');
-        this.initView();
-        return;
+    switch (name) {
       case 'isTooltip':
       case 'isScale':
       case 'isVertical':
         this.view.setAttribute(this.props.get(name) as TViewProps, value);
         return;
+      case 'isRange':
+        this.model.isRange = (value === 'true');
+        this.view.init('valueTo');
+        return;
     }
-    if (!isNaN(Number(value))) {
-      this.model[name] = Number(value);
-    } else this.model[name] = this.model[name];
-    this.initView();
+    const valueToNum = Number(value);
+    if (!Number.isNaN(valueToNum)) this.model[name] = valueToNum;
+    this.view.init(name);
   }
 
-  init(obj: object) {
-    const data = (obj instanceof HTMLElement) ? {...obj.dataset} : {...obj};
-    for (const key of Array.from(this.props.keys())) {
-      this.setProp(key, String(data[key]));
-    }
-  }
-
-  private initView() {
-    const min = this.model.minValue;
-    const max = this.model.maxValue;
-    const calcValue = (value: number) => {
-      return Math.abs((min - value) / ((max - min) / 100)).toString();
-    }
-    this.view.setAttribute('data-move-from', calcValue(this.model.valueFrom));
-    this.view.setAttribute('data-move-to', calcValue(this.model.valueTo));
+  init(obj: Record<string, unknown>): void {
+    Array.from(this.props.keys()).forEach((prop) => {
+      this.setProp(prop, String(obj[prop]));
+    });
   }
 
   private modelCallback(name: TModelProps, value: number | boolean): void {
     this.view.setAttribute(this.props.get(name) as TViewProps, value.toString());
   }
 
-  private handleViewEvent(evt: CustomEvent): void {
+  private setEventHandlers(): void {
+    this.view.addEventListener('range-slider', this.handleViewEvent.bind(this));
+  }
+
+  private handleViewEvent(evt: Event): void {
     const { name, value } = evt.detail;
 
     const setModel = (prop: 'valueFrom' | 'valueTo') => {
       const range = this.model.maxValue - this.model.minValue;
       this.model[prop] = Number(value) * (range / 100) + this.model.minValue;
-    }
+    };
 
     if (name === 'data-move-from') setModel('valueFrom');
     else if (name === 'data-move-to') setModel('valueTo');

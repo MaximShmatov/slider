@@ -1,4 +1,4 @@
-import Presenter from '../src/components/range-slider/Presenter';
+import Presenter from '../src/components/RangeSlider/Presenter';
 
 function getHTMLElementFromObj(): HTMLElement {
   const element = document.createElement('input');
