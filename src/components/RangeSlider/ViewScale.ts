@@ -10,7 +10,7 @@ class ViewScale extends HTMLElement {
     this.createScaleDOM();
     this.valueItems = this.querySelectorAll('.slider__scale-values-item');
     this.setScaleValues();
-    this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
+    this.setEventHandlers();
   }
 
   static get observedAttributes(): string[] {
@@ -25,6 +25,10 @@ class ViewScale extends HTMLElement {
     const range = Number(this.dataset.maxValue) - Number(this.dataset.minValue);
     this.valueItems[2].style.display = (range < 3) ? 'none' : '';
     this.valueItems[1].style.display = (range < 2) ? 'none' : '';
+  }
+
+  private setEventHandlers(): void {
+    this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
   }
 
   private createScaleDOM() {
