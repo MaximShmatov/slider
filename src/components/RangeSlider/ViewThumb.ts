@@ -1,7 +1,7 @@
-class ViewThumb extends HTMLElement {
-  private readonly tooltip: HTMLElement;
+import ViewAbstract from './ViewAbstract';
 
-  private leftOrTop: 'left' | 'top' = 'left';
+class ViewThumb extends ViewAbstract {
+  private readonly tooltip: HTMLElement;
 
   constructor() {
     super();
@@ -9,15 +9,6 @@ class ViewThumb extends HTMLElement {
     this.tooltip = document.createElement('div');
     this.tooltip.className = 'slider__thumb-tooltip';
     this.appendChild(this.tooltip);
-  }
-
-  static get observedAttributes(): string[] {
-    return [
-      'data-is-vertical',
-      'data-has-tooltip',
-      'data-value',
-      'data-move',
-    ];
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {

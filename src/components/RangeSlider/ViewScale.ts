@@ -1,4 +1,6 @@
-class ViewScale extends HTMLElement {
+import ViewAbstract from './ViewAbstract';
+
+class ViewScale extends ViewAbstract {
   private readonly callback: TViewCallback;
 
   private readonly valueItems: NodeListOf<HTMLSpanElement>;
@@ -11,13 +13,6 @@ class ViewScale extends HTMLElement {
     this.valueItems = this.querySelectorAll('.slider__scale-values-item');
     this.setScaleValues();
     this.setEventHandlers();
-  }
-
-  static get observedAttributes(): string[] {
-    return [
-      'data-min-value',
-      'data-max-value',
-    ];
   }
 
   attributeChangedCallback(): void {
@@ -55,11 +50,17 @@ class ViewScale extends HTMLElement {
       const posToPercent = (clientXorY - leftOrTop) / (widthOrHeight / 100);
 
       if (this.dataset.isRange === 'true') {
+        const minValue = Number(this.dataset.minValue);
+        const valueFrom = Number(this.dataset.valueFrom);
+        const valueTo = Number(this.dataset.valueTo);
+        const isThumbFromLeft = (minValue === valueFrom && valueFrom === valueTo);
+
         const moveFom = Number(this.dataset.moveFrom);
         const moveTo = Number(this.dataset.moveTo);
         const distanceFrom = Math.abs(posToPercent - moveFom);
         const distanceTo = Math.abs(moveTo - posToPercent);
-        const attr = (distanceFrom < distanceTo) ? 'data-move-from' : 'data-move-to';
+        const isNearThumb = isThumbFromLeft ? false : (distanceFrom <= distanceTo);
+        const attr = isNearThumb ? 'data-move-from' : 'data-move-to';
         this.callback(attr, posToPercent);
       } else {
         this.callback('data-move-from', posToPercent);

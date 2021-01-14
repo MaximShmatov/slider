@@ -1,20 +1,11 @@
-class ViewProgress extends HTMLElement {
-  private leftOrTop: 'left' | 'top' = 'left';
+import ViewAbstract from './ViewAbstract';
 
+class ViewProgress extends ViewAbstract {
   private rightOrBottom: 'right' | 'bottom' = 'right';
 
   constructor() {
     super();
     this.className = 'slider__progress';
-  }
-
-  static get observedAttributes(): string[] {
-    return [
-      'data-move-from',
-      'data-move-to',
-      'data-is-vertical',
-      'data-is-range',
-    ];
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {

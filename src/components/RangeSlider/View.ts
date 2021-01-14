@@ -1,10 +1,11 @@
 import '../../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
+import ViewAbstract from './ViewAbstract';
 import ViewRail from './ViewRail';
 import ViewScale from './ViewScale';
 import styles from './styles.module.sass';
 
-class View extends HTMLElement {
+class View extends ViewAbstract {
   readonly id: string;
 
   private readonly rail: HTMLElement;
@@ -33,56 +34,30 @@ class View extends HTMLElement {
     }
   }
 
-  static get observedAttributes(): string[] {
-    return [
-      'data-min-value',
-      'data-max-value',
-      'data-value-from',
-      'data-value-to',
-      'data-step-size',
-      'data-is-range',
-      'data-has-scale',
-      'data-has-tooltip',
-      'data-is-vertical',
-      'data-move-from',
-      'data-move-to',
-    ];
-  }
-
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-    switch (name) {
-      case 'data-has-scale':
-        this.scale.style.display = (newValue === 'true') ? '' : 'none';
-        break;
-      case 'data-min-value':
-      case 'data-max-value':
-      case 'data-move-from':
-      case 'data-move-to':
-        this.rail.setAttribute(name, newValue);
-        this.scale.setAttribute(name, newValue);
-        break;
-      case 'data-is-range':
-        this.rail.setAttribute(name, newValue);
-        this.scale.setAttribute(name, newValue);
-        this.init('isRange');
-        break;
-      case 'data-value-from':
-      case 'data-value-to':
-      case 'data-has-tooltip':
-        this.rail.setAttribute(name, newValue);
-        break;
-      case 'data-is-vertical':
-        if (newValue === 'true') this.slider.classList.add('slider_vertical');
-        else this.slider.classList.remove('slider_vertical');
-        this.rail.setAttribute(name, newValue);
-        this.scale.setAttribute(name, newValue);
-    }
     this.dispatchEvent(new CustomEvent('range-slider', {
       bubbles: true,
       cancelable: true,
       composed: true,
       detail: { name, value: newValue },
     }));
+
+    switch (name) {
+      case 'data-has-scale':
+        this.scale.style.display = (newValue === 'true') ? '' : 'none';
+        return;
+      case 'data-is-range':
+        this.rail.setAttribute(name, newValue);
+        this.scale.setAttribute(name, newValue);
+        this.init('isRange');
+        return;
+      case 'data-is-vertical':
+        if (newValue === 'true') this.slider.classList.add('slider_vertical');
+        else this.slider.classList.remove('slider_vertical');
+    }
+    this.rail.setAttribute(name, newValue);
+    this.scale.setAttribute(name, newValue);
+    console.log(name);
   }
 
   init(name: TModelProps): void {

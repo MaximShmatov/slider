@@ -1,7 +1,8 @@
+import ViewAbstract from './ViewAbstract';
 import ViewThumb from './ViewThumb';
 import ViewProgress from './ViewProgress';
 
-class ViewRail extends HTMLElement {
+class ViewRail extends ViewAbstract {
   private readonly callback: TViewCallback;
 
   private readonly progress: HTMLElement;
@@ -15,8 +16,6 @@ class ViewRail extends HTMLElement {
   private readonly thumbTo: HTMLElement;
 
   private valueFromOrTo: 'data-move-from' | 'data-move-to';
-
-  private clientXorY: 'clientX' | 'clientY';
 
   private offsetXorY = 0;
 
@@ -39,20 +38,6 @@ class ViewRail extends HTMLElement {
     this.appendChild(this.thumbTo);
     this.appendChild(this.progress);
     this.addEventListener('mousedown', this.handleMouseDown.bind(this));
-  }
-
-  static get observedAttributes(): string[] {
-    return [
-      'data-min-value',
-      'data-max-value',
-      'data-value-from',
-      'data-value-to',
-      'data-has-tooltip',
-      'data-is-range',
-      'data-is-vertical',
-      'data-move-from',
-      'data-move-to',
-    ];
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
