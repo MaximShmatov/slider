@@ -56,8 +56,6 @@ class View extends HTMLElement {
         break;
       case 'data-min-value':
       case 'data-max-value':
-        this.scale.setAttribute(name, newValue);
-        break;
       case 'data-move-from':
       case 'data-move-to':
         this.rail.setAttribute(name, newValue);

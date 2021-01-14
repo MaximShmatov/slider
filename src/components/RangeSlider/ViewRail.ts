@@ -43,6 +43,8 @@ class ViewRail extends HTMLElement {
 
   static get observedAttributes(): string[] {
     return [
+      'data-min-value',
+      'data-max-value',
       'data-value-from',
       'data-value-to',
       'data-has-tooltip',
@@ -96,9 +98,15 @@ class ViewRail extends HTMLElement {
       const posToPercent = (posXorY - this.offsetXorY) / (this.widthOrHeight / 100);
       const moveFrom = Number(this.dataset.moveFrom);
       const moveTo = Number(this.dataset.moveTo);
+
+      const minValue = Number(this.dataset.minValue);
+      const valueFrom = Number(this.dataset.valueFrom);
+      const valueTo = Number(this.dataset.valueTo);
+      const isThumbFromLeft = (minValue === valueFrom && valueFrom === valueTo);
+
       const distanceFrom = Math.abs(posToPercent - moveFrom);
       const distanceTo = Math.abs(moveTo - posToPercent);
-      const isNearThumb = (distanceFrom <= distanceTo);
+      const isNearThumb = isThumbFromLeft ? false : (distanceFrom <= distanceTo);
       this.minPercent = isNearThumb ? 0 : moveFrom;
       if (this.dataset.isRange === 'true') {
         this.maxPercent = isNearThumb ? moveTo : 100;
