@@ -9,8 +9,8 @@ class Presenter {
     ['valueFrom', 'data-value-from'],
     ['stepSize', 'data-step-size'],
     ['isRange', 'data-is-range'],
-    ['isTooltip', 'data-is-tooltip'],
-    ['isScale', 'data-is-scale'],
+    ['hasTooltip', 'data-has-tooltip'],
+    ['hasScale', 'data-has-scale'],
     ['isVertical', 'data-is-vertical'],
   ]);
 
@@ -26,8 +26,8 @@ class Presenter {
 
   getProp(name: TPluginProps): number | boolean {
     switch (name) {
-      case 'isTooltip':
-      case 'isScale':
+      case 'hasTooltip':
+      case 'hasScale':
       case 'isVertical':
         return (this.view.dataset[name] === 'true');
     }
@@ -36,8 +36,8 @@ class Presenter {
 
   setProp(name: TPluginProps, value: string): void {
     switch (name) {
-      case 'isTooltip':
-      case 'isScale':
+      case 'hasTooltip':
+      case 'hasScale':
       case 'isVertical':
         this.view.setAttribute(this.props.get(name) as TViewProps, value);
         return;

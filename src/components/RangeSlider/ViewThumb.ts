@@ -14,7 +14,7 @@ class ViewThumb extends HTMLElement {
   static get observedAttributes(): string[] {
     return [
       'data-is-vertical',
-      'data-is-tooltip',
+      'data-has-tooltip',
       'data-value',
       'data-move',
     ];
@@ -33,7 +33,7 @@ class ViewThumb extends HTMLElement {
           this.style.top = '0';
         }
         break;
-      case 'data-is-tooltip':
+      case 'data-has-tooltip':
         this.tooltip.style.display = (newValue === 'true') ? '' : 'none';
         break;
       case 'data-value':

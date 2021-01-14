@@ -7,11 +7,10 @@ function getHTMLElementFromObj(): HTMLElement {
   element.setAttribute('data-value-from', '15');
   element.setAttribute('data-value-to', '85');
   element.setAttribute('data-step-size', '5');
-  element.setAttribute('data-on-range', 'false');
-  element.setAttribute('data-on-scale', 'false');
-  element.setAttribute('data-on-vertical', 'false');
-  element.setAttribute('data-on-tooltip', 'false');
-  element.setAttribute('data-server-u-r-l', 'test string');
+  element.setAttribute('data-is-range', 'false');
+  element.setAttribute('data-has-scale', 'false');
+  element.setAttribute('data-is-vertical', 'false');
+  element.setAttribute('data-has-tooltip', 'false');
   return element;
 }
 
@@ -19,15 +18,14 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
   const presenter = new Presenter();
   const modelData = {
     isVertical: true,
-    isScale: true,
+    hasScale: true,
     isRange: true,
-    isTooltip: true,
+    hasTooltip: true,
     minValue: 0,
     maxValue: 100,
     valueFrom: 10,
     valueTo: 90,
     stepSize: 1,
-    serverURL: 'http://localhost:9000/slider',
   };
   const props = <TMethodsUnion[]>Object.keys(modelData);
 

@@ -45,14 +45,14 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Should be execute callback for "isVertical"', () => {
           expect(spyCallback).toHaveBeenCalledWith('isVertical', jasmine.anything());
         });
-        it('Should be execute callback for "isTooltip"', () => {
-          expect(spyCallback).toHaveBeenCalledWith('isTooltip', jasmine.anything());
+        it('Should be execute callback for "hasTooltip"', () => {
+          expect(spyCallback).toHaveBeenCalledWith('hasTooltip', jasmine.anything());
         });
         it('Should be execute callback for "isRange"', () => {
           expect(spyCallback).toHaveBeenCalledWith('isRange', jasmine.anything());
         });
-        it('Should be execute callback for "isScale"', () => {
-          expect(spyCallback).toHaveBeenCalledWith('isScale', jasmine.anything());
+        it('Should be execute callback for "hasScale"', () => {
+          expect(spyCallback).toHaveBeenCalledWith('hasScale', jasmine.anything());
         });
         it('Should be execute callback for "serverURL"', () => {
           expect(spyCallback).toHaveBeenCalledWith('serverURL', jasmine.anything());
@@ -61,17 +61,14 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         it('Property "isVertical" must be defined', () => {
           expect(model.isVertical).toBeDefined();
         });
-        it('Property "isTooltip" must be defined', () => {
-          expect(model.isTooltip).toBeDefined();
+        it('Property "hasTooltip" must be defined', () => {
+          expect(model.hasTooltip).toBeDefined();
         });
         it('Property "isRange" must be defined', () => {
           expect(model.isRange).toBeDefined();
         });
-        it('Property "isScale" must be defined', () => {
-          expect(model.isScale).toBeDefined();
-        });
-        it('Property "serverURL" must be defined', () => {
-          expect(model.serverURL).toBeDefined();
+        it('Property "hasScale" must be defined', () => {
+          expect(model.hasScale).toBeDefined();
         });
 
         it('"stepSize" should be > 0', () => {
@@ -255,41 +252,41 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERMODEL.TS', () => {
         });
       });
 
-      describe('Testing setter and getter for "isScale" property', () => {
+      describe('Testing setter and getter for "hasScale" property', () => {
         const bool = (Math.round(Math.random()) === 0);
         let spySet: jasmine.Spy;
         beforeAll(() => {
-          spySet = spyOnProperty(model, 'isScale', 'set').and.callThrough();
+          spySet = spyOnProperty(model, 'hasScale', 'set').and.callThrough();
           spyCallback.calls.reset();
-          model.isScale = bool;
+          model.hasScale = bool;
         });
         it(`Should be called setter with ${bool}`, () => {
           expect(spySet).toHaveBeenCalledWith(bool);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('isScale', bool);
+          expect(spyCallback).toHaveBeenCalledWith('hasScale', bool);
         });
         it(`Should be setting ${bool}`, () => {
-          expect(model.isScale).toBe(bool);
+          expect(model.hasScale).toBe(bool);
         });
       });
 
-      describe('Testing setter and getter for "isTooltip" property', () => {
+      describe('Testing setter and getter for "hasTooltip" property', () => {
         const bool = (Math.round(Math.random()) === 0);
         let spySet: jasmine.Spy;
         beforeAll(() => {
-          spySet = spyOnProperty(model, 'isTooltip', 'set').and.callThrough();
+          spySet = spyOnProperty(model, 'hasTooltip', 'set').and.callThrough();
           spyCallback.calls.reset();
-          model.isTooltip = bool;
+          model.hasTooltip = bool;
         });
         it(`Should be called setter with ${bool}`, () => {
           expect(spySet).toHaveBeenCalledWith(bool);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('isTooltip', bool);
+          expect(spyCallback).toHaveBeenCalledWith('hasTooltip', bool);
         });
         it(`Should be setting ${bool}`, () => {
-          expect(model.isTooltip).toBe(bool);
+          expect(model.hasTooltip).toBe(bool);
         });
       });
 

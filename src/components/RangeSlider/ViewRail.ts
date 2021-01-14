@@ -45,7 +45,7 @@ class ViewRail extends HTMLElement {
     return [
       'data-value-from',
       'data-value-to',
-      'data-is-tooltip',
+      'data-has-tooltip',
       'data-is-range',
       'data-is-vertical',
       'data-move-from',
@@ -74,7 +74,7 @@ class ViewRail extends HTMLElement {
         this.thumbFrom.setAttribute(name, newValue);
         this.thumbTo.setAttribute(name, newValue);
         break;
-      case 'data-is-tooltip':
+      case 'data-has-tooltip':
         this.thumbFrom.setAttribute(name, newValue);
         this.thumbTo.setAttribute(name, newValue);
         break;

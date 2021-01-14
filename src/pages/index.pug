@@ -4,12 +4,12 @@ mixin control
       legend.control__legend
         h3.control__title Control panel
       div.control__block
-        label.control__is Scale on/off
-          input.control__is-scale.js-control__is-scale(type="checkbox")
+        label.control__has Scale on/off
+          input.control__has-scale.js-control__has-scale(type="checkbox")
         label.control__is Vertical on/off
           input.control__is-vertical.js-control__is-vertical(type="checkbox")
-        label.control__is Tooltip on/off
-          input.control__is-tooltip.js-control__is-tooltip(type="checkbox")
+        label.control__has Tooltip on/off
+          input.control__has-tooltip.js-control__has-tooltip(type="checkbox")
         label.control__is Range mode
           input.control__is-range.js-control__is-range(type="checkbox")
         label.control__min Minimum value
@@ -55,9 +55,9 @@ html(lang="ru" dir="ltr")
           data-value-to=`${Math.round(Math.random() * 100)}`
           data-step-size=`${Math.round(Math.random() * 10)}`
           data-is-vertical="false"
-          data-is-scale="true"
+          data-has-scale="true"
           data-is-range="true"
-          data-is-tooltip="true")
+          data-has-tooltip="true")
         +control
       div.container.js-container
         input.range-slider.js-range-slider(
@@ -67,9 +67,9 @@ html(lang="ru" dir="ltr")
           data-value-to=`${Math.round(Math.random() * 100)}`
           data-step-size=`${Math.round(Math.random() * 10)}`
           data-is-vertical="true"
-          data-is-scale="true"
+          data-has-scale="true"
           data-is-range="false"
-          data-is-tooltip="true")
+          data-has-tooltip="true")
         +control
       div.container.js-container
         input.range-slider.js-range-slider(
@@ -79,9 +79,9 @@ html(lang="ru" dir="ltr")
           data-value-to="1"
           data-step-size="1"
           data-is-vertical="false"
-          data-is-scale="true"
+          data-has-scale="true"
           data-is-range="true"
-          data-is-tooltip="true")
+          data-has-tooltip="true")
         +control
       div.container.js-container
         input.range-slider.js-range-slider

@@ -41,8 +41,8 @@ class View extends HTMLElement {
       'data-value-to',
       'data-step-size',
       'data-is-range',
-      'data-is-scale',
-      'data-is-tooltip',
+      'data-has-scale',
+      'data-has-tooltip',
       'data-is-vertical',
       'data-move-from',
       'data-move-to',
@@ -51,7 +51,7 @@ class View extends HTMLElement {
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
     switch (name) {
-      case 'data-is-scale':
+      case 'data-has-scale':
         this.scale.style.display = (newValue === 'true') ? '' : 'none';
         break;
       case 'data-min-value':
@@ -70,7 +70,7 @@ class View extends HTMLElement {
         break;
       case 'data-value-from':
       case 'data-value-to':
-      case 'data-is-tooltip':
+      case 'data-has-tooltip':
         this.rail.setAttribute(name, newValue);
         break;
       case 'data-is-vertical':

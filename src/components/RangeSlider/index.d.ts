@@ -16,7 +16,7 @@ type TModelProps =
   'stepSize' |
   'isRange';
 
-type TPluginProps = TModelProps | 'isTooltip' | 'isScale' | 'isVertical';
+type TPluginProps = TModelProps | 'hasTooltip' | 'hasScale' | 'isVertical';
 
 type TViewProps =
   'data-min-value' |
@@ -25,8 +25,8 @@ type TViewProps =
   'data-value-to' |
   'data-step-size' |
   'data-is-range' |
-  'data-is-tooltip' |
-  'data-is-scale' |
+  'data-has-tooltip' |
+  'data-has-scale' |
   'data-is-vertical';
 
 type TModelCallback = (prop: TModelProps, value: number | boolean) => void;

@@ -15,9 +15,9 @@ class ControlPanel {
 
   private readonly $valueTo: JQuery;
 
-  private readonly $isScale: JQuery;
+  private readonly $hasScale: JQuery;
 
-  private readonly $isTooltip: JQuery;
+  private readonly $hasTooltip: JQuery;
 
   private readonly $isRange: JQuery;
 
@@ -35,9 +35,9 @@ class ControlPanel {
     this.$valueTo = $container.find('.js-control__to-value');
     this.$stepSize = $container.find('.js-control__step-size');
     this.$isRange = $container.find('.js-control__is-range');
-    this.$isScale = $container.find('.js-control__is-scale');
+    this.$hasScale = $container.find('.js-control__has-scale');
     this.$isVertical = $container.find('.js-control__is-vertical');
-    this.$isTooltip = $container.find('.js-control__is-tooltip');
+    this.$hasTooltip = $container.find('.js-control__has-tooltip');
     this.$rangeValue = $container.find('.js-control__range-value');
     this.$plugin = $container.find('.js-range-slider');
     this.setEventHandlers();
@@ -49,10 +49,10 @@ class ControlPanel {
     this.$valueFrom.on('blur', this.handleValueFromBlur.bind(this));
     this.$valueTo.on('blur', this.handleValueToBlur.bind(this));
     this.$stepSize.on('blur', this.handleStepSizeBlur.bind(this));
-    this.$isTooltip.on('change', this.handleIsTooltipChange.bind(this));
+    this.$hasTooltip.on('change', this.handleHasTooltipChange.bind(this));
     this.$isVertical.on('change', this.handleIsVerticalChange.bind(this));
     this.$isRange.on('change', this.handleIsRangeChange.bind(this));
-    this.$isScale.on('change', this.handleIsScaleChange.bind(this));
+    this.$hasScale.on('change', this.handleHasScaleChange.bind(this));
     this.$container.on('range-slider', this.handlePluginEvents.bind(this));
   }
 
@@ -76,14 +76,14 @@ class ControlPanel {
     this.$plugin.slider('stepSize', String(this.$stepSize.val()));
   }
 
-  private handleIsScaleChange(): void {
-    const isScale = this.$isScale.prop('checked');
-    this.$plugin.slider('isScale', isScale);
+  private handleHasScaleChange(): void {
+    const hasScale = this.$hasScale.prop('checked');
+    this.$plugin.slider('hasScale', hasScale);
   }
 
-  private handleIsTooltipChange(): void {
-    const isTooltip = this.$isTooltip.prop('checked');
-    this.$plugin.slider('isTooltip', isTooltip);
+  private handleHasTooltipChange(): void {
+    const hasTooltip = this.$hasTooltip.prop('checked');
+    this.$plugin.slider('hasTooltip', hasTooltip);
   }
 
   private handleIsVerticalChange(): void {
@@ -129,11 +129,11 @@ class ControlPanel {
         this.$valueTo.prop('disabled', (value === 'false'));
         this.$isRange.prop('checked', (value === 'true'));
         break;
-      case 'data-is-scale':
-        this.$isScale.prop('checked', (value === 'true'));
+      case 'data-has-scale':
+        this.$hasScale.prop('checked', (value === 'true'));
         break;
-      case 'data-is-tooltip':
-        this.$isTooltip.prop('checked', (value === 'true'));
+      case 'data-has-tooltip':
+        this.$hasTooltip.prop('checked', (value === 'true'));
         break;
       case 'data-is-vertical':
         this.$isVertical.prop('checked', (value === 'true'));
@@ -155,8 +155,8 @@ class ControlPanel {
     stepSize: 2,
     isRange: true,
     isVertical: false,
-    isScale: true,
-    isTooltip: true,
+    hasScale: true,
+    hasTooltip: true,
   };
 
   plugins[0].$plugin.slider('init');
