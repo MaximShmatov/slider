@@ -8,19 +8,20 @@ import styles from './styles.module.sass';
 class View extends ViewAbstract {
   readonly id: string;
 
-  private readonly rail: HTMLElement;
+  private readonly rail: ViewRail;
 
-  private readonly scale: HTMLElement;
+  private readonly scale: ViewScale;
 
   private readonly slider: HTMLElement;
 
   private readonly styles: HTMLElement;
 
-  constructor(func: TViewCallback) {
+  constructor() {
     super();
     this.id = String(Math.random());
-    this.rail = new ViewRail(func);
-    this.scale = new ViewScale(func);
+    this.className = 'range-slider';
+    this.rail = new ViewRail();
+    this.scale = new ViewScale();
     this.styles = document.createElement('style');
     this.styles.innerHTML = styles;
     this.slider = document.createElement('div');
@@ -67,7 +68,12 @@ class View extends ViewAbstract {
     this.scale.setAttribute(name, newValue);
   }
 
-  setMoveAttribute(name: 'data-move-from' | 'data-move-to'): void {
+  setCallback(func: TViewCallback) {
+    this.rail.callback = func;
+    this.scale.callback = func;
+  }
+
+  private setMoveAttribute(name: 'data-move-from' | 'data-move-to'): void {
     const min = Number(this.dataset.minValue);
     const max = Number(this.dataset.maxValue);
     const prop = (name === 'data-move-from') ? 'valueFrom' : 'valueTo';

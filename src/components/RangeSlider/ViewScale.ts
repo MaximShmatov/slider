@@ -1,13 +1,13 @@
 import ViewAbstract from './ViewAbstract';
 
 class ViewScale extends ViewAbstract {
-  private readonly callback: TViewCallback;
+  callback: TViewCallback;
 
   private readonly valueItems: NodeListOf<HTMLSpanElement>;
 
-  constructor(func: TViewCallback) {
+  constructor() {
     super();
-    this.callback = func;
+    this.callback = () => ({});
     this.className = 'slider__scale';
     this.createScaleDOM();
     this.valueItems = this.querySelectorAll('.slider__scale-values-item');

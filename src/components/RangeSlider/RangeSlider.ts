@@ -1,3 +1,5 @@
+import Model from './Model';
+import View from './View';
 import Presenter from './Presenter';
 
 (function ($: JQueryStatic): void {
@@ -21,11 +23,11 @@ import Presenter from './Presenter';
       }
 
       if (prop === 'init') {
-        const slider = new Presenter();
-        controls.set(slider.view.id, slider);
-        slider.view.className = this.className;
-        this.id = slider.view.id;
-        this.replaceWith(slider.view);
+        const view = new View();
+        const slider = new Presenter(view, new Model());
+        controls.set(slider.id, slider);
+        this.id = slider.id;
+        this.replaceWith(view);
         if (typeof value === 'object') slider.init(value);
         else slider.init(this.dataset);
       }

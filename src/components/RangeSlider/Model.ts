@@ -1,5 +1,5 @@
 class Model {
-  private readonly callback: TModelCallback;
+  callback: TModelCallback;
 
   private min = 0;
 
@@ -13,8 +13,8 @@ class Model {
 
   private isTo = true;
 
-  constructor(func: TModelCallback) {
-    this.callback = func;
+  constructor() {
+    this.callback = () => ({});
   }
 
   get minValue(): number {

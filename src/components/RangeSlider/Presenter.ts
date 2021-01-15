@@ -16,11 +16,23 @@ class Presenter {
 
   private readonly model: Model;
 
-  readonly view: View;
+  private readonly view: View;
 
-  constructor() {
-    this.view = new View(this.viewCallback.bind(this));
-    this.model = new Model(this.modelCallback.bind(this));
+  constructor(view: View, model: Model) {
+    this.view = view;
+    this.view.setCallback(this.viewCallback.bind(this));
+    this.model = model;
+    this.model.callback = this.modelCallback.bind(this);
+  }
+
+  init(obj: Record<string, unknown>): void {
+    Array.from(this.props.keys()).forEach((prop) => {
+      this.setProp(prop, String(obj[prop]));
+    });
+  }
+
+  get id(): string {
+    return this.view.id;
   }
 
   getProp(name: TPluginProps): number | boolean {
@@ -46,12 +58,6 @@ class Presenter {
     }
     const valueToNum = Number(value);
     if (!Number.isNaN(valueToNum)) this.model[name] = valueToNum;
-  }
-
-  init(obj: Record<string, unknown>): void {
-    Array.from(this.props.keys()).forEach((prop) => {
-      this.setProp(prop, String(obj[prop]));
-    });
   }
 
   private modelCallback(prop: TModelProps, value: number | boolean): void {
