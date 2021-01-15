@@ -59,8 +59,10 @@ abstract class ViewAbstract extends HTMLElement {
         )
       );
     this.valuePropName = isNearThumbTo ? 'valueTo' : 'valueFrom';
+
     const element = evt.target as HTMLElement;
-    const isTooltipOrThumb = element.className === 'slider__thumb-tooltip' || element.className === 'slider__thumb';
+    const isTooltipOrThumb = element.className === 'slider__thumb-tooltip'
+      || element.className === 'slider__thumb';
     if (isTooltipOrThumb) {
       this.clickOffset = isNearThumbTo ? distanceTo : distanceFrom;
     }

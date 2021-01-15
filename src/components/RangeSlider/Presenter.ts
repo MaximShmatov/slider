@@ -60,7 +60,7 @@ class Presenter {
 
   private viewCallback(prop: 'valueFrom' | 'valueTo', value: number): void {
     const range = this.model.maxValue - this.model.minValue;
-    this.model[prop] = Number(value) * (range / 100) + this.model.minValue;
+    this.model[prop] = value * (range / 100) + this.model.minValue;
   }
 }
 
