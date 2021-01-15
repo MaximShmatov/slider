@@ -16,11 +16,11 @@ class View extends ViewAbstract {
 
   private readonly styles: HTMLElement;
 
-  constructor() {
+  constructor(func: TViewCallback) {
     super();
     this.id = String(Math.random());
-    this.rail = new ViewRail(this.callback.bind(this));
-    this.scale = new ViewScale(this.callback.bind(this));
+    this.rail = new ViewRail(func);
+    this.scale = new ViewScale(func);
     this.styles = document.createElement('style');
     this.styles.innerHTML = styles;
     this.slider = document.createElement('div');
@@ -46,50 +46,37 @@ class View extends ViewAbstract {
       case 'data-has-scale':
         this.scale.style.display = (newValue === 'true') ? '' : 'none';
         return;
-      case 'data-is-range':
-        this.rail.setAttribute(name, newValue);
-        this.scale.setAttribute(name, newValue);
-        this.init('isRange');
-        return;
+      case 'data-min-value':
+      case 'data-max-value':
+      case 'data-step-size':
+        this.setMoveAttribute('data-move-from');
+        this.setMoveAttribute('data-move-to');
+        break;
+      case 'data-value-from':
+        this.setMoveAttribute('data-move-from');
+        break;
+      case 'data-value-to':
+        this.setMoveAttribute('data-move-to');
+        break;
       case 'data-is-vertical':
         if (newValue === 'true') this.slider.classList.add('slider_vertical');
         else this.slider.classList.remove('slider_vertical');
     }
+
     this.rail.setAttribute(name, newValue);
     this.scale.setAttribute(name, newValue);
-    console.log(name);
   }
 
-  init(name: TModelProps): void {
+  setMoveAttribute(name: 'data-move-from' | 'data-move-to'): void {
     const min = Number(this.dataset.minValue);
     const max = Number(this.dataset.maxValue);
-    const from = Number(this.dataset.valueFrom);
-    const to = Number(this.dataset.valueTo);
-    if (Number.isNaN(min + max + from + to)) return;
+    const prop = (name === 'data-move-from') ? 'valueFrom' : 'valueTo';
+    const value = Number(this.dataset[prop]);
+    if (Number.isNaN(min + max + value)) return;
 
-    const calcPosition = (val: number) => Math.abs((min - val) / ((max - min) / 100));
-    switch (name) {
-      case 'valueFrom':
-        this.setAttribute('data-move-from', calcPosition(from).toString());
-        return;
-      case 'valueTo':
-        this.setAttribute('data-move-to', calcPosition(to).toString());
-        return;
-      case 'isRange':
-        if (this.dataset.isRange === 'true') {
-          this.setAttribute('data-move-to', calcPosition(to).toString());
-        } else {
-          this.setAttribute('data-move-to', '100');
-        }
-        this.setAttribute('data-move-from', calcPosition(from).toString());
-        return;
-    }
-    this.setAttribute('data-move-from', calcPosition(from).toString());
-    this.setAttribute('data-move-to', calcPosition(to).toString());
-  }
-
-  private callback(name: 'data-move-from' | 'data-move-to', value: number): void {
-    this.setAttribute(name, String(value));
+    const position = () => Math.abs((min - value) / ((max - min) / 100));
+    this.rail.setAttribute(name, String(position()));
+    this.scale.setAttribute(name, String(position()));
   }
 }
 

@@ -40,32 +40,9 @@ class ViewScale extends ViewAbstract {
     this.innerHTML = scale + values;
   }
 
-  private handleScaleMouseDown(evt: MouseEventInit): void {
-    if (evt.clientX && evt.clientY) {
-      const rect = this.getBoundingClientRect();
-      const isVertical = (this.dataset.isVertical === 'true');
-      const clientXorY = isVertical ? evt.clientY : evt.clientX;
-      const widthOrHeight = isVertical ? rect.height : rect.width;
-      const leftOrTop = isVertical ? rect.top : rect.left;
-      const posToPercent = (clientXorY - leftOrTop) / (widthOrHeight / 100);
-
-      if (this.dataset.isRange === 'true') {
-        const minValue = Number(this.dataset.minValue);
-        const valueFrom = Number(this.dataset.valueFrom);
-        const valueTo = Number(this.dataset.valueTo);
-        const isThumbFromLeft = (minValue === valueFrom && valueFrom === valueTo);
-
-        const moveFom = Number(this.dataset.moveFrom);
-        const moveTo = Number(this.dataset.moveTo);
-        const distanceFrom = Math.abs(posToPercent - moveFom);
-        const distanceTo = Math.abs(moveTo - posToPercent);
-        const isNearThumb = isThumbFromLeft ? false : (distanceFrom <= distanceTo);
-        const attr = isNearThumb ? 'data-move-from' : 'data-move-to';
-        this.callback(attr, posToPercent);
-      } else {
-        this.callback('data-move-from', posToPercent);
-      }
-    }
+  private handleScaleMouseDown(evt: MouseEvent): void {
+    this.setDirection(evt);
+    this.callback(this.valuePropName, this.calcPosInPercent(evt));
   }
 
   private setScaleValues(): void {

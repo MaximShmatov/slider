@@ -7,23 +7,13 @@ class ViewRail extends ViewAbstract {
 
   private readonly progress: HTMLElement;
 
-  private readonly mouseMove = this.handleMouseMove.bind(this);
-
-  private readonly mouseUp = this.handleMouseUp.bind(this);
-
   private readonly thumbFrom: HTMLElement;
 
   private readonly thumbTo: HTMLElement;
 
-  private valueFromOrTo: 'data-move-from' | 'data-move-to';
+  private readonly mouseMove = this.handleMouseMove.bind(this);
 
-  private offsetXorY = 0;
-
-  private widthOrHeight = 0;
-
-  private minPercent = 0;
-
-  private maxPercent = 0;
+  private readonly mouseUp = this.handleMouseUp.bind(this);
 
   constructor(func: TViewCallback) {
     super();
@@ -32,8 +22,6 @@ class ViewRail extends ViewAbstract {
     this.thumbFrom = new ViewThumb();
     this.thumbTo = new ViewThumb();
     this.progress = new ViewProgress();
-    this.clientXorY = 'clientX';
-    this.valueFromOrTo = 'data-move-from';
     this.appendChild(this.thumbFrom);
     this.appendChild(this.thumbTo);
     this.appendChild(this.progress);
@@ -72,36 +60,7 @@ class ViewRail extends ViewAbstract {
   }
 
   private handleMouseDown(evt: MouseEvent): void {
-    const rect = this.getBoundingClientRect();
-    const isVertical = (this.dataset.isVertical === 'true');
-    this.clientXorY = isVertical ? 'clientY' : 'clientX';
-    this.offsetXorY = isVertical ? rect.top : rect.left;
-    this.widthOrHeight = isVertical ? rect.height : rect.width;
-
-    const posXorY = evt[this.clientXorY];
-    if (posXorY) {
-      const posToPercent = (posXorY - this.offsetXorY) / (this.widthOrHeight / 100);
-      const moveFrom = Number(this.dataset.moveFrom);
-      const moveTo = Number(this.dataset.moveTo);
-
-      const minValue = Number(this.dataset.minValue);
-      const valueFrom = Number(this.dataset.valueFrom);
-      const valueTo = Number(this.dataset.valueTo);
-      const isThumbFromLeft = (minValue === valueFrom && valueFrom === valueTo);
-
-      const distanceFrom = Math.abs(posToPercent - moveFrom);
-      const distanceTo = Math.abs(moveTo - posToPercent);
-      const isNearThumb = isThumbFromLeft ? false : (distanceFrom <= distanceTo);
-      this.minPercent = isNearThumb ? 0 : moveFrom;
-      if (this.dataset.isRange === 'true') {
-        this.maxPercent = isNearThumb ? moveTo : 100;
-        this.valueFromOrTo = isNearThumb ? 'data-move-from' : 'data-move-to';
-      } else {
-        this.maxPercent = 100;
-        this.valueFromOrTo = 'data-move-from';
-      }
-    }
-
+    this.setDirection(evt);
     this.handleMouseMove(evt);
     document.addEventListener('mousemove', this.mouseMove);
     document.addEventListener('mouseup', this.mouseUp);
@@ -109,13 +68,10 @@ class ViewRail extends ViewAbstract {
 
   private handleMouseMove(evt: MouseEvent): void {
     evt.preventDefault();
-    const position = evt[this.clientXorY];
-    if (position) {
-      let posToPercent = (position - this.offsetXorY) / (this.widthOrHeight / 100);
-      if (posToPercent < this.minPercent) posToPercent = this.minPercent;
-      if (posToPercent > this.maxPercent) posToPercent = this.maxPercent;
-      this.callback(this.valueFromOrTo, posToPercent);
-    }
+    let posInPercent = this.calcPosInPercent(evt);
+    if (posInPercent < 0) posInPercent = 0;
+    if (posInPercent > 100) posInPercent = 100;
+    this.callback(this.valuePropName, posInPercent);
   }
 
   private handleMouseUp(): void {

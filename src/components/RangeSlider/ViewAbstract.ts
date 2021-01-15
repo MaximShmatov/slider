@@ -1,7 +1,13 @@
 abstract class ViewAbstract extends HTMLElement {
-  protected leftOrTop: 'left' | 'top' = 'left';
+  protected valuePropName: 'valueFrom' | 'valueTo' = 'valueFrom';
 
   protected clientXorY: 'clientX' | 'clientY' = 'clientX';
+
+  protected clickOffset = 0;
+
+  protected offsetXorY = 0;
+
+  protected widthOrHeight = 0;
 
   static get observedAttributes(): string[] {
     return [
@@ -19,6 +25,45 @@ abstract class ViewAbstract extends HTMLElement {
       'data-value',
       'data-move',
     ];
+  }
+
+  protected calcPosInPercent(evt: MouseEvent): number {
+    const pos = (evt[this.clientXorY] - this.offsetXorY) / (this.widthOrHeight / 100);
+    return pos - this.clickOffset;
+  }
+
+  protected setDirection(evt: MouseEvent): void {
+    this.clickOffset = 0;
+    const isVertical = (this.dataset.isVertical === 'true');
+    this.clientXorY = isVertical ? 'clientY' : 'clientX';
+
+    const rect = this.getBoundingClientRect();
+    this.offsetXorY = isVertical ? rect.top : rect.left;
+    this.widthOrHeight = isVertical ? rect.height : rect.width;
+
+    const isRange = (this.dataset.isRange === 'true');
+    const moveFrom = Number(this.dataset.moveFrom);
+    const moveTo = Number(this.dataset.moveTo);
+    const posInPercent = this.calcPosInPercent(evt);
+    const distanceFrom = posInPercent - moveFrom;
+    const distanceTo = posInPercent - moveTo;
+    const minValue = Number(this.dataset.minValue);
+    const valueFrom = Number(this.dataset.valueFrom);
+    const valueTo = Number(this.dataset.valueTo);
+    const isNearThumbTo = isRange
+      && (Math.abs(distanceFrom) > Math.abs(distanceTo)
+        || (distanceFrom === distanceTo
+          && ((valueFrom === minValue && valueTo === minValue)
+            || posInPercent > moveFrom
+          )
+        )
+      );
+    this.valuePropName = isNearThumbTo ? 'valueTo' : 'valueFrom';
+    const element = evt.target as HTMLElement;
+    const isTooltipOrThumb = element.className === 'slider__thumb-tooltip' || element.className === 'slider__thumb';
+    if (isTooltipOrThumb) {
+      this.clickOffset = isNearThumbTo ? distanceTo : distanceFrom;
+    }
   }
 }
 

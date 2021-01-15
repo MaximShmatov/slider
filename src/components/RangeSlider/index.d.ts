@@ -31,12 +31,11 @@ type TViewProps =
 
 type TModelCallback = (prop: TModelProps, value: number | boolean) => void;
 
-type TViewCallback = (prop: 'data-move-from' | 'data-move-to', value: number) => void;
+type TViewCallback = (prop: 'valueFrom' | 'valueTo', value: number) => void;
 
 interface JQuery {
   slider: {
-    (prop: TPluginProps, value: string): JQuery,
-    (prop: 'init', value?: Record<string, unknown>): JQuery,
+    (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): JQuery,
     (prop: TPluginProps): number | boolean,
   }
 }

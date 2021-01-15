@@ -19,9 +19,8 @@ class Presenter {
   readonly view: View;
 
   constructor() {
-    this.view = new View();
+    this.view = new View(this.viewCallback.bind(this));
     this.model = new Model(this.modelCallback.bind(this));
-    this.setEventHandlers();
   }
 
   getProp(name: TPluginProps): number | boolean {
@@ -43,12 +42,10 @@ class Presenter {
         return;
       case 'isRange':
         this.model.isRange = (value === 'true');
-        this.view.init('valueTo');
         return;
     }
     const valueToNum = Number(value);
     if (!Number.isNaN(valueToNum)) this.model[name] = valueToNum;
-    this.view.init(name);
   }
 
   init(obj: Record<string, unknown>): void {
@@ -57,24 +54,13 @@ class Presenter {
     });
   }
 
-  private modelCallback(name: TModelProps, value: number | boolean): void {
-    this.view.setAttribute(this.props.get(name) as TViewProps, value.toString());
+  private modelCallback(prop: TModelProps, value: number | boolean): void {
+    this.view.setAttribute(this.props.get(prop) as TViewProps, value.toString());
   }
 
-  private setEventHandlers(): void {
-    this.view.addEventListener('range-slider', this.handleViewEvent.bind(this));
-  }
-
-  private handleViewEvent(evt: Event): void {
-    const { name, value } = evt.detail;
-
-    const setModel = (prop: 'valueFrom' | 'valueTo') => {
-      const range = this.model.maxValue - this.model.minValue;
-      this.model[prop] = Number(value) * (range / 100) + this.model.minValue;
-    };
-
-    if (name === 'data-move-from') setModel('valueFrom');
-    else if (name === 'data-move-to') setModel('valueTo');
+  private viewCallback(prop: 'valueFrom' | 'valueTo', value: number): void {
+    const range = this.model.maxValue - this.model.minValue;
+    this.model[prop] = Number(value) * (range / 100) + this.model.minValue;
   }
 }
 

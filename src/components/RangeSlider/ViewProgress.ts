@@ -1,6 +1,8 @@
 import ViewAbstract from './ViewAbstract';
 
 class ViewProgress extends ViewAbstract {
+  private leftOrTop: 'left' | 'top' = 'left';
+
   private rightOrBottom: 'right' | 'bottom' = 'right';
 
   constructor() {

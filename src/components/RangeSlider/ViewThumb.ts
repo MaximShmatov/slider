@@ -3,6 +3,8 @@ import ViewAbstract from './ViewAbstract';
 class ViewThumb extends ViewAbstract {
   private readonly tooltip: HTMLElement;
 
+  private leftOrTop: 'left' | 'top' = 'left';
+
   constructor() {
     super();
     this.className = 'slider__thumb';
@@ -17,12 +19,11 @@ class ViewThumb extends ViewAbstract {
         if (newValue === 'true') {
           this.leftOrTop = 'top';
           this.style.left = '0';
-          this.style.top = `${this.dataset.move}%`;
         } else {
           this.leftOrTop = 'left';
-          this.style.left = `${this.dataset.move}%`;
           this.style.top = '0';
         }
+        this.style[this.leftOrTop] = `${this.dataset.move}%`;
         break;
       case 'data-has-tooltip':
         this.tooltip.style.display = (newValue === 'true') ? '' : 'none';
