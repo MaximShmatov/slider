@@ -1,3 +1,5 @@
+import View from '../src/components/RangeSlider/View';
+import Model from '../src/components/RangeSlider/Model';
 import Presenter from '../src/components/RangeSlider/Presenter';
 
 function getHTMLElementFromObj(): HTMLElement {
@@ -15,7 +17,7 @@ function getHTMLElementFromObj(): HTMLElement {
 }
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
-  const presenter = new Presenter();
+  const presenter = new Presenter(new View(), new Model());
   const modelData = {
     isVertical: true,
     hasScale: true,
@@ -27,21 +29,17 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
     valueTo: 90,
     stepSize: 1,
   };
-  const props = <TMethodsUnion[]>Object.keys(modelData);
-
-  it('View.ts should be defined', () => {
-    expect(presenter.view).toBeDefined();
-  });
+  const props = <TPluginProps[]>Object.keys(modelData);
 
   describe('Testing reading properties', () => {
     const element = getHTMLElementFromObj();
 
     beforeAll(() => {
-      presenter.init(element);
+      presenter.init(element.dataset);
     });
     props.forEach((key) => {
       it(`getProps("${key}") should return ${element.dataset[key]}`, () => {
-        expect(String(presenter.getProps(key))).toEqual(String(element.dataset[key]));
+        expect(String(presenter.getProp(key))).toEqual(String(element.dataset[key]));
       });
     });
   });

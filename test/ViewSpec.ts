@@ -1,21 +1,22 @@
-import styles from '../src/components/RangeSlider/slider.module.sass';
-import { data } from './TestData';
+import View from '../src/components/RangeSlider/View';
+import styles from '../src/components/RangeSlider/styles.module.sass';
+import { object as data } from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
-  const view = <ISliderView>document.createElement('input-slider');
+  const view = <View>document.createElement('input-slider');
   let spySetModelData: jasmine.Spy;
 
   beforeAll(() => {
     document.body.appendChild(view);
-    spySetModelData = spyOn(view, 'setModelData').and.callThrough();
-    view.setModelData('minValue', data.minValue);
-    view.setModelData('maxValue', data.maxValue);
-    view.setModelData('valueFrom', data.valueFrom);
-    view.setModelData('valueTo', data.valueTo);
-    view.setModelData('hasScale', data.hasScale);
-    view.setModelData('isRange', data.isRange);
-    view.setModelData('isVertical', data.isVertical);
-    view.setModelData('hasTooltip', data.hasTooltip);
+    spySetModelData = spyOn(view, 'attributeChangedCallback').and.callThrough();
+    view.setAttribute('data-min-value', String(data.minValue));
+    view.setAttribute('data-max-value', String(data.maxValue));
+    view.setAttribute('data-value-from', String(data.valueFrom));
+    view.setAttribute('data-value-to', String(data.valueTo));
+    view.setAttribute('data-has-scale', String(data.hasScale));
+    view.setAttribute('data-is-range', String(data.isRange));
+    view.setAttribute('data-is-vertical', String(data.isVertical));
+    view.setAttribute('data-has-tooltip', String(data.hasTooltip));
   });
   afterAll(() => {
     view.remove();
@@ -31,23 +32,20 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
     let shadowRoot: ShadowRoot;
     beforeAll(() => {
       let element: HTMLElement | null;
-      element = document.body.querySelector('input-slider');
+      element = document.body.querySelector('range-slider');
       if (element) {
         slider = element;
         if (slider.shadowRoot) {
           shadowRoot = slider.shadowRoot;
         }
       }
-      element = shadowRoot.querySelector('input-slider-view-rail');
+      element = shadowRoot.querySelector('range-slider-view-rail');
       if (element) rail = element;
-      element = shadowRoot.querySelector('input-slider-view-scale');
+      element = shadowRoot.querySelector('range-slider-view-scale');
       if (element) scale = element;
     });
     afterAll(() => {
       slider.remove();
-    });
-    it('Property view.presenter should be set to  null', () => {
-      expect(view.presenter).toBeUndefined();
     });
     it('"View.ts.shadowRoot" element should be defined', () => {
       expect(shadowRoot).toBeInstanceOf(ShadowRoot);
@@ -252,9 +250,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           }
         });
         it('On event "mouseup->mousemove" should dispatch event "range-slider-view" from thumbFrom', () => {
-          let customEvent: CustomEvent | undefined;
+          let customEvent: Event | undefined;
           // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
-          thumbFrom.addEventListener('slider-view', (evt: CustomEvent) => {
+          thumbFrom.addEventListener('range-slider', (evt: Event) => {
             customEvent = evt;
           });
           thumbFrom.dispatchEvent(new Event('mousedown'));
@@ -262,9 +260,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
           expect(customEvent).toBeDefined();
         });
         it('On event "mouseup->mousemove" should dispatch event "range-slider-view" from thumbTo', () => {
-          let customEvent: CustomEvent | undefined;
+          let customEvent: Event | undefined;
           // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
-          thumbTo.addEventListener('slider-view', (evt: CustomEvent) => {
+          thumbTo.addEventListener('range-slider', (evt: Event) => {
             customEvent = evt;
           });
           thumbTo.dispatchEvent(new Event('mousedown'));
@@ -327,9 +325,9 @@ describe('TESTING MODULE SRC/SLIDER/SLIDERVIEW.TS', () => {
         expect(valuesItem[valuesItem.length - 1].textContent).toEqual(data.maxValue.toString());
       });
       it('On event "mousedown" should dispatch event "range-slider-view"', () => {
-        let customEvent: CustomEvent | undefined;
+        let customEvent: Event | undefined;
         // eslint-disable-next-line fsd/no-function-declaration-in-event-listener
-        scale.addEventListener('slider-view', (evt: CustomEvent) => {
+        scale.addEventListener('slider-view', (evt: Event) => {
           customEvent = evt;
         });
         scale.dispatchEvent(new Event('mousedown'));

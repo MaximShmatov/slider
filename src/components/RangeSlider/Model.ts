@@ -114,11 +114,11 @@ class Model {
 
   set isRange(isRange: boolean) {
     this.isTo = isRange;
-    this.callback('isRange', this.isTo);
     if (isRange) {
       if (this.to > this.max) this.valueTo = this.max;
       if (this.to < this.from) this.valueTo = this.from;
     }
+    this.callback('isRange', this.isTo);
   }
 }
 

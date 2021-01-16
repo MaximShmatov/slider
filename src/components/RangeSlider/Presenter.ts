@@ -3,15 +3,15 @@ import View from './View';
 
 class Presenter {
   private readonly props: Map<TPluginProps, TViewProps> = new Map([
+    ['isRange', 'data-is-range'],
+    ['hasTooltip', 'data-has-tooltip'],
+    ['hasScale', 'data-has-scale'],
+    ['isVertical', 'data-is-vertical'],
     ['minValue', 'data-min-value'],
     ['maxValue', 'data-max-value'],
     ['valueTo', 'data-value-to'],
     ['valueFrom', 'data-value-from'],
     ['stepSize', 'data-step-size'],
-    ['isRange', 'data-is-range'],
-    ['hasTooltip', 'data-has-tooltip'],
-    ['hasScale', 'data-has-scale'],
-    ['isVertical', 'data-is-vertical'],
   ]);
 
   private readonly model: Model;

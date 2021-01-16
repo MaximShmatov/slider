@@ -25,17 +25,17 @@ type TModelCallback = (prop: TModelProps, value: number | boolean) => void;
 
 type TViewCallback = (prop: 'valueFrom' | 'valueTo', value: number) => void;
 
-interface Window {
-  $: JQueryStatic;
+interface JQuery {
+  slider: {
+    (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): JQuery,
+    (prop: TPluginProps): number | boolean,
+  }
 }
 
 interface Event {
   detail: { name: string, value: string };
 }
 
-interface JQuery {
-  slider: {
-    (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): JQuery,
-    (prop: TPluginProps): number | boolean,
-  }
+interface Window {
+  $: JQueryStatic;
 }
