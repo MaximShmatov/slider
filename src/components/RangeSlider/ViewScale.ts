@@ -23,7 +23,7 @@ class ViewScale extends ViewAbstract {
   }
 
   private setEventHandlers(): void {
-    this.addEventListener('mousedown', this.handleScaleMouseDown.bind(this));
+    this.addEventListener('mousedown', this.handleScaleMousedown.bind(this));
   }
 
   private createScaleDOM() {
@@ -40,7 +40,7 @@ class ViewScale extends ViewAbstract {
     this.innerHTML = scale + values;
   }
 
-  private handleScaleMouseDown(evt: MouseEvent): void {
+  private handleScaleMousedown(evt: MouseEvent): void {
     this.setDirection(evt);
     this.callback(this.valuePropName, this.calcPosInPercent(evt));
   }
@@ -56,8 +56,8 @@ class ViewScale extends ViewAbstract {
   }
 }
 
-if (!customElements.get('range-slider-view-scale')) {
-  customElements.define('range-slider-view-scale', ViewScale);
+if (!customElements.get('range-slider-scale')) {
+  customElements.define('range-slider-scale', ViewScale);
 }
 
 export default ViewScale;

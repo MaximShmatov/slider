@@ -25,6 +25,7 @@ module.exports = function (config) {
     preprocessors: {
       // 'test/**/*.ts': ['webpack'],
       'test/ModelSpec.ts': ['webpack'],
+      'test/ViewSpec.ts': ['webpack'],
     },
 
     webpack: {

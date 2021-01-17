@@ -68,7 +68,7 @@ class View extends ViewAbstract {
     this.scale.setAttribute(name, newValue);
   }
 
-  setCallback(func: TViewCallback) {
+  setCallback(func: TViewCallback): void {
     this.rail.callback = func;
     this.scale.callback = func;
   }
@@ -81,8 +81,8 @@ class View extends ViewAbstract {
     if (Number.isNaN(min + max + value)) return;
 
     const position = () => Math.abs((min - value) / ((max - min) / 100));
-    this.rail.setAttribute(name, String(position()));
-    this.scale.setAttribute(name, String(position()));
+    this.rail.setAttribute(name, position().toFixed());
+    this.scale.setAttribute(name, position().toFixed());
   }
 }
 

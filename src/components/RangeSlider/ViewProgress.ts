@@ -27,11 +27,11 @@ class ViewProgress extends ViewAbstract {
         if (newValue === 'true') {
           this.leftOrTop = 'top';
           this.rightOrBottom = 'bottom';
-          this.style.left = '0';
+          this.style.left = '0%';
         } else {
           this.leftOrTop = 'left';
           this.rightOrBottom = 'right';
-          this.style.top = '0';
+          this.style.top = '0%';
         }
         this.init(isRange);
     }
@@ -42,7 +42,7 @@ class ViewProgress extends ViewAbstract {
       this.moveFrom();
       this.moveTo();
     } else {
-      this.style[this.leftOrTop] = '0';
+      this.style[this.leftOrTop] = '0%';
       this.moveFromIsNoRange();
     }
   }
@@ -60,8 +60,8 @@ class ViewProgress extends ViewAbstract {
   }
 }
 
-if (!customElements.get('range-slider-view-progress')) {
-  customElements.define('range-slider-view-progress', ViewProgress);
+if (!customElements.get('range-slider-progress')) {
+  customElements.define('range-slider-progress', ViewProgress);
 }
 
 export default ViewProgress;

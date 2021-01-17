@@ -2,11 +2,11 @@ import Model from '../src/components/RangeSlider/Model';
 
 type TObject = Record<TModelProps, number | boolean>
 type TSpyObject = Record<TModelProps, jasmine.Spy>
-type TFunc = (title: string, data: TObject) => void;
+type TRunFunc = (title: string, data: TObject) => void;
 
 const ITERATION_COUNT = 3;
 
-function runTests(func: TFunc): void {
+function runTests(run: TRunFunc): void {
   const getRandom = (val: number) => {
     const newValue = (Math.round(Math.random()) ? (-1 * val) : val);
     return newValue * Math.random();
@@ -22,7 +22,7 @@ function runTests(func: TFunc): void {
   for (let i = 0; i < ITERATION_COUNT; i += 1) {
     const data = getTestData();
     const title = `Testing model initialized from the part - ${i}: ${JSON.stringify(data)}`;
-    func(title, data);
+    run(title, data);
   }
 }
 
@@ -91,8 +91,8 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
           expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
         });
         it('"Should be >= "valueTo" if "isRange" = "true", else >= "valueFrom"', () => {
-          if (model.isRange) expect(model.maxValue).toBeGreaterThanOrEqual(model.valueTo);
-          else expect(model.maxValue).toBeGreaterThanOrEqual(model.valueFrom);
+          const valueFromOrTo = (model.isRange) ? model.valueTo : model.valueFrom;
+          expect(model.maxValue).toBeGreaterThanOrEqual(valueFromOrTo);
         });
       });
 
@@ -107,8 +107,8 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
           expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
         });
         it('Should be <= "valueTo" if "isRange" = true, else <= "maxValue"', () => {
-          if (model.isRange) expect(model.valueFrom).toBeLessThanOrEqual(model.valueTo);
-          else expect(model.valueFrom).toBeLessThanOrEqual(model.maxValue);
+          const valueToOrMax = (model.isRange) ? model.valueTo : model.maxValue;
+          expect(model.valueFrom).toBeLessThanOrEqual(valueToOrMax);
         });
         it('"Should be >= "minValue"', () => {
           expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);

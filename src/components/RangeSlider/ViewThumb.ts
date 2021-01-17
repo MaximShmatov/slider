@@ -18,10 +18,10 @@ class ViewThumb extends ViewAbstract {
       case 'data-is-vertical':
         if (newValue === 'true') {
           this.leftOrTop = 'top';
-          this.style.left = '0';
+          this.style.left = '0%';
         } else {
           this.leftOrTop = 'left';
-          this.style.top = '0';
+          this.style.top = '0%';
         }
         this.style[this.leftOrTop] = `${this.dataset.move}%`;
         break;
@@ -37,8 +37,8 @@ class ViewThumb extends ViewAbstract {
   }
 }
 
-if (!customElements.get('range-slider-view-thumb')) {
-  customElements.define('range-slider-view-thumb', ViewThumb);
+if (!customElements.get('range-slider-thumb')) {
+  customElements.define('range-slider-thumb', ViewThumb);
 }
 
 export default ViewThumb;

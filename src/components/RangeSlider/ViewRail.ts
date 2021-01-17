@@ -25,7 +25,7 @@ class ViewRail extends ViewAbstract {
     this.appendChild(this.thumbFrom);
     this.appendChild(this.thumbTo);
     this.appendChild(this.progress);
-    this.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    this.addEventListener('mousedown', this.handleMousedown.bind(this));
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -59,7 +59,7 @@ class ViewRail extends ViewAbstract {
     }
   }
 
-  private handleMouseDown(evt: MouseEvent): void {
+  private handleMousedown(evt: MouseEvent): void {
     this.setDirection(evt);
     this.handleMouseMove(evt);
     document.addEventListener('mousemove', this.mouseMove);
@@ -80,8 +80,8 @@ class ViewRail extends ViewAbstract {
   }
 }
 
-if (!customElements.get('range-slider-view-rail')) {
-  customElements.define('range-slider-view-rail', ViewRail);
+if (!customElements.get('range-slider-rail')) {
+  customElements.define('range-slider-rail', ViewRail);
 }
 
 export default ViewRail;
