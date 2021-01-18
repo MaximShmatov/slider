@@ -1,5 +1,4 @@
 import Model from './Model';
-import View from './View';
 
 class Presenter {
   private readonly props: Map<TPluginProps, TViewProps> = new Map([
@@ -16,12 +15,17 @@ class Presenter {
 
   private readonly model: Model;
 
-  private readonly view: View;
+  private readonly view: HTMLElement;
 
-  constructor(view: View, model: Model) {
+  readonly id: string;
+
+  constructor(view: HTMLElement, model: Model) {
     this.view = view;
-    this.view.setCallback(this.viewCallback.bind(this));
     this.model = model;
+    this.id = Math.random().toString();
+    this.view.className = 'range-slider';
+    this.view.setAttribute('id', this.id);
+    this.view.setCallback(this.viewCallback.bind(this));
     this.model.callback = this.modelCallback.bind(this);
   }
 
@@ -29,10 +33,6 @@ class Presenter {
     Array.from(this.props.keys()).forEach((prop) => {
       this.setProp(prop, String(obj[prop]));
     });
-  }
-
-  get id(): string {
-    return this.view.id;
   }
 
   getProp(name: TPluginProps): number | boolean {

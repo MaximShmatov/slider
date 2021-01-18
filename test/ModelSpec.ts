@@ -1,30 +1,5 @@
 import Model from '../src/components/RangeSlider/Model';
-
-type TObject = Record<TModelProps, number | boolean>
-type TSpyObject = Record<TModelProps, jasmine.Spy>
-type TRunFunc = (title: string, data: TObject) => void;
-
-const ITERATION_COUNT = 3;
-
-function runTests(run: TRunFunc): void {
-  const getRandom = (val: number) => {
-    const newValue = (Math.round(Math.random()) ? (-1 * val) : val);
-    return newValue * Math.random();
-  };
-  const getTestData = () => ({
-    minValue: getRandom(100),
-    maxValue: getRandom(100),
-    valueTo: getRandom(100),
-    valueFrom: getRandom(100),
-    stepSize: getRandom(10),
-    isRange: (Math.round(Math.random()) === 1),
-  });
-  for (let i = 0; i < ITERATION_COUNT; i += 1) {
-    const data = getTestData();
-    const title = `Testing model initialized from the part - ${i}: ${JSON.stringify(data)}`;
-    run(title, data);
-  }
-}
+import run from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
   let spyCallback: jasmine.Spy;
@@ -45,14 +20,14 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
     model.callback = spyCallback;
   });
 
-  runTests((title: string, data: TObject) => {
+  run((title: string, data: TObject) => {
     describe(title, () => {
       describe('Testing "stepSize" property', () => {
         beforeAll(() => {
-          model.stepSize = data.stepSize as number;
+          model.stepSize = Number(data.stepSize);
         });
         it(`Should be called setter with ${data.stepSize}`, () => {
-          expect(spySet.stepSize).toHaveBeenCalledWith(data.stepSize);
+          expect(spySet.stepSize).toHaveBeenCalledWith(Number(data.stepSize));
         });
         it('Should be execute callback ', () => {
           expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
@@ -67,10 +42,10 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
 
       describe('Testing "minValue" property', () => {
         beforeAll(() => {
-          model.minValue = data.minValue as number;
+          model.minValue = Number(data.minValue);
         });
         it(`Should be called setter with ${data.minValue}`, () => {
-          expect(spySet.minValue).toHaveBeenCalledWith(data.minValue);
+          expect(spySet.minValue).toHaveBeenCalledWith(Number(data.minValue));
         });
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('minValue', jasmine.anything());
@@ -82,10 +57,10 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
 
       describe('Testing "maxValue" property', () => {
         beforeAll(() => {
-          model.maxValue = data.maxValue as number;
+          model.maxValue = Number(data.maxValue);
         });
         it(`Should be called setter with ${data.maxValue}`, () => {
-          expect(spySet.maxValue).toHaveBeenCalledWith(data.maxValue);
+          expect(spySet.maxValue).toHaveBeenCalledWith(Number(data.maxValue));
         });
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
@@ -98,10 +73,10 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
 
       describe('Testing "valueFrom" property', () => {
         beforeAll(() => {
-          model.valueFrom = data.valueFrom as number;
+          model.valueFrom = Number(data.valueFrom);
         });
         it(`Should be called setter with ${data.valueFrom}`, () => {
-          expect(spySet.valueFrom).toHaveBeenCalledWith(data.valueFrom);
+          expect(spySet.valueFrom).toHaveBeenCalledWith(Number(data.valueFrom));
         });
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
@@ -118,10 +93,10 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
       describe('Testing "valueTo" property where "isRange" = "true"', () => {
         beforeAll(() => {
           model.isRange = true;
-          model.valueTo = data.valueTo as number;
+          model.valueTo = Number(data.valueTo);
         });
         it(`Should be called setter with ${data.valueTo}`, () => {
-          expect(spySet.valueTo).toHaveBeenCalledWith(data.valueTo);
+          expect(spySet.valueTo).toHaveBeenCalledWith(Number(data.valueTo));
         });
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
@@ -135,17 +110,19 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
       });
 
       describe('Testing "isRange" property', () => {
+        let isRange: boolean;
         beforeAll(() => {
-          model.isRange = data.isRange as boolean;
+          isRange = (data.isRange === 'true');
+          model.isRange = (data.isRange === 'true');
         });
         it(`Should be called setter with ${data.isRange}`, () => {
-          expect(spySet.isRange).toHaveBeenCalledWith(data.isRange);
+          expect(spySet.isRange).toHaveBeenCalledWith(isRange);
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('isRange', data.isRange);
+          expect(spyCallback).toHaveBeenCalledWith('isRange', isRange);
         });
         it(`Should be equal ${data.isRange}`, () => {
-          expect(model.isRange).toBe(data.isRange as boolean);
+          expect(model.isRange).toBe(isRange);
         });
       });
     });

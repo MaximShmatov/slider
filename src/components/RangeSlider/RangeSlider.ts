@@ -1,5 +1,7 @@
+import '../../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
+import '../../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
+import './View';
 import Model from './Model';
-import View from './View';
 import Presenter from './Presenter';
 
 (function ($: JQueryStatic): void {
@@ -23,7 +25,7 @@ import Presenter from './Presenter';
       }
 
       if (prop === 'init') {
-        const view = new View();
+        const view = document.createElement('range-slider');
         const slider = new Presenter(view, new Model());
         controls.set(slider.id, slider);
         this.id = slider.id;

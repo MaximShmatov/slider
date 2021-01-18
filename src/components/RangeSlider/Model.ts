@@ -72,8 +72,8 @@ class Model {
       } else if (valueTo >= this.max) {
         this.to = this.max;
       } else this.to = this.from;
-      this.callback('valueTo', this.to);
     }
+    this.callback('valueTo', this.to);
   }
 
   get stepSize(): number {

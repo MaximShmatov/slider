@@ -1,13 +1,13 @@
 abstract class ViewAbstract extends HTMLElement {
+  private clickOffset = 0;
+
+  private offsetXorY = 0;
+
+  private widthOrHeight = 0;
+
   protected valuePropName: 'valueFrom' | 'valueTo' = 'valueFrom';
 
   protected clientXorY: 'clientX' | 'clientY' = 'clientX';
-
-  protected clickOffset = 0;
-
-  protected offsetXorY = 0;
-
-  protected widthOrHeight = 0;
 
   static get observedAttributes(): string[] {
     return [

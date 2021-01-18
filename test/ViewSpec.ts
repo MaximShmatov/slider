@@ -1,43 +1,17 @@
-import View from '../src/components/RangeSlider/View';
-
-type TObject = Record<TPluginProps, string>
-type TRunFunc = (title: string, data: TObject) => void;
-
-const ITERATION_COUNT = 3;
-
-function runTests(run: TRunFunc): void {
-  const getNumRandom = (val: number) => {
-    const newValue = (Math.round(Math.random()) ? (-1 * val) : val);
-    return (newValue * Math.random()).toFixed();
-  };
-  const getBoolRandom = () => String(Math.round(Math.random()) === 1);
-  const getTestData = () => ({
-    minValue: getNumRandom(100),
-    maxValue: getNumRandom(100),
-    valueTo: getNumRandom(100),
-    valueFrom: getNumRandom(100),
-    stepSize: getNumRandom(10),
-    isRange: getBoolRandom(),
-    isVertical: getBoolRandom(),
-    hasScale: getBoolRandom(),
-    hasTooltip: getBoolRandom(),
-  });
-  for (let i = 0; i < ITERATION_COUNT; i += 1) {
-    const data = getTestData();
-    const title = `Testing model initialized from the part - ${i}: ${JSON.stringify(data)}`;
-    run(title, data);
-  }
-}
+import '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
+import '../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
+import '../src/components/RangeSlider/View';
+import run from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
-  let view: View;
+  let view: HTMLElement;
   let spyCallback: jasmine.Spy;
   let spyEvents: jasmine.Spy;
 
-  runTests((title: string, data: TObject) => {
+  run((title: string, data: TObject) => {
     describe(title, () => {
       beforeAll(() => {
-        view = new View();
+        view = document.createElement('range-slider');
         document.body.appendChild(view);
         spyCallback = jasmine.createSpy('spyCallback');
         spyEvents = jasmine.createSpy('spyEvents');
@@ -60,19 +34,19 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
       });
 
       describe('Testing element "range-slider"', () => {
+        let rangeSlider: HTMLElement;
         let slider: HTMLElement;
-        let railScaleWrapper: HTMLElement;
         let rail: HTMLElement;
         let scale: HTMLElement;
         let shadowRoot: ShadowRoot;
 
         beforeAll(() => {
-          let element = document.body.querySelector<HTMLElement>('.range-slider');
+          let element = document.body.querySelector<HTMLElement>('range-slider');
           if (element) {
-            slider = element;
-            if (slider.shadowRoot) shadowRoot = slider.shadowRoot;
+            rangeSlider = element;
+            if (rangeSlider.shadowRoot) shadowRoot = rangeSlider.shadowRoot;
             element = shadowRoot.querySelector('.slider');
-            if (element) railScaleWrapper = element;
+            if (element) slider = element;
             element = shadowRoot.querySelector('.slider__rail');
             if (element) rail = element;
             element = shadowRoot.querySelector('.slider__scale');
@@ -80,16 +54,16 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
           }
         });
         afterAll(() => {
-          slider.remove();
+          rangeSlider.remove();
         });
         it('Should be mount element "range-slider" ', () => {
-          expect(slider).toBe(view);
+          expect(rangeSlider).toBe(view);
         });
         it('Should be mount element "ShadowRoot"', () => {
           expect(shadowRoot).toBeInstanceOf(ShadowRoot);
         });
         it('Should be mount element "div" (scale and rail wrapper)', () => {
-          expect(railScaleWrapper).toBeInstanceOf(HTMLElement);
+          expect(slider).toBeInstanceOf(HTMLElement);
         });
         it('Should be mount element "range-slider-view-rail"', () => {
           expect(rail).toBeInstanceOf(HTMLElement);
@@ -102,66 +76,68 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
         });
 
         it(`Should be set "data-min-value"="${data.minValue}" and dispatch event`, () => {
-          expect(view.getAttribute('data-min-value')).toEqual(data.minValue);
+          expect(view.getAttribute('data-min-value')).toBe(data.minValue);
           const args = spyEvents.calls.allArgs()[0][0];
           expect(args.detail).toEqual({ name: 'data-min-value', value: data.minValue });
         });
         it(`Should be set "data-max-value"="${data.maxValue}" and dispatch event`, () => {
-          expect(view.getAttribute('data-max-value')).toEqual(data.maxValue);
+          expect(view.getAttribute('data-max-value')).toBe(data.maxValue);
           const args = spyEvents.calls.allArgs()[1][0];
           expect(args.detail).toEqual({ name: 'data-max-value', value: data.maxValue });
         });
         it(`Should be set "data-value-from"="${data.valueFrom}" and dispatch event`, () => {
-          expect(view.getAttribute('data-value-from')).toEqual(data.valueFrom);
+          expect(view.getAttribute('data-value-from')).toBe(data.valueFrom);
           const args = spyEvents.calls.allArgs()[2][0];
           expect(args.detail).toEqual({ name: 'data-value-from', value: data.valueFrom });
         });
         it(`Should be set "data-value-to"="${data.valueTo}" and dispatch event`, () => {
-          expect(view.getAttribute('data-value-to')).toEqual(data.valueTo);
+          expect(view.getAttribute('data-value-to')).toBe(data.valueTo);
           const args = spyEvents.calls.allArgs()[3][0];
           expect(args.detail).toEqual({ name: 'data-value-to', value: data.valueTo });
         });
         it(`Should be set "data-step-size"="${data.stepSize}" and dispatch event`, () => {
-          expect(view.getAttribute('data-step-size')).toEqual(data.stepSize);
+          expect(view.getAttribute('data-step-size')).toBe(data.stepSize);
           const args = spyEvents.calls.allArgs()[4][0];
           expect(args.detail).toEqual({ name: 'data-step-size', value: data.stepSize });
         });
         it(`Should be set "data-is-range"="${data.isRange}" and dispatch event`, () => {
-          expect(view.getAttribute('data-is-range')).toEqual(data.isRange);
+          expect(view.getAttribute('data-is-range')).toBe(data.isRange);
           const args = spyEvents.calls.allArgs()[5][0];
           expect(args.detail).toEqual({ name: 'data-is-range', value: data.isRange });
         });
         it(`Should be set "data-is-vertical"="${data.isVertical}" and dispatch event`, () => {
-          expect(view.getAttribute('data-is-vertical')).toEqual(data.isVertical);
+          expect(view.getAttribute('data-is-vertical')).toBe(data.isVertical);
           const args = spyEvents.calls.allArgs()[6][0];
           expect(args.detail).toEqual({ name: 'data-is-vertical', value: data.isVertical });
         });
         it(`Should be set "data-has-scale"="${data.hasScale}" and dispatch event`, () => {
-          expect(view.getAttribute('data-has-scale')).toEqual(data.hasScale);
+          expect(view.getAttribute('data-has-scale')).toBe(data.hasScale);
           const args = spyEvents.calls.allArgs()[7][0];
           expect(args.detail).toEqual({ name: 'data-has-scale', value: data.hasScale });
         });
         it(`Should be set "data-has-tooltip"="${data.hasTooltip}" and dispatch event`, () => {
-          expect(view.getAttribute('data-has-tooltip')).toEqual(data.hasTooltip);
+          expect(view.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
           const args = spyEvents.calls.allArgs()[8][0];
           expect(args.detail).toEqual({ name: 'data-has-tooltip', value: data.hasTooltip });
         });
 
         it('Should switch (on/off) scale', () => {
           const display = (data.hasScale === 'true') ? '' : 'none';
-          expect(scale.style.display).toEqual(display);
+          expect(scale.style.display).toBe(display);
         });
         it('Should switch (horizontal/vertical) mode', () => {
           const className = (data.isVertical === 'true') ? 'slider slider_vertical' : 'slider';
-          expect(railScaleWrapper.className).toEqual(className);
+          expect(slider.className).toBe(className);
         });
 
         describe('Testing element "range-slider-rail"', () => {
           const min = Number(data.minValue);
           const max = Number(data.maxValue);
           const calcMove = (value: number) => Math.abs((value - min) / ((max - min) / 100));
-          const moveFrom = calcMove(Number(data.valueFrom)).toFixed();
-          const moveTo = calcMove(Number(data.valueTo)).toFixed();
+          let moveFrom = calcMove(Number(data.valueFrom)).toFixed();
+          let moveTo = calcMove(Number(data.valueTo)).toFixed();
+          moveFrom = (moveFrom === '-Infinity') ? '0' : moveFrom;
+          moveTo = (moveTo === 'Infinity') ? '100' : moveTo;
           let thumbFrom: HTMLElement;
           let thumbTo: HTMLElement;
           let progress: HTMLElement;
@@ -182,29 +158,29 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
           });
 
           it(`The attribute "data-value-from" must be set to "${data.valueFrom}"`, () => {
-            expect(rail.getAttribute('data-value-from')).toEqual(data.valueFrom);
+            expect(rail.getAttribute('data-value-from')).toBe(data.valueFrom);
           });
           it(`The attribute "data-value-to" must be set to "${data.valueTo}"`, () => {
-            expect(rail.getAttribute('data-value-to')).toEqual(data.valueTo);
+            expect(rail.getAttribute('data-value-to')).toBe(data.valueTo);
           });
           it(`The attribute "data-move-from" must be set to "${moveFrom}"`, () => {
-            expect(progress.getAttribute('data-move-from')).toEqual(moveFrom);
+            expect(progress.getAttribute('data-move-from')).toBe(moveFrom);
           });
           it(`The attribute "data-move-to" must be set to "${moveTo}"`, () => {
-            expect(progress.getAttribute('data-move-to')).toEqual(moveTo);
+            expect(progress.getAttribute('data-move-to')).toBe(moveTo);
           });
           it(`The attribute "data-has-tooltip" must be set to "${data.hasTooltip}"`, () => {
-            expect(rail.getAttribute('data-has-tooltip')).toEqual(data.hasTooltip);
+            expect(rail.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
           });
           it(`The attribute "data-is-range" must be set to "${data.isRange}"`, () => {
-            expect(rail.getAttribute('data-is-range')).toEqual(data.isRange);
+            expect(rail.getAttribute('data-is-range')).toBe(data.isRange);
           });
           it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-            expect(rail.getAttribute('data-is-vertical')).toEqual(data.isVertical);
+            expect(rail.getAttribute('data-is-vertical')).toBe(data.isVertical);
           });
           it('Should switch (on/off) thumbTo', () => {
             const display = (data.isRange === 'true') ? '' : 'none';
-            expect(thumbTo.style.display).toEqual(display);
+            expect(thumbTo.style.display).toBe(display);
           });
 
           it('On event "mousedown" should run callback', () => {
@@ -216,21 +192,21 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
             spyCallback.calls.reset();
             rail.dispatchEvent(new Event('mousedown'));
             document.dispatchEvent(new Event('mousemove'));
-            expect(spyCallback.calls.count()).toEqual(2);
+            expect(spyCallback.calls.count()).toBe(2);
           });
 
           describe('Testing element "range-slider-progress"', () => {
             it(`The attribute "data-move-from" must be set to "${moveFrom}"`, () => {
-              expect(progress.getAttribute('data-move-from')).toEqual(moveFrom);
+              expect(progress.getAttribute('data-move-from')).toBe(moveFrom);
             });
             it(`The attribute "data-move-to" must be set to "${moveTo}"`, () => {
-              expect(progress.getAttribute('data-move-to')).toEqual(moveTo);
+              expect(progress.getAttribute('data-move-to')).toBe(moveTo);
             });
             it(`The attribute "data-is-range" must be set to "${data.isRange}"`, () => {
-              expect(progress.getAttribute('data-is-range')).toEqual(String(data.isRange));
+              expect(progress.getAttribute('data-is-range')).toBe(String(data.isRange));
             });
             it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-              expect(progress.getAttribute('data-is-vertical')).toEqual(String(data.isVertical));
+              expect(progress.getAttribute('data-is-vertical')).toBe(String(data.isVertical));
             });
 
             it('Must be set positions (top, right, bottom, lef)', () => {
@@ -245,8 +221,8 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               const rightOrBottom = isVertical ? bottom : right;
               const leftOrTop = isVertical ? top : left;
 
-              expect(String(progressTo)).toEqual(rightOrBottom);
-              expect(isRange ? moveFrom : '0').toEqual(leftOrTop);
+              expect(String(progressTo)).toBe(rightOrBottom);
+              expect(isRange ? moveFrom : '0').toBe(leftOrTop);
             });
           });
 
@@ -265,24 +241,24 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               expect(tooltipTo).toBeInstanceOf(HTMLElement);
             });
             it(`The attribute "data-value" must be set to (${data.valueFrom} and ${data.valueTo})`, () => {
-              expect(thumbFrom.getAttribute('data-value')).toEqual(data.valueFrom);
-              expect(thumbTo.getAttribute('data-value')).toEqual(data.valueTo);
+              expect(thumbFrom.getAttribute('data-value')).toBe(data.valueFrom);
+              expect(thumbTo.getAttribute('data-value')).toBe(data.valueTo);
             });
             it(`The attribute "data-move" must be set to (${moveFrom} and ${moveTo})`, () => {
-              expect(thumbFrom.getAttribute('data-move')).toEqual(moveFrom);
-              expect(thumbTo.getAttribute('data-move')).toEqual(moveTo);
+              expect(thumbFrom.getAttribute('data-move')).toBe(moveFrom);
+              expect(thumbTo.getAttribute('data-move')).toBe(moveTo);
             });
             it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-              expect(thumbFrom.getAttribute('data-is-vertical')).toEqual(data.isVertical);
-              expect(thumbTo.getAttribute('data-is-vertical')).toEqual(data.isVertical);
+              expect(thumbFrom.getAttribute('data-is-vertical')).toBe(data.isVertical);
+              expect(thumbTo.getAttribute('data-is-vertical')).toBe(data.isVertical);
             });
             it(`The attribute "data-has-tooltip" must be set to "${data.hasTooltip}"`, () => {
-              expect(thumbFrom.getAttribute('data-has-tooltip')).toEqual(data.hasTooltip);
-              expect(thumbTo.getAttribute('data-has-tooltip')).toEqual(data.hasTooltip);
+              expect(thumbFrom.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
+              expect(thumbTo.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
             });
             it(`Must be set text content (${data.valueFrom} and ${data.valueTo})`, () => {
-              expect(tooltipFrom.textContent).toEqual(data.valueFrom);
-              expect(tooltipTo.textContent).toEqual(data.valueTo);
+              expect(tooltipFrom.textContent).toBe(data.valueFrom);
+              expect(tooltipTo.textContent).toBe(data.valueTo);
             });
             it('Should be set positions (left, top)', () => {
               const isVertical = (data.isVertical === 'true');
@@ -292,16 +268,16 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               const leftTo = thumbTo.style.left.slice(0, -1);
               const leftOrTopFrom = isVertical ? topFrom : leftFrom;
               const leftOrTopTo = isVertical ? topTo : leftTo;
-              expect(leftOrTopFrom).toEqual(moveFrom);
-              expect(leftOrTopTo).toEqual(moveTo);
+              expect(leftOrTopFrom).toBe(moveFrom);
+              expect(leftOrTopTo).toBe(moveTo);
             });
             it('Should switch (on/off) tooltip', () => {
               if (data.hasTooltip === 'true') {
-                expect(tooltipFrom.style.display).toEqual('');
-                expect(tooltipTo.style.display).toEqual('');
+                expect(tooltipFrom.style.display).toBe('');
+                expect(tooltipTo.style.display).toBe('');
               } else {
-                expect(tooltipFrom.style.display).toEqual('none');
-                expect(tooltipTo.style.display).toEqual('none');
+                expect(tooltipFrom.style.display).toBe('none');
+                expect(tooltipTo.style.display).toBe('none');
               }
             });
           });
@@ -324,7 +300,7 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
             subdivision = scale.querySelectorAll('.slider__scale-subdivision');
           });
           it('Must include four elements with class "slider__scale-valuesItem"', () => {
-            expect(valuesItem.length).toEqual(4);
+            expect(valuesItem.length).toBe(4);
           });
           it('Must include element with class "slider__scale-wrapper"', () => {
             expect(wrapper).toBeInstanceOf(HTMLElement);
@@ -333,28 +309,29 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
             expect(values).toBeInstanceOf(HTMLElement);
           });
           it('Must include three elements with class "slider__scale-division"', () => {
-            expect(division.length).toEqual(3);
+            expect(division.length).toBe(3);
           });
           it('Must include 15 elements with class "slider__scale-subdivision"', () => {
-            expect(subdivision.length).toEqual(15);
+            expect(subdivision.length).toBe(15);
           });
           it(`The attribute "data-min-value" must be set to "${data.minValue}"`, () => {
-            expect(scale.getAttribute('data-min-value')).toEqual(data.minValue);
+            expect(scale.getAttribute('data-min-value')).toBe(data.minValue);
           });
           it(`The attribute "data-max-value" must be set to "${data.maxValue}"`, () => {
-            expect(scale.getAttribute('data-max-value')).toEqual(data.maxValue);
+            expect(scale.getAttribute('data-max-value')).toBe(data.maxValue);
           });
           it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-            expect(scale.getAttribute('data-is-vertical')).toEqual(String(data.isVertical));
+            expect(scale.getAttribute('data-is-vertical')).toBe(data.isVertical);
           });
           it(`The attribute "data-is-range" must be set to "${data.isRange}"`, () => {
-            expect(scale.getAttribute('data-is-range')).toEqual(String(data.isRange));
+            expect(scale.getAttribute('data-is-range')).toBe(data.isRange);
           });
-          it(`The first element with class "slider__scale-values-item" must have text content ${data.minValue}`, () => {
-            expect(valuesItem[0].textContent).toEqual(data.minValue);
+          it(`The first element item value must have text content ${data.minValue}`, () => {
+            expect(Number(valuesItem[0].textContent)).toBe(Number(data.minValue));
           });
-          it(`The last element with class "slider__scale-valuesItem" must have text content ${data.maxValue}`, () => {
-            expect(valuesItem[valuesItem.length - 1].textContent).toEqual(data.maxValue);
+          it(`The last element item value must have text content ${data.maxValue}`, () => {
+            const value = Number(valuesItem[valuesItem.length - 1].textContent);
+            expect(value).toBe(Number(data.maxValue));
           });
 
           it('On event "mousedown" should run callback function', () => {

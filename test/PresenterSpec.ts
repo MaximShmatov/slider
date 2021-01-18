@@ -1,112 +1,83 @@
-import View from '../src/components/RangeSlider/View';
+import '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
+import '../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
+import '../src/components/RangeSlider/View';
 import Model from '../src/components/RangeSlider/Model';
 import Presenter from '../src/components/RangeSlider/Presenter';
+import run from './TestData';
 
-function getHTMLElementFromObj(): HTMLElement {
-  const element = document.createElement('input');
-  element.setAttribute('data-min-value', '5');
-  element.setAttribute('data-max-value', '95');
-  element.setAttribute('data-value-from', '15');
-  element.setAttribute('data-value-to', '85');
-  element.setAttribute('data-step-size', '5');
-  element.setAttribute('data-is-range', 'false');
-  element.setAttribute('data-has-scale', 'false');
-  element.setAttribute('data-is-vertical', 'false');
-  element.setAttribute('data-has-tooltip', 'false');
-  return element;
-}
+describe('TESTING MODULE SRC/SLIDER/PRESENTER.TS', () => {
+  const props: Map<TModelProps, TViewProps> = new Map([
+    ['isRange', 'data-is-range'],
+    ['minValue', 'data-min-value'],
+    ['maxValue', 'data-max-value'],
+    ['valueTo', 'data-value-to'],
+    ['valueFrom', 'data-value-from'],
+    ['stepSize', 'data-step-size'],
+  ]);
+  let presenter: Presenter;
+  let view: HTMLElement;
+  let model: Model;
 
-describe('TESTING MODULE SRC/SLIDER/SLIDERPRESENTER.TS', () => {
-  const presenter = new Presenter(new View(), new Model());
-  const modelData = {
-    isVertical: true,
-    hasScale: true,
-    isRange: true,
-    hasTooltip: true,
-    minValue: 0,
-    maxValue: 100,
-    valueFrom: 10,
-    valueTo: 90,
-    stepSize: 1,
-  };
-  const props = <TPluginProps[]>Object.keys(modelData);
-
-  describe('Testing reading properties', () => {
-    const element = getHTMLElementFromObj();
-
-    beforeAll(() => {
-      presenter.init(element.dataset);
-    });
-    props.forEach((key) => {
-      it(`getProps("${key}") should return ${element.dataset[key]}`, () => {
-        expect(String(presenter.getProp(key))).toEqual(String(element.dataset[key]));
-      });
-    });
+  beforeAll(() => {
+    view = document.createElement('range-slider');
+    model = new Model();
+    presenter = new Presenter(view, model);
   });
 
-  describe('Testing setting properties', () => {
-    let spySetModelData: jasmine.Spy;
-    const dataModelEvt: { name: string, value: number | boolean | string }[] = [];
-    const spyModelEvt = jasmine.createSpy('spyModelEvt').and.callFake((evt) => {
-      dataModelEvt.push(evt.detail);
-    });
-
-    beforeAll(() => {
-      spySetModelData = spyOn(presenter.view, 'setModelData');
-      presenter.view.addEventListener('slider-data', spyModelEvt);
-    });
-    afterEach(() => {
-      spyModelEvt.calls.reset();
-      spySetModelData.calls.reset();
-      dataModelEvt.length = 0;
-    });
-    props.forEach((key) => {
-      it(`setProps("${key}") should dispatch event "slider-model" and call method "setModelData" with (${key}, ${modelData[key]})`, () => {
-        presenter.setProps(key, modelData[key]);
-        if (key === 'valueTo' && presenter.getProps('isRange') === false) {
-          expect(spyModelEvt).not.toHaveBeenCalled();
-        } else {
-          expect(spyModelEvt).toHaveBeenCalled();
-          expect(dataModelEvt[0].name).toEqual(key);
-          expect(dataModelEvt[0].value).toEqual(modelData[key]);
-          expect(spySetModelData).toHaveBeenCalledWith(key, modelData[key]);
-        }
+  run((title: string, data: TObject) => {
+    describe(title, () => {
+      let spySetProp: jasmine.Spy;
+      beforeAll(() => {
+        spySetProp = spyOn(presenter, 'setProp').and.callThrough();
+        presenter.init(data);
       });
-    });
-  });
+      it('Should execute initialization', () => {
+        expect(spySetProp.calls.count()).toBe(9);
+      });
+      it('Should return view ID', () => {
+        expect(presenter.id).toBe(view.id);
+      });
 
-  describe('Testing handle events "range-slider-view"', () => {
-    let spySetProps: jasmine.Spy;
-    let dataViewEvt: CustomEvent;
-    const spyViewEvt = jasmine.createSpy('spyViewEvt').and.callFake((evt) => {
-      dataViewEvt = evt;
-    });
-    let thumbs: NodeListOf<HTMLElement>;
+      describe('Testing properties reading', () => {
+        Array.from(props.keys()).forEach((key) => {
+          it(`Should read the property "${key}" and return it`, () => {
+            expect(presenter.getProp(key)).toBe(model[key]);
+          });
+        });
+        it('Should read the property "hasScale" and return it', () => {
+          const prop = (view.getAttribute('data-has-scale') === 'true');
+          expect(presenter.getProp('hasScale')).toBe(prop);
+        });
+        it('Should read the property "hasTooltip" and return it', () => {
+          const prop = (view.getAttribute('data-has-tooltip') === 'true');
+          expect(presenter.getProp('hasTooltip')).toBe(prop);
+        });
+        it('Should read the property "isVertical" and return it', () => {
+          const prop = (view.getAttribute('data-is-vertical') === 'true');
+          expect(presenter.getProp('isVertical')).toBe(prop);
+        });
+      });
 
-    beforeAll(() => {
-      if (presenter.view.shadowRoot) {
-        thumbs = presenter.view.shadowRoot.querySelectorAll('input-slider-view-thumb');
-      }
-      spySetProps = spyOn(presenter, 'setProps');
-      presenter.view.addEventListener('slider-view', spyViewEvt);
-    });
-    afterEach(() => {
-      spyViewEvt.calls.reset();
-      spySetProps.calls.reset();
-    });
-    it('Events "mousedown (from)"->"mousemove" should dispatch event "range-slider-view" and call method "setProps" with (valueFrom)', () => {
-      thumbs[0].dispatchEvent(new MouseEvent('mousedown'));
-      document.dispatchEvent(new MouseEvent('mousemove'));
-      expect(spyViewEvt).toHaveBeenCalled();
-      expect(dataViewEvt.detail.name).toEqual('valueFrom');
-      expect(spySetProps).toHaveBeenCalledWith('valueFrom', jasmine.anything());
-    });
-    it('Events "mousedown (to)"->"mousemove" should dispatch event "range-slider-view" and call method "setProps with (valueTo)"', () => {
-      thumbs[1].dispatchEvent(new MouseEvent('mousedown'));
-      document.dispatchEvent(new MouseEvent('mousemove'));
-      expect(spyViewEvt).toHaveBeenCalled();
-      expect(dataViewEvt.detail.name).toEqual('valueTo');
-      expect(spySetProps).toHaveBeenCalledWith('valueTo', jasmine.anything());
+      describe('Testing properties setting', () => {
+        Array.from(props.keys()).forEach((key) => {
+          it(`Should set the property "${props.get(key)}"`, () => {
+            const prop = (view.getAttribute(props.get(key) as TViewProps));
+            expect(prop).toBe(String(model[key]));
+          });
+        });
+        it('Should set the property "data-has-scale"', () => {
+          const prop = view.getAttribute('data-has-scale');
+          expect(prop).toBe(String(data.hasScale));
+        });
+        it('Should set the property "data-has-tooltip"', () => {
+          const prop = view.getAttribute('data-has-tooltip');
+          expect(prop).toBe(String(data.hasTooltip));
+        });
+        it('Should set the property "data-is-vertical"', () => {
+          const prop = view.getAttribute('data-is-vertical');
+          expect(prop).toBe(String(data.isVertical));
+        });
+      });
     });
   });
 });

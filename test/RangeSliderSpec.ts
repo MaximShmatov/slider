@@ -1,82 +1,52 @@
-import '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import '../node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js';
 import '../src/components/RangeSlider/RangeSlider';
-import { getHTMLElement, data } from './TestData';
+import run from './TestData';
 
-describe('TESTING MODULE SRC/SLIDER/SLIDERPLUGIN.TS', () => {
-  const props = <TMethodsUnion[]>Object.keys(data);
-  let $obj: JQuery;
+describe('TESTING MODULE SRC/SLIDER/PLUGIN.TS', () => {
+  const props: Map<TPluginProps, TViewProps> = new Map([
+    ['hasTooltip', 'data-has-tooltip'],
+    ['hasScale', 'data-has-scale'],
+    ['isVertical', 'data-is-vertical'],
+    ['minValue', 'data-min-value'],
+    ['maxValue', 'data-max-value'],
+    ['valueFrom', 'data-value-from'],
+    ['valueTo', 'data-value-to'],
+    ['stepSize', 'data-step-size'],
+    ['isRange', 'data-is-range'],
+  ]);
+  const testElements = document.createElement('div');
+  const element = '<div class="test"></div>';
+  testElements.innerHTML = element + element + element;
 
-  describe('Plugin initialization testing', () => {
-    let block: HTMLElement;
-    beforeEach(() => {
-      block = document.createElement('div');
-      block.appendChild(getHTMLElement());
-      block.appendChild(getHTMLElement());
-      block.appendChild(getHTMLElement());
-      document.body.appendChild(block);
-    });
-    afterEach(() => {
-      block.remove();
-    });
-    it('Plugin should initialize elements and return new "jQuery" object with initialized elements', () => {
-      $obj = $('.js-test-element').slider('init');
-      expect($obj).toBeInstanceOf($);
-      expect($obj.length).toEqual(3);
-      expect($obj[0]).toBeInstanceOf(HTMLElement);
-      expect($obj[1]).toBeInstanceOf(HTMLElement);
-      expect($obj[2]).toBeInstanceOf(HTMLElement);
-    });
-    it('Plugin should find initialized elements and return them', () => {
-      // eslint-disable-next-line fsd/jq-cache-dom-elements
-      $('.js-test-element').first().slider('init');
-      $obj = $('.js-test-element').slider();
-      expect($obj).toBeInstanceOf($);
-      expect($obj.length).toEqual(1);
-      expect($obj[0]).toBeInstanceOf(HTMLElement);
-    });
-  });
+  run((title: string, data: TObject) => {
+    describe(title, () => {
+      let $elements: JQuery;
+      let spySetAttribute: jasmine.Spy;
 
-  describe('Testing getters API', () => {
-    let element: ISliderView;
-    let spyGetProps: jasmine.Spy;
-    beforeAll(() => {
-      document.body.appendChild(getHTMLElement());
-      $obj = $('.js-test-element').slider('init');
-      element = <ISliderView>$obj[0];
-      if (element.presenter) {
-        spyGetProps = spyOn(element.presenter, 'getProps').and.callThrough();
-      }
-    });
-    afterAll(() => {
-      element.remove();
-    });
-    props.forEach((key) => {
-      it(`Method $("element").slider("${key}") should call "presenter.getProps("${key}")"`, () => {
-        $obj.slider(key);
-        expect(spyGetProps).toHaveBeenCalledWith(key);
+      beforeAll(() => {
+        document.body.appendChild(testElements);
+        $('.test').slider('init', data);
+        $elements = $('range-slider');
+        spySetAttribute = jasmine.createSpy();
+        $elements.eq(0).on('range-slider', spySetAttribute);
       });
-    });
-  });
-
-  describe('Testing setters API', () => {
-    let element: ISliderView;
-    let spySetProps: jasmine.Spy;
-    beforeAll(() => {
-      document.body.appendChild(getHTMLElement());
-      $obj = $('.js-test-element').slider('init');
-      element = <ISliderView>$obj[0];
-      if (element.presenter) {
-        spySetProps = spyOn(element.presenter, 'setProps').and.callThrough();
-      }
-    });
-    afterAll(() => {
-      element.remove();
-    });
-    props.forEach((key) => {
-      it(`Method $("element").slider("${key}") should call "presenter.getProps("${key}")"`, () => {
-        $obj.slider(key, data[key]);
-        expect(spySetProps).toHaveBeenCalledWith(key, data[key]);
+      afterAll(() => {
+        testElements.remove();
+      });
+      it('Plugin should initialize elements', () => {
+        expect($elements.length).toBe(3);
+      });
+      Array.from(props.keys()).forEach((prop) => {
+        it(`Plugin should reading "${prop}" prop`, () => {
+          const value = $elements.eq(0).slider(prop);
+          expect(value).toBeDefined();
+        });
+      });
+      Array.from(props.keys()).forEach((prop) => {
+        it(`Plugin should setting "${prop}" prop`, () => {
+          spySetAttribute.calls.reset();
+          $elements.eq(0).slider(prop, data[prop]);
+          expect(spySetAttribute).toHaveBeenCalled();
+        });
       });
     });
   });

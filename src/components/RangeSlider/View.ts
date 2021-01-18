@@ -1,13 +1,9 @@
-import '../../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import '../../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
 import ViewAbstract from './ViewAbstract';
 import ViewRail from './ViewRail';
 import ViewScale from './ViewScale';
 import styles from './styles.module.sass';
 
 class View extends ViewAbstract {
-  readonly id: string;
-
   private readonly rail: ViewRail;
 
   private readonly scale: ViewScale;
@@ -18,8 +14,6 @@ class View extends ViewAbstract {
 
   constructor() {
     super();
-    this.id = String(Math.random());
-    this.className = 'range-slider';
     this.rail = new ViewRail();
     this.scale = new ViewScale();
     this.styles = document.createElement('style');

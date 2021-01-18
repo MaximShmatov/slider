@@ -25,6 +25,11 @@ type TModelCallback = (prop: TModelProps, value: number | boolean) => void;
 
 type TViewCallback = (prop: 'valueFrom' | 'valueTo', value: number) => void;
 
+interface HTMLElement {
+  callback: TViewCallback;
+  setCallback(func: TViewCallback): void;
+}
+
 interface JQuery {
   slider: {
     (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): JQuery,

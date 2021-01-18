@@ -1,36 +1,28 @@
-function getRandom(num: number) {
-  let number = num;
-  if (Math.round(Math.random())) {
-    number *= -1;
+const ITERATION_COUNT = 13;
+
+function run(runTests: TRunFunc): void {
+  const getNumRandom = (val: number) => {
+    const newValue = (Math.round(Math.random()) ? (-1 * val) : val);
+    return (newValue * Math.random()).toFixed();
+  };
+  const getBoolRandom = () => String(Math.round(Math.random()) === 1);
+  const getTestData = () => ({
+    minValue: getNumRandom(100),
+    maxValue: getNumRandom(100),
+    valueTo: getNumRandom(100),
+    valueFrom: getNumRandom(100),
+    stepSize: getNumRandom(10),
+    isRange: getBoolRandom(),
+    isVertical: getBoolRandom(),
+    hasScale: getBoolRandom(),
+    hasTooltip: getBoolRandom(),
+  });
+
+  for (let i = 0; i < ITERATION_COUNT; i += 1) {
+    const data = getTestData();
+    const title = `RUN TEST PART - ${i}: ${JSON.stringify(data)}`;
+    runTests(title, data);
   }
-  return Math.round(Math.random() * number);
 }
 
-const object = {
-  minValue: getRandom(100),
-  maxValue: getRandom(100),
-  valueFrom: getRandom(100),
-  valueTo: getRandom(100),
-  stepSize: getRandom(10),
-  isVertical: (Math.round(Math.random()) === 1),
-  isRange: (Math.round(Math.random()) === 1),
-  hasTooltip: (Math.round(Math.random()) === 1),
-  hasScale: (Math.round(Math.random()) === 1),
-};
-
-function getHTMLElement(): HTMLElement {
-  const element = document.createElement('div');
-  element.className = 'js-test-element';
-  element.setAttribute('data-min-value', object.minValue.toString());
-  element.setAttribute('data-max-value', object.maxValue.toString());
-  element.setAttribute('data-value-from', object.valueFrom.toString());
-  element.setAttribute('data-value-to', object.valueTo.toString());
-  element.setAttribute('data-step-size', object.stepSize.toString());
-  element.setAttribute('data-is-range', object.isRange.toString());
-  element.setAttribute('data-has-scale', object.hasScale.toString());
-  element.setAttribute('data-is-vertical', object.isVertical.toString());
-  element.setAttribute('data-has-tooltip', object.hasTooltip.toString());
-  return element;
-}
-
-export { getHTMLElement, object };
+export default run;
