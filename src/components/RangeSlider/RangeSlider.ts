@@ -17,10 +17,9 @@ import Presenter from './Presenter';
       const presenter = controls.get(this.id);
 
       if (presenter && prop !== 'init') {
-        if (prop === 'all') propValue = presenter.getProp('all');
-        else if (value === undefined) {
-          propValue = presenter.getProp(prop);
-        } else presenter.setProp(prop, String(value));
+        if (value === undefined) propValue = presenter.getProp(prop);
+        else if (prop !== 'all') presenter.setProp(prop, String(value));
+        else if (typeof value === 'object') presenter.init(value);
         return false;
       }
 

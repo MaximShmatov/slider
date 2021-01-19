@@ -9,6 +9,8 @@ abstract class ViewAbstract extends HTMLElement {
 
   protected clientXorY: 'clientX' | 'clientY' = 'clientX';
 
+  protected abstract attributeChangedCallback(name: string, oldVal: string, newVal: string): void;
+
   static get observedAttributes(): string[] {
     return [
       'data-min-value',
