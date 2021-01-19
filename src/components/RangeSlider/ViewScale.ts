@@ -42,7 +42,7 @@ class ViewScale extends ViewAbstract {
 
   private handleScaleMousedown(evt: MouseEvent): void {
     this.setDirection(evt);
-    this.callback(this.valuePropName, this.calcPosInPercent(evt));
+    this.callback(this.valuePropName, this.calcValue(evt));
   }
 
   private setScaleValues(): void {

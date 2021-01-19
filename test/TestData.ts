@@ -18,7 +18,7 @@ function run(runTests: TRunFunc): void {
     hasTooltip: getBoolRandom(),
   });
 
-  for (let i = 0; i < ITERATION_COUNT; i += 1) {
+  for (let i = 1; i <= ITERATION_COUNT; i += 1) {
     const data = getTestData();
     const title = `RUN TEST PART - ${i}: ${JSON.stringify(data)}`;
     runTests(title, data);

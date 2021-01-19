@@ -27,9 +27,13 @@ abstract class ViewAbstract extends HTMLElement {
     ];
   }
 
-  protected calcPosInPercent(evt: MouseEvent): number {
-    const pos = (evt[this.clientXorY] - this.offsetXorY) / (this.widthOrHeight / 100);
-    return pos - this.clickOffset;
+  protected calcValue(evt: MouseEvent): number {
+    let posInPercent = this.calcPosInPercent(evt);
+    if (posInPercent < 0) posInPercent = 0;
+    if (posInPercent > 100) posInPercent = 100;
+    const min = Number(this.dataset.minValue);
+    const max = Number(this.dataset.maxValue);
+    return (posInPercent * ((max - min) / 100) + min);
   }
 
   protected setDirection(evt: MouseEvent): void {
@@ -66,6 +70,11 @@ abstract class ViewAbstract extends HTMLElement {
     if (isTooltipOrThumb) {
       this.clickOffset = isNearThumbTo ? distanceTo : distanceFrom;
     }
+  }
+
+  private calcPosInPercent(evt: MouseEvent): number {
+    const pos = (evt[this.clientXorY] - this.offsetXorY) / (this.widthOrHeight / 100);
+    return (pos - this.clickOffset);
   }
 }
 

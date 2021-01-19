@@ -68,10 +68,7 @@ class ViewRail extends ViewAbstract {
 
   private handleMouseMove(evt: MouseEvent): void {
     evt.preventDefault();
-    let posInPercent = this.calcPosInPercent(evt);
-    if (posInPercent < 0) posInPercent = 0;
-    if (posInPercent > 100) posInPercent = 100;
-    this.callback(this.valuePropName, posInPercent);
+    this.callback(this.valuePropName, this.calcValue(evt));
   }
 
   private handleMouseUp(): void {
