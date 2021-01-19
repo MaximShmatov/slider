@@ -30,13 +30,19 @@ class Presenter {
   }
 
   init(obj: Record<string, unknown>): void {
-    Array.from(this.props.keys()).forEach((prop) => {
-      this.setProp(prop, String(obj[prop]));
-    });
+    this.model.setAll(obj);
+    const {
+      isVertical, hasTooltip, hasScale,
+    } = obj;
+    if (isVertical) this.setProp('isVertical', String(isVertical));
+    if (hasTooltip) this.setProp('hasTooltip', String(hasTooltip));
+    if (hasScale) this.setProp('hasScale', String(hasScale));
   }
 
-  getProp(name: TPluginProps): number | boolean {
+  getProp(name: TPluginProps | 'all'): number | boolean | TModelData {
     switch (name) {
+      case 'all':
+        return this.model.getAll();
       case 'hasTooltip':
       case 'hasScale':
       case 'isVertical':

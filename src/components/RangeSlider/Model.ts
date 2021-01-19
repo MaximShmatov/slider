@@ -17,6 +17,29 @@ class Model {
     this.callback = () => ({});
   }
 
+  getAll(): TModelData {
+    return {
+      isRange: this.isTo,
+      minValue: this.min,
+      maxValue: this.max,
+      valueTo: this.to,
+      valueFrom: this.from,
+      stepSize: this.step,
+    };
+  }
+
+  setAll(data: Record<string, unknown>): void {
+    const {
+      minValue, maxValue, valueTo, valueFrom, stepSize, isRange,
+    } = data;
+    if (isRange) this.isRange = String(isRange) === 'true';
+    if (!Number.isNaN(Number(minValue))) this.minValue = Number(minValue);
+    if (!Number.isNaN(Number(maxValue))) this.maxValue = Number(maxValue);
+    if (!Number.isNaN(Number(stepSize))) this.stepSize = Number(stepSize);
+    if (!Number.isNaN(Number(valueTo))) this.valueTo = Number(valueTo);
+    if (!Number.isNaN(Number(valueFrom))) this.valueFrom = Number(valueFrom);
+  }
+
   get minValue(): number {
     return this.min;
   }

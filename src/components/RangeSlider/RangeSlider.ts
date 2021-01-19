@@ -9,19 +9,19 @@ import Presenter from './Presenter';
   const jquery = $;
   const controls = new Map();
 
-  jquery.fn.slider = function (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): any {
-    if (this.length === 0) return this;
+  jquery.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: string | Record<string, unknown>): any {
+    if (this.length === 0 || prop === undefined) return this;
     let propValue = null;
 
     this.each(function () {
       const presenter = controls.get(this.id);
 
       if (presenter && prop !== 'init') {
-        if (value === undefined) {
+        if (prop === 'all') propValue = presenter.getProp('all');
+        else if (value === undefined) {
           propValue = presenter.getProp(prop);
-          return false;
-        }
-        presenter.setProp(prop, String(value));
+        } else presenter.setProp(prop, String(value));
+        return false;
       }
 
       if (prop === 'init') {

@@ -32,7 +32,7 @@ describe('TESTING MODULE SRC/SLIDER/PRESENTER.TS', () => {
         presenter.init(data);
       });
       it('Should execute initialization', () => {
-        expect(spySetProp.calls.count()).toBe(9);
+        expect(spySetProp.calls.count()).toBe(3);
       });
       it('Should return view ID', () => {
         expect(presenter.id).toBe(view.id);

@@ -1,14 +1,14 @@
 declare module '*.module.sass';
 
-type TModelProps =
-  'minValue' |
-  'maxValue' |
-  'valueFrom' |
-  'valueTo' |
-  'stepSize' |
-  'isRange';
+type TModelPropsNum = 'minValue' | 'maxValue' | 'valueFrom' | 'valueTo' | 'stepSize';
+
+type TModelProps = TModelPropsNum | 'isRange';
 
 type TPluginProps = TModelProps | 'hasTooltip' | 'hasScale' | 'isVertical';
+
+type TModelData = {
+  [P in TModelProps]?: P extends 'isRange' ? boolean : P extends TModelPropsNum ? number : null;
+};
 
 type TViewProps =
   'data-min-value' |
@@ -34,6 +34,7 @@ interface JQuery {
   slider: {
     (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): JQuery,
     (prop: TPluginProps): number | boolean,
+    (prop: 'all'): TModelData,
   }
 }
 
