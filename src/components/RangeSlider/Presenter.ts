@@ -1,18 +1,6 @@
 import Model from './Model';
 
 class Presenter {
-  private readonly props: Map<TPluginProps, TViewProps> = new Map([
-    ['isRange', 'data-is-range'],
-    ['hasTooltip', 'data-has-tooltip'],
-    ['hasScale', 'data-has-scale'],
-    ['isVertical', 'data-is-vertical'],
-    ['minValue', 'data-min-value'],
-    ['maxValue', 'data-max-value'],
-    ['valueTo', 'data-value-to'],
-    ['valueFrom', 'data-value-from'],
-    ['stepSize', 'data-step-size'],
-  ]);
-
   private readonly model: Model;
 
   private readonly view: HTMLElement;
@@ -29,49 +17,26 @@ class Presenter {
     this.model.callback = this.modelCallback.bind(this);
   }
 
-  init(obj: Record<string, unknown>): void {
-    this.model.setAll(obj);
+  setProp(obj: Record<string, unknown>): void {
+    this.model.write(obj);
     const {
       isVertical, hasTooltip, hasScale,
     } = obj;
-    if (isVertical) this.setProp('isVertical', String(isVertical));
-    if (hasTooltip) this.setProp('hasTooltip', String(hasTooltip));
-    if (hasScale) this.setProp('hasScale', String(hasScale));
+    if (isVertical !== undefined) this.view.setAttribute('data-is-Vertical', String(isVertical));
+    if (hasTooltip !== undefined) this.view.setAttribute('data-has-tooltip', String(hasTooltip));
+    if (hasScale !== undefined) this.view.setAttribute('data-has-scale', String(hasScale));
   }
 
-  getProp(name: TPluginProps | 'all'): number | boolean | TModelData {
-    switch (name) {
-      case 'all':
-        return this.model.getAll();
-      case 'hasTooltip':
-      case 'hasScale':
-      case 'isVertical':
-        return (this.view.dataset[name] === 'true');
-    }
-    return this.model[name];
+  getProp(): TModelData {
+    return this.model.read();
   }
 
-  setProp(name: TPluginProps, value: string): void {
-    switch (name) {
-      case 'hasTooltip':
-      case 'hasScale':
-      case 'isVertical':
-        this.view.setAttribute(this.props.get(name) as TViewProps, value);
-        return;
-      case 'isRange':
-        this.model.isRange = (value === 'true');
-        return;
-    }
-    const valueToNum = Number(value);
-    if (!Number.isNaN(valueToNum)) this.model[name] = valueToNum;
-  }
-
-  private modelCallback(prop: TModelProps, value: number | boolean): void {
-    this.view.setAttribute(this.props.get(prop) as TViewProps, value.toString());
+  private modelCallback(prop: TViewProps, value: number | boolean): void {
+    this.view.setAttribute(prop, value.toString());
   }
 
   private viewCallback(prop: 'valueFrom' | 'valueTo', value: number): void {
-    this.model[prop] = value;
+    this.model.write({ [prop]: value });
   }
 }
 

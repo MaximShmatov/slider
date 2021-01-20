@@ -93,7 +93,7 @@ class ControlPanel {
 
   private handleIsRangeChange(): void {
     const isRange = this.$isRange.prop('checked');
-    this.$plugin.slider('isRange', String(isRange));
+    this.$plugin.slider('isRange', isRange);
   }
 
   private setRangeValue() {

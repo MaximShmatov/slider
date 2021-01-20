@@ -50,7 +50,7 @@ JQuery плагин слайдера диапазона - [посмотреть]
 ### Подключение
 
 ```html
-<script type="text/javascript" src="RangeSlider/SliderPlugin.js"></script>
+<script type="text/javascript" src="RangeSlider.js"></script>
 ```
 или
 ```javascript

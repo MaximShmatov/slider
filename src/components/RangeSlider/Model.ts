@@ -17,7 +17,7 @@ class Model {
     this.callback = () => ({});
   }
 
-  getAll(): TModelData {
+  read(): TModelData {
     return {
       isRange: this.isTo,
       minValue: this.min,
@@ -28,11 +28,11 @@ class Model {
     };
   }
 
-  setAll(data: Record<string, unknown>): void {
+  write(data: Record<string, unknown>) {
     const {
       minValue, maxValue, valueTo, valueFrom, stepSize, isRange,
     } = data;
-    if (isRange) this.isRange = String(isRange) === 'true';
+    if (isRange !== undefined) this.isRange = (String(isRange) === 'true');
     if (!Number.isNaN(Number(minValue))) this.minValue = Number(minValue);
     if (!Number.isNaN(Number(maxValue))) this.maxValue = Number(maxValue);
     if (!Number.isNaN(Number(stepSize))) this.stepSize = Number(stepSize);
@@ -40,24 +40,16 @@ class Model {
     if (!Number.isNaN(Number(valueFrom))) this.valueFrom = Number(valueFrom);
   }
 
-  get minValue(): number {
-    return this.min;
-  }
-
-  set minValue(minValue: number) {
+  private set minValue(minValue: number) {
     if (minValue < this.from) {
       const stepSize = Math.round((this.from - minValue) / this.step) * this.step;
       this.min = this.from - stepSize;
     } else this.min = this.from;
     if (this.min === this.max) this.min -= this.step;
-    this.callback('minValue', this.min);
+    this.callback('data-min-value', this.min);
   }
 
-  get maxValue(): number {
-    return this.max;
-  }
-
-  set maxValue(maxValue: number) {
+  private set maxValue(maxValue: number) {
     if (this.isTo && maxValue <= this.to) this.max = this.to;
     else if (maxValue <= this.from) this.max = this.from;
     else {
@@ -65,14 +57,10 @@ class Model {
       this.max = this.max * this.step + this.min;
     }
     if (this.max === this.min) this.max += this.step;
-    this.callback('maxValue', this.max);
+    this.callback('data-max-value', this.max);
   }
 
-  get valueFrom(): number {
-    return this.from;
-  }
-
-  set valueFrom(valueFrom: number) {
+  private set valueFrom(valueFrom: number) {
     if (valueFrom <= this.min) this.from = this.min;
     else if (this.isTo && valueFrom >= this.to) this.from = this.to;
     else if (valueFrom >= this.max) this.from = this.max;
@@ -80,14 +68,10 @@ class Model {
       this.from = Math.round((valueFrom - this.min) / this.step);
       this.from = this.from * this.step + this.min;
     }
-    this.callback('valueFrom', this.from);
+    this.callback('data-value-from', this.from);
   }
 
-  get valueTo(): number {
-    return this.to;
-  }
-
-  set valueTo(valueTo: number) {
+  private set valueTo(valueTo: number) {
     if (this.isTo) {
       if (valueTo > this.from && valueTo < this.max) {
         this.to = Math.round((valueTo - this.from) / this.step);
@@ -96,14 +80,10 @@ class Model {
         this.to = this.max;
       } else this.to = this.from;
     }
-    this.callback('valueTo', this.to);
+    this.callback('data-value-to', this.to);
   }
 
-  get stepSize(): number {
-    return this.step;
-  }
-
-  set stepSize(stepSize: number) {
+  private set stepSize(stepSize: number) {
     const maxStep = Math.abs(this.max - this.min);
     this.step = Math.abs(Math.round(stepSize));
 
@@ -128,20 +108,16 @@ class Model {
       else this.valueTo = this.from;
     }
 
-    this.callback('stepSize', this.step);
+    this.callback('data-step-size', this.step);
   }
 
-  get isRange(): boolean {
-    return this.isTo;
-  }
-
-  set isRange(isRange: boolean) {
+  private set isRange(isRange: boolean) {
     this.isTo = isRange;
     if (isRange) {
       if (this.to > this.max) this.valueTo = this.max;
       if (this.to < this.from) this.valueTo = this.from;
     }
-    this.callback('isRange', this.isTo);
+    this.callback('data-is-range', this.isTo);
   }
 }
 

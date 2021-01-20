@@ -21,7 +21,7 @@ type TViewProps =
   'data-has-scale' |
   'data-is-vertical';
 
-type TModelCallback = (prop: TModelProps, value: number | boolean) => void;
+type TModelCallback = (prop: TViewProps, value: number | boolean) => void;
 
 type TViewCallback = (prop: 'valueFrom' | 'valueTo', value: number) => void;
 
@@ -32,7 +32,8 @@ interface HTMLElement {
 
 interface JQuery {
   slider: {
-    (prop: TPluginProps | 'init', value?: string | Record<string, unknown>): JQuery,
+    (prop: TPluginProps, value: number | boolean | string | Record<string, unknown>): JQuery,
+    (prop: 'init', value?: number | boolean | string | Record<string, unknown>): JQuery,
     (prop: TPluginProps): number | boolean,
     (prop: 'all'): TModelData,
   }
