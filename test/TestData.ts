@@ -1,27 +1,43 @@
-const ITERATION_COUNT = 13;
+const ITERATION_COUNT = 3;
 
 function run(runTests: TRunFunc): void {
-  const getNumRandom = (val: number) => {
-    const newValue = (Math.round(Math.random()) ? (-1 * val) : val);
-    return (newValue * Math.random()).toFixed();
-  };
-  const getBoolRandom = () => String(Math.round(Math.random()) === 1);
-  const getTestData = () => ({
-    minValue: getNumRandom(100),
-    maxValue: getNumRandom(100),
-    valueTo: getNumRandom(100),
-    valueFrom: getNumRandom(100),
-    stepSize: getNumRandom(10),
-    isRange: getBoolRandom(),
-    isVertical: getBoolRandom(),
-    hasScale: getBoolRandom(),
-    hasTooltip: getBoolRandom(),
-  });
+  const data = [{
+    minValue: '100',
+    maxValue: '100',
+    valueTo: '50',
+    valueFrom: '-50',
+    stepSize: '5',
+    isRange: 'true',
+    isVertical: 'true',
+    hasScale: 'false',
+    hasTooltip: 'false',
+  },
+  {
+    minValue: '10',
+    maxValue: '87',
+    valueTo: '54',
+    valueFrom: '-5',
+    stepSize: '15',
+    isRange: 'false',
+    isVertical: 'true',
+    hasScale: 'false',
+    hasTooltip: 'true',
+  },
+  {
+    minValue: '1',
+    maxValue: '-100',
+    valueTo: '14',
+    valueFrom: '17',
+    stepSize: '9',
+    isRange: 'true',
+    isVertical: 'false',
+    hasScale: 'true',
+    hasTooltip: 'false',
+  }];
 
   for (let i = 1; i <= ITERATION_COUNT; i += 1) {
-    const data = getTestData();
-    const title = `RUN TEST PART - ${i}: ${JSON.stringify(data)}`;
-    runTests(title, data);
+    const title = `RUN TEST PART - ${i}`;
+    runTests(title, data[i - 1]);
   }
 }
 

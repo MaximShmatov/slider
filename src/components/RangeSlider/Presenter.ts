@@ -27,8 +27,13 @@ class Presenter {
     if (hasScale !== undefined) this.view.setAttribute('data-has-scale', String(hasScale));
   }
 
-  getProp(): TModelData {
-    return this.model.read();
+  getProp(): TPluginData {
+    const isVertical = (String(this.view.dataset.isVertical) === 'true');
+    const hasScale = (String(this.view.dataset.hasScale) === 'true');
+    const hasTooltip = (String(this.view.dataset.hasTooltip) === 'true');
+    return {
+      ...this.model.read(), isVertical, hasScale, hasTooltip,
+    };
   }
 
   private modelCallback(prop: TViewProps, value: number | boolean): void {

@@ -134,10 +134,8 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
           const min = Number(data.minValue);
           const max = Number(data.maxValue);
           const calcMove = (value: number) => Math.abs((value - min) / ((max - min) / 100));
-          let moveFrom = calcMove(Number(data.valueFrom)).toFixed();
-          let moveTo = calcMove(Number(data.valueTo)).toFixed();
-          moveFrom = (moveFrom === '-Infinity') ? '0' : moveFrom;
-          moveTo = (moveTo === 'Infinity') ? '100' : moveTo;
+          const moveFrom = calcMove(Number(data.valueFrom)).toFixed();
+          const moveTo = calcMove(Number(data.valueTo)).toFixed();
           let thumbFrom: HTMLElement;
           let thumbTo: HTMLElement;
           let progress: HTMLElement;
@@ -218,9 +216,10 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               const isVertical = (data.isVertical === 'true');
               const isRange = (data.isRange === 'true');
               const progressTo = 100 - (isRange ? Number(moveTo) : Number(moveFrom));
-              const rightOrBottom = isVertical ? bottom : right;
-              const leftOrTop = isVertical ? top : left;
-
+              let rightOrBottom = isVertical ? bottom : right;
+              let leftOrTop = isVertical ? top : left;
+              rightOrBottom = (rightOrBottom === '') ? '-Infinity' : rightOrBottom;
+              leftOrTop = (leftOrTop === '') ? 'Infinity' : leftOrTop;
               expect(String(progressTo)).toBe(rightOrBottom);
               expect(isRange ? moveFrom : '0').toBe(leftOrTop);
             });
@@ -266,8 +265,10 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               const topTo = thumbTo.style.top.slice(0, -1);
               const leftFrom = thumbFrom.style.left.slice(0, -1);
               const leftTo = thumbTo.style.left.slice(0, -1);
-              const leftOrTopFrom = isVertical ? topFrom : leftFrom;
-              const leftOrTopTo = isVertical ? topTo : leftTo;
+              let leftOrTopFrom = isVertical ? topFrom : leftFrom;
+              let leftOrTopTo = isVertical ? topTo : leftTo;
+              leftOrTopFrom = (leftOrTopFrom === '') ? 'Infinity' : leftOrTopFrom;
+              leftOrTopTo = (leftOrTopTo === '') ? 'Infinity' : leftOrTopTo;
               expect(leftOrTopFrom).toBe(moveFrom);
               expect(leftOrTopTo).toBe(moveTo);
             });

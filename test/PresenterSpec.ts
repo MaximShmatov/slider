@@ -6,14 +6,6 @@ import Presenter from '../src/components/RangeSlider/Presenter';
 import run from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/PRESENTER.TS', () => {
-  const props: Map<TModelProps, TViewProps> = new Map([
-    ['isRange', 'data-is-range'],
-    ['minValue', 'data-min-value'],
-    ['maxValue', 'data-max-value'],
-    ['valueTo', 'data-value-to'],
-    ['valueFrom', 'data-value-from'],
-    ['stepSize', 'data-step-size'],
-  ]);
   let presenter: Presenter;
   let view: HTMLElement;
   let model: Model;
@@ -26,57 +18,50 @@ describe('TESTING MODULE SRC/SLIDER/PRESENTER.TS', () => {
 
   run((title: string, data: TObject) => {
     describe(title, () => {
-      let spySetProp: jasmine.Spy;
+      let newModel: TPluginData;
+
       beforeAll(() => {
-        spySetProp = spyOn(presenter, 'setProp').and.callThrough();
-        presenter.init(data);
-      });
-      it('Should execute initialization', () => {
-        expect(spySetProp.calls.count()).toBe(3);
+        presenter.setProp(data);
+        newModel = presenter.getProp();
       });
       it('Should return view ID', () => {
         expect(presenter.id).toBe(view.id);
       });
-
-      describe('Testing properties reading', () => {
-        Array.from(props.keys()).forEach((key) => {
-          it(`Should read the property "${key}" and return it`, () => {
-            expect(presenter.getProp(key)).toBe(model[key]);
-          });
-        });
-        it('Should read the property "hasScale" and return it', () => {
-          const prop = (view.getAttribute('data-has-scale') === 'true');
-          expect(presenter.getProp('hasScale')).toBe(prop);
-        });
-        it('Should read the property "hasTooltip" and return it', () => {
-          const prop = (view.getAttribute('data-has-tooltip') === 'true');
-          expect(presenter.getProp('hasTooltip')).toBe(prop);
-        });
-        it('Should read the property "isVertical" and return it', () => {
-          const prop = (view.getAttribute('data-is-vertical') === 'true');
-          expect(presenter.getProp('isVertical')).toBe(prop);
-        });
+      it('Should read and write the property "data-has-scale"', () => {
+        const prop = view.getAttribute('data-has-scale');
+        expect(prop).toBe(String(newModel.hasScale));
       });
-
-      describe('Testing properties setting', () => {
-        Array.from(props.keys()).forEach((key) => {
-          it(`Should set the property "${props.get(key)}"`, () => {
-            const prop = (view.getAttribute(props.get(key) as TViewProps));
-            expect(prop).toBe(String(model[key]));
-          });
-        });
-        it('Should set the property "data-has-scale"', () => {
-          const prop = view.getAttribute('data-has-scale');
-          expect(prop).toBe(String(data.hasScale));
-        });
-        it('Should set the property "data-has-tooltip"', () => {
-          const prop = view.getAttribute('data-has-tooltip');
-          expect(prop).toBe(String(data.hasTooltip));
-        });
-        it('Should set the property "data-is-vertical"', () => {
-          const prop = view.getAttribute('data-is-vertical');
-          expect(prop).toBe(String(data.isVertical));
-        });
+      it('Should read and write set the property "data-has-tooltip"', () => {
+        const prop = view.getAttribute('data-has-tooltip');
+        expect(prop).toBe(String(newModel.hasTooltip));
+      });
+      it('Should read and write set the property "data-is-vertical"', () => {
+        const prop = view.getAttribute('data-is-vertical');
+        expect(prop).toBe(String(newModel.isVertical));
+      });
+      it('Should read and write the property "data-is-range"', () => {
+        const prop = view.getAttribute('data-is-range');
+        expect(prop).toBe(String(newModel.isRange));
+      });
+      it('Should read and write set the property "data-min-value"', () => {
+        const prop = view.getAttribute('data-min-value');
+        expect(prop).toBe(String(newModel.minValue));
+      });
+      it('Should read and write set the property "data-max-value"', () => {
+        const prop = view.getAttribute('data-max-value');
+        expect(prop).toBe(String(newModel.maxValue));
+      });
+      it('Should read and write the property "data-value-from"', () => {
+        const prop = view.getAttribute('data-value-From');
+        expect(prop).toBe(String(newModel.valueFrom));
+      });
+      it('Should read and write set the property "data-value-to"', () => {
+        const prop = view.getAttribute('data-value-to');
+        expect(prop).toBe(String(newModel.valueTo));
+      });
+      it('Should read and write set the property "data-step-size"', () => {
+        const prop = view.getAttribute('data-step-size');
+        expect(prop).toBe(String(newModel.stepSize));
       });
     });
   });

@@ -1,14 +1,22 @@
 declare module '*.module.sass';
 
-type TModelPropsNum = 'minValue' | 'maxValue' | 'valueFrom' | 'valueTo' | 'stepSize';
+type TIsRange = 'isRange';
 
-type TModelProps = TModelPropsNum | 'isRange';
+type TPropsNum = 'minValue' | 'maxValue' | 'valueFrom' | 'valueTo' | 'stepSize';
 
-type TPluginProps = TModelProps | 'hasTooltip' | 'hasScale' | 'isVertical';
+type TPropsBool = 'hasTooltip' | 'hasScale' | 'isVertical' | TIsRange
+
+type TModelProps = TPropsNum | TIsRange;
+
+type TPluginProps = TPropsNum | TPropsBool;
 
 type TModelData = {
-  [P in TModelProps]?: P extends 'isRange' ? boolean : P extends TModelPropsNum ? number : null;
+  [P in TModelProps]: P extends TIsRange ? boolean : P extends TPropsNum ? number : null;
 };
+
+type TPluginData = {
+  [P in TPluginProps]: P extends TPropsNum ? number : P extends TPropsBool ? boolean : null;
+}
 
 type TViewProps =
   'data-min-value' |
@@ -17,9 +25,9 @@ type TViewProps =
   'data-value-to' |
   'data-step-size' |
   'data-is-range' |
-  'data-has-tooltip' |
+  'data-is-vertical' |
   'data-has-scale' |
-  'data-is-vertical';
+  'data-has-tooltip';
 
 type TModelCallback = (prop: TViewProps, value: number | boolean) => void;
 

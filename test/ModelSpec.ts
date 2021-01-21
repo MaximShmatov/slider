@@ -3,19 +3,10 @@ import run from './TestData';
 
 describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
   let spyCallback: jasmine.Spy;
-  let spySet: TSpyObject;
   let model: Model;
 
   beforeAll(() => {
-    const setMethods: TModelProps[] = [
-      'minValue', 'maxValue', 'valueFrom', 'valueTo', 'stepSize', 'isRange',
-    ];
-    const reducer = (acc: TSpyObject, current: TModelProps) => {
-      acc[current] = spyOnProperty(model, current, 'set').and.callThrough();
-      return acc;
-    };
     model = new Model();
-    spySet = setMethods.reduce(reducer, {} as TSpyObject);
     spyCallback = jasmine.createSpy('spyCallback');
     model.callback = spyCallback;
   });
@@ -23,106 +14,107 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
   run((title: string, data: TObject) => {
     describe(title, () => {
       describe('Testing "stepSize" property', () => {
+        let stepSize: number;
         beforeAll(() => {
-          model.stepSize = Number(data.stepSize);
-        });
-        it(`Should be called setter with ${data.stepSize}`, () => {
-          expect(spySet.stepSize).toHaveBeenCalledWith(Number(data.stepSize));
+          spyCallback.calls.reset();
+          model.write({ stepSize: data.stepSize });
+          stepSize = model.read().stepSize;
         });
         it('Should be execute callback ', () => {
-          expect(spyCallback).toHaveBeenCalledWith('stepSize', jasmine.anything());
+          expect(spyCallback).toHaveBeenCalledWith('data-step-size', stepSize);
         });
         it('Should be > 0', () => {
-          expect(model.stepSize).toBeGreaterThanOrEqual(0);
+          expect(stepSize).toBeGreaterThanOrEqual(0);
         });
         it('Should be <= (maxValue - minValue)', () => {
-          expect(model.stepSize).toBeLessThanOrEqual(model.maxValue - model.minValue);
+          const { minValue, maxValue } = model.read();
+          expect(stepSize).toBeLessThanOrEqual(maxValue - minValue);
         });
       });
 
       describe('Testing "minValue" property', () => {
+        let minValue: number;
         beforeAll(() => {
-          model.minValue = Number(data.minValue);
-        });
-        it(`Should be called setter with ${data.minValue}`, () => {
-          expect(spySet.minValue).toHaveBeenCalledWith(Number(data.minValue));
+          spyCallback.calls.reset();
+          model.write({ minValue: data.minValue });
+          minValue = model.read().minValue;
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('minValue', jasmine.anything());
+          expect(spyCallback).toHaveBeenCalledWith('data-min-value', minValue);
         });
         it('Should be <= "valueFrom"', () => {
-          expect(model.minValue).toBeLessThanOrEqual(model.valueFrom);
+          expect(minValue).toBeLessThanOrEqual(model.read().valueFrom);
         });
       });
 
       describe('Testing "maxValue" property', () => {
+        let maxValue: number;
         beforeAll(() => {
-          model.maxValue = Number(data.maxValue);
-        });
-        it(`Should be called setter with ${data.maxValue}`, () => {
-          expect(spySet.maxValue).toHaveBeenCalledWith(Number(data.maxValue));
+          spyCallback.calls.reset();
+          model.write({ maxValue: data.maxValue });
+          maxValue = model.read().maxValue;
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('maxValue', jasmine.anything());
+          expect(spyCallback).toHaveBeenCalledWith('data-max-value', maxValue);
         });
         it('"Should be >= "valueTo" if "isRange" = "true", else >= "valueFrom"', () => {
-          const valueFromOrTo = (model.isRange) ? model.valueTo : model.valueFrom;
-          expect(model.maxValue).toBeGreaterThanOrEqual(valueFromOrTo);
+          const { valueFrom, valueTo, isRange } = model.read();
+          const valueFromOrTo = (isRange) ? valueTo : valueFrom;
+          expect(maxValue).toBeGreaterThanOrEqual(valueFromOrTo);
         });
       });
 
       describe('Testing "valueFrom" property', () => {
+        let valueFrom: number;
         beforeAll(() => {
-          model.valueFrom = Number(data.valueFrom);
-        });
-        it(`Should be called setter with ${data.valueFrom}`, () => {
-          expect(spySet.valueFrom).toHaveBeenCalledWith(Number(data.valueFrom));
+          spyCallback.calls.reset();
+          model.write({ valueFrom: data.valueFrom });
+          valueFrom = model.read().valueFrom;
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('valueFrom', jasmine.anything());
+          expect(spyCallback).toHaveBeenCalledWith('data-value-from', valueFrom);
         });
         it('Should be <= "valueTo" if "isRange" = true, else <= "maxValue"', () => {
-          const valueToOrMax = (model.isRange) ? model.valueTo : model.maxValue;
-          expect(model.valueFrom).toBeLessThanOrEqual(valueToOrMax);
+          const { maxValue, valueTo, isRange } = model.read();
+          const valueToOrMax = (isRange) ? valueTo : maxValue;
+          expect(valueFrom).toBeLessThanOrEqual(valueToOrMax);
         });
         it('"Should be >= "minValue"', () => {
-          expect(model.valueFrom).toBeGreaterThanOrEqual(model.minValue);
+          expect(valueFrom).toBeGreaterThanOrEqual(model.read().minValue);
         });
       });
 
       describe('Testing "valueTo" property where "isRange" = "true"', () => {
+        let valueTo: number;
         beforeAll(() => {
-          model.isRange = true;
-          model.valueTo = Number(data.valueTo);
-        });
-        it(`Should be called setter with ${data.valueTo}`, () => {
-          expect(spySet.valueTo).toHaveBeenCalledWith(Number(data.valueTo));
+          spyCallback.calls.reset();
+          model.write({ isRange: true });
+          model.write({ valueTo: data.valueTo });
+          valueTo = model.read().valueTo;
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('valueTo', jasmine.anything());
+          expect(spyCallback).toHaveBeenCalledWith('data-value-to', valueTo);
         });
         it('Should be <= "maxValue"', () => {
-          expect(model.valueTo).toBeLessThanOrEqual(model.maxValue);
+          expect(valueTo).toBeLessThanOrEqual(model.read().maxValue);
         });
         it('"valueTo" should be >= "valueFrom"', () => {
-          expect(model.valueTo).toBeGreaterThanOrEqual(model.valueFrom);
+          expect(valueTo).toBeGreaterThanOrEqual(model.read().valueFrom);
         });
       });
 
       describe('Testing "isRange" property', () => {
         let isRange: boolean;
         beforeAll(() => {
+          spyCallback.calls.reset();
           isRange = (data.isRange === 'true');
-          model.isRange = (data.isRange === 'true');
-        });
-        it(`Should be called setter with ${data.isRange}`, () => {
-          expect(spySet.isRange).toHaveBeenCalledWith(isRange);
+          model.write({ isRange });
         });
         it('Should be execute callback', () => {
-          expect(spyCallback).toHaveBeenCalledWith('isRange', isRange);
+          expect(spyCallback).toHaveBeenCalledWith('data-is-range', isRange);
         });
         it(`Should be equal ${data.isRange}`, () => {
-          expect(model.isRange).toBe(isRange);
+          expect(model.read().isRange).toBe(isRange);
         });
       });
     });
