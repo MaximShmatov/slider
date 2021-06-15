@@ -40,8 +40,8 @@ interface HTMLElement {
 
 interface JQuery {
   slider: {
-    (prop: TPluginProps, value: number | boolean | string | Record<string, unknown>): JQuery;
-    (prop: 'init', value?: number | boolean | string | Record<string, unknown>): JQuery;
+    (prop: TPluginProps, value: number | boolean | string | TPluginData): JQuery;
+    (prop: 'init', value?: number | boolean | string | TPluginData): JQuery;
     (prop: TPluginProps): number | boolean;
     (prop: 'all'): TModelData;
   }

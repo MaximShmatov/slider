@@ -4,20 +4,23 @@ import run from './TestData';
 describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
   let spyCallback: jasmine.Spy;
   let model: Model;
+  let modelData: TModelData;
 
   beforeAll(() => {
     model = new Model();
+    modelData = model.read();
     spyCallback = jasmine.createSpy('spyCallback');
     model.callback = spyCallback;
   });
 
-  run((title: string, data: TObject) => {
+  run((title: string, data: TModelData) => {
     describe(title, () => {
       describe('Testing "stepSize" property', () => {
         let stepSize: number;
         beforeAll(() => {
           spyCallback.calls.reset();
-          model.write({ stepSize: data.stepSize });
+          modelData.stepSize = data.stepSize;
+          model.write(modelData);
           stepSize = model.read().stepSize;
         });
         it('Should be execute callback ', () => {
@@ -36,7 +39,8 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
         let minValue: number;
         beforeAll(() => {
           spyCallback.calls.reset();
-          model.write({ minValue: data.minValue });
+          modelData.minValue = data.minValue;
+          model.write(modelData);
           minValue = model.read().minValue;
         });
         it('Should be execute callback', () => {
@@ -51,7 +55,8 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
         let maxValue: number;
         beforeAll(() => {
           spyCallback.calls.reset();
-          model.write({ maxValue: data.maxValue });
+          modelData.maxValue = data.maxValue;
+          model.write(modelData);
           maxValue = model.read().maxValue;
         });
         it('Should be execute callback', () => {
@@ -68,7 +73,8 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
         let valueFrom: number;
         beforeAll(() => {
           spyCallback.calls.reset();
-          model.write({ valueFrom: data.valueFrom });
+          modelData.valueFrom = data.valueFrom;
+          model.write(modelData);
           valueFrom = model.read().valueFrom;
         });
         it('Should be execute callback', () => {
@@ -88,8 +94,9 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
         let valueTo: number;
         beforeAll(() => {
           spyCallback.calls.reset();
-          model.write({ isRange: true });
-          model.write({ valueTo: data.valueTo });
+          modelData.isRange = true;
+          modelData.valueTo = data.valueTo;
+          model.write(modelData);
           valueTo = model.read().valueTo;
         });
         it('Should be execute callback', () => {
@@ -107,8 +114,8 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
         let isRange: boolean;
         beforeAll(() => {
           spyCallback.calls.reset();
-          isRange = (data.isRange === 'true');
-          model.write({ isRange });
+          modelData.isRange = (String(data.isRange) === 'true');
+          model.write(modelData);
         });
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('data-is-range', isRange);

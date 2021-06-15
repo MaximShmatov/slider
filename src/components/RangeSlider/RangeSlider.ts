@@ -8,7 +8,7 @@ import Presenter from './Presenter';
   if (!$) return;
   const controls = new Map();
 
-  $.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: string | number | boolean | Record<string, unknown>): any {
+  $.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: string | number | boolean | TPluginData): any {
     if (this.length === 0 || prop === undefined) return this;
     let propValue = null;
 
@@ -20,14 +20,37 @@ import Presenter from './Presenter';
         controls.set(slider.id, slider);
         this.id = slider.id;
         this.replaceWith(view);
-        if (typeof value === 'object') slider.setProp(value);
-        else if (value === undefined) slider.setProp(this.dataset);
-        else slider.setProp({ [prop]: value });
+        if (typeof value === 'object') {
+          slider.setProp(value);
+        } else if (value === undefined) {
+          const {
+            minValue, maxValue, valueTo, valueFrom, stepSize,
+            isRange, isVertical, hasTooltip, hasScale,
+          } = this.dataset;
+          slider.setProp({
+            minValue: Number(minValue),
+            maxValue: Number(maxValue),
+            valueFrom: Number(valueFrom),
+            valueTo: Number(valueTo),
+            stepSize: Number(stepSize),
+            hasScale: (hasScale === 'true'),
+            hasTooltip: (hasTooltip === 'true'),
+            isRange: (isRange === 'true'),
+            isVertical: (isVertical === 'true'),
+          });
+        }
       } else if (presenter) {
-        if (prop === 'all') propValue = presenter.getProp();
-        else if (value === undefined) propValue = presenter.getProp()[prop];
-        else if (typeof value === 'object') presenter.setProp(value);
-        else presenter.setProp({ [prop]: value });
+        if (prop === 'all') {
+          propValue = presenter.getProp();
+        } else if (value === undefined) {
+          propValue = presenter.getProp()[prop];
+        } else if (typeof value === 'object') {
+          presenter.setProp(value);
+        } else {
+          const sliderProps = presenter.getProp();
+          sliderProps[prop] = value;
+          presenter.setProp(sliderProps);
+        }
         return false;
       }
     });

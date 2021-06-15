@@ -17,7 +17,7 @@ describe('TESTING MODULE SRC/SLIDER/PLUGIN.TS', () => {
   const element = '<div class="test"></div>';
   testElements.innerHTML = element + element + element;
 
-  run((title: string, data: TObject) => {
+  run((title: string, data: TPluginData) => {
     describe(title, () => {
       let $elements: JQuery;
       let spySetAttribute: jasmine.Spy;

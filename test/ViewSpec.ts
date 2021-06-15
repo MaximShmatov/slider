@@ -8,7 +8,7 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
   let spyCallback: jasmine.Spy;
   let spyEvents: jasmine.Spy;
 
-  run((title: string, data: TObject) => {
+  run((title: string, data: TPluginData) => {
     describe(title, () => {
       beforeAll(() => {
         view = document.createElement('range-slider');
@@ -18,15 +18,15 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
         view.addEventListener('range-slider', spyEvents);
         view.setCallback(spyCallback);
 
-        view.setAttribute('data-min-value', data.minValue);
-        view.setAttribute('data-max-value', data.maxValue);
-        view.setAttribute('data-value-from', data.valueFrom);
-        view.setAttribute('data-value-to', data.valueTo);
-        view.setAttribute('data-step-size', data.stepSize);
-        view.setAttribute('data-is-range', data.isRange);
-        view.setAttribute('data-is-vertical', data.isVertical);
-        view.setAttribute('data-has-scale', data.hasScale);
-        view.setAttribute('data-has-tooltip', data.hasTooltip);
+        view.setAttribute('data-min-value', String(data.minValue));
+        view.setAttribute('data-max-value', String(data.maxValue));
+        view.setAttribute('data-value-from', String(data.valueFrom));
+        view.setAttribute('data-value-to', String(data.valueTo));
+        view.setAttribute('data-step-size', String(data.stepSize));
+        view.setAttribute('data-is-range', String(data.isRange));
+        view.setAttribute('data-is-vertical', String(data.isVertical));
+        view.setAttribute('data-has-scale', String(data.hasScale));
+        view.setAttribute('data-has-tooltip', String(data.hasTooltip));
       });
 
       afterAll(() => {
@@ -76,57 +76,57 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
         });
 
         it(`Should be set "data-min-value"="${data.minValue}" and dispatch event`, () => {
-          expect(view.getAttribute('data-min-value')).toBe(data.minValue);
+          expect(view.getAttribute('data-min-value')).toBe(String(data.minValue));
           const args = spyEvents.calls.allArgs()[0][0];
-          expect(args.detail).toEqual({ name: 'data-min-value', value: data.minValue });
+          expect(args.detail).toEqual({ name: 'data-min-value', value: String(data.minValue) });
         });
         it(`Should be set "data-max-value"="${data.maxValue}" and dispatch event`, () => {
-          expect(view.getAttribute('data-max-value')).toBe(data.maxValue);
+          expect(view.getAttribute('data-max-value')).toBe(String(data.maxValue));
           const args = spyEvents.calls.allArgs()[1][0];
-          expect(args.detail).toEqual({ name: 'data-max-value', value: data.maxValue });
+          expect(args.detail).toEqual({ name: 'data-max-value', value: String(data.maxValue) });
         });
         it(`Should be set "data-value-from"="${data.valueFrom}" and dispatch event`, () => {
-          expect(view.getAttribute('data-value-from')).toBe(data.valueFrom);
+          expect(view.getAttribute('data-value-from')).toBe(String(data.valueFrom));
           const args = spyEvents.calls.allArgs()[2][0];
-          expect(args.detail).toEqual({ name: 'data-value-from', value: data.valueFrom });
+          expect(args.detail).toEqual({ name: 'data-value-from', value: String(data.valueFrom) });
         });
         it(`Should be set "data-value-to"="${data.valueTo}" and dispatch event`, () => {
-          expect(view.getAttribute('data-value-to')).toBe(data.valueTo);
+          expect(view.getAttribute('data-value-to')).toBe(String(data.valueTo));
           const args = spyEvents.calls.allArgs()[3][0];
-          expect(args.detail).toEqual({ name: 'data-value-to', value: data.valueTo });
+          expect(args.detail).toEqual({ name: 'data-value-to', value: String(data.valueTo) });
         });
         it(`Should be set "data-step-size"="${data.stepSize}" and dispatch event`, () => {
-          expect(view.getAttribute('data-step-size')).toBe(data.stepSize);
+          expect(view.getAttribute('data-step-size')).toBe(String(data.stepSize));
           const args = spyEvents.calls.allArgs()[4][0];
-          expect(args.detail).toEqual({ name: 'data-step-size', value: data.stepSize });
+          expect(args.detail).toEqual({ name: 'data-step-size', value: String(data.stepSize) });
         });
         it(`Should be set "data-is-range"="${data.isRange}" and dispatch event`, () => {
-          expect(view.getAttribute('data-is-range')).toBe(data.isRange);
+          expect(view.getAttribute('data-is-range')).toBe(String(data.isRange));
           const args = spyEvents.calls.allArgs()[5][0];
-          expect(args.detail).toEqual({ name: 'data-is-range', value: data.isRange });
+          expect(args.detail).toEqual({ name: 'data-is-range', value: String(data.isRange) });
         });
         it(`Should be set "data-is-vertical"="${data.isVertical}" and dispatch event`, () => {
-          expect(view.getAttribute('data-is-vertical')).toBe(data.isVertical);
+          expect(view.getAttribute('data-is-vertical')).toBe(String(data.isVertical));
           const args = spyEvents.calls.allArgs()[6][0];
-          expect(args.detail).toEqual({ name: 'data-is-vertical', value: data.isVertical });
+          expect(args.detail).toEqual({ name: 'data-is-vertical', value: String(data.isVertical) });
         });
         it(`Should be set "data-has-scale"="${data.hasScale}" and dispatch event`, () => {
-          expect(view.getAttribute('data-has-scale')).toBe(data.hasScale);
+          expect(view.getAttribute('data-has-scale')).toBe(String(data.hasScale));
           const args = spyEvents.calls.allArgs()[7][0];
-          expect(args.detail).toEqual({ name: 'data-has-scale', value: data.hasScale });
+          expect(args.detail).toEqual({ name: 'data-has-scale', value: String(data.hasScale) });
         });
         it(`Should be set "data-has-tooltip"="${data.hasTooltip}" and dispatch event`, () => {
-          expect(view.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
+          expect(view.getAttribute('data-has-tooltip')).toBe(String(data.hasTooltip));
           const args = spyEvents.calls.allArgs()[8][0];
-          expect(args.detail).toEqual({ name: 'data-has-tooltip', value: data.hasTooltip });
+          expect(args.detail).toEqual({ name: 'data-has-tooltip', value: String(data.hasTooltip) });
         });
 
         it('Should switch (on/off) scale', () => {
-          const display = (data.hasScale === 'true') ? '' : 'none';
+          const display = (String(data.hasScale) === 'true') ? '' : 'none';
           expect(scale.style.display).toBe(display);
         });
         it('Should switch (horizontal/vertical) mode', () => {
-          const className = (data.isVertical === 'true') ? 'slider slider_vertical' : 'slider';
+          const className = (String(data.isVertical) === 'true') ? 'slider slider_vertical' : 'slider';
           expect(slider.className).toBe(className);
         });
 
@@ -156,10 +156,10 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
           });
 
           it(`The attribute "data-value-from" must be set to "${data.valueFrom}"`, () => {
-            expect(rail.getAttribute('data-value-from')).toBe(data.valueFrom);
+            expect(rail.getAttribute('data-value-from')).toBe(String(data.valueFrom));
           });
-          it(`The attribute "data-value-to" must be set to "${data.valueTo}"`, () => {
-            expect(rail.getAttribute('data-value-to')).toBe(data.valueTo);
+          it(`The attribute "data-value-to" must be set to "${String(data.valueTo)}"`, () => {
+            expect(rail.getAttribute('data-value-to')).toBe(String(data.valueTo));
           });
           it(`The attribute "data-move-from" must be set to "${moveFrom}"`, () => {
             expect(progress.getAttribute('data-move-from')).toBe(moveFrom);
@@ -168,16 +168,16 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
             expect(progress.getAttribute('data-move-to')).toBe(moveTo);
           });
           it(`The attribute "data-has-tooltip" must be set to "${data.hasTooltip}"`, () => {
-            expect(rail.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
+            expect(rail.getAttribute('data-has-tooltip')).toBe(String(data.hasTooltip));
           });
           it(`The attribute "data-is-range" must be set to "${data.isRange}"`, () => {
-            expect(rail.getAttribute('data-is-range')).toBe(data.isRange);
+            expect(rail.getAttribute('data-is-range')).toBe(String(data.isRange));
           });
           it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-            expect(rail.getAttribute('data-is-vertical')).toBe(data.isVertical);
+            expect(rail.getAttribute('data-is-vertical')).toBe(String(data.isVertical));
           });
           it('Should switch (on/off) thumbTo', () => {
-            const display = (data.isRange === 'true') ? '' : 'none';
+            const display = (String(data.isRange) === 'true') ? '' : 'none';
             expect(thumbTo.style.display).toBe(display);
           });
 
@@ -213,8 +213,8 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               const right = progress.style.right.slice(0, -1);
               const bottom = progress.style.bottom.slice(0, -1);
 
-              const isVertical = (data.isVertical === 'true');
-              const isRange = (data.isRange === 'true');
+              const isVertical = (String(data.isVertical) === 'true');
+              const isRange = (String(data.isRange) === 'true');
               const progressTo = 100 - (isRange ? Number(moveTo) : Number(moveFrom));
               let rightOrBottom = isVertical ? bottom : right;
               let leftOrTop = isVertical ? top : left;
@@ -240,27 +240,27 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               expect(tooltipTo).toBeInstanceOf(HTMLElement);
             });
             it(`The attribute "data-value" must be set to (${data.valueFrom} and ${data.valueTo})`, () => {
-              expect(thumbFrom.getAttribute('data-value')).toBe(data.valueFrom);
-              expect(thumbTo.getAttribute('data-value')).toBe(data.valueTo);
+              expect(thumbFrom.getAttribute('data-value')).toBe(String(data.valueFrom));
+              expect(thumbTo.getAttribute('data-value')).toBe(String(data.valueTo));
             });
             it(`The attribute "data-move" must be set to (${moveFrom} and ${moveTo})`, () => {
               expect(thumbFrom.getAttribute('data-move')).toBe(moveFrom);
               expect(thumbTo.getAttribute('data-move')).toBe(moveTo);
             });
             it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-              expect(thumbFrom.getAttribute('data-is-vertical')).toBe(data.isVertical);
-              expect(thumbTo.getAttribute('data-is-vertical')).toBe(data.isVertical);
+              expect(thumbFrom.getAttribute('data-is-vertical')).toBe(String(data.isVertical));
+              expect(thumbTo.getAttribute('data-is-vertical')).toBe(String(data.isVertical));
             });
             it(`The attribute "data-has-tooltip" must be set to "${data.hasTooltip}"`, () => {
-              expect(thumbFrom.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
-              expect(thumbTo.getAttribute('data-has-tooltip')).toBe(data.hasTooltip);
+              expect(thumbFrom.getAttribute('data-has-tooltip')).toBe(String(data.hasTooltip));
+              expect(thumbTo.getAttribute('data-has-tooltip')).toBe(String(data.hasTooltip));
             });
             it(`Must be set text content (${data.valueFrom} and ${data.valueTo})`, () => {
-              expect(tooltipFrom.textContent).toBe(data.valueFrom);
-              expect(tooltipTo.textContent).toBe(data.valueTo);
+              expect(tooltipFrom.textContent).toBe(String(data.valueFrom));
+              expect(tooltipTo.textContent).toBe(String(data.valueTo));
             });
             it('Should be set positions (left, top)', () => {
-              const isVertical = (data.isVertical === 'true');
+              const isVertical = (String(data.isVertical) === 'true');
               const topFrom = thumbFrom.style.top.slice(0, -1);
               const topTo = thumbTo.style.top.slice(0, -1);
               const leftFrom = thumbFrom.style.left.slice(0, -1);
@@ -273,7 +273,7 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
               expect(leftOrTopTo).toBe(moveTo);
             });
             it('Should switch (on/off) tooltip', () => {
-              if (data.hasTooltip === 'true') {
+              if (String(data.hasTooltip) === 'true') {
                 expect(tooltipFrom.style.display).toBe('');
                 expect(tooltipTo.style.display).toBe('');
               } else {
@@ -316,16 +316,16 @@ describe('TESTING MODULE SRC/SLIDER/VIEW.TS', () => {
             expect(subdivision.length).toBe(15);
           });
           it(`The attribute "data-min-value" must be set to "${data.minValue}"`, () => {
-            expect(scale.getAttribute('data-min-value')).toBe(data.minValue);
+            expect(scale.getAttribute('data-min-value')).toBe(String(data.minValue));
           });
           it(`The attribute "data-max-value" must be set to "${data.maxValue}"`, () => {
-            expect(scale.getAttribute('data-max-value')).toBe(data.maxValue);
+            expect(scale.getAttribute('data-max-value')).toBe(String(data.maxValue));
           });
           it(`The attribute "data-is-vertical" must be set to "${data.isVertical}"`, () => {
-            expect(scale.getAttribute('data-is-vertical')).toBe(data.isVertical);
+            expect(scale.getAttribute('data-is-vertical')).toBe(String(data.isVertical));
           });
           it(`The attribute "data-is-range" must be set to "${data.isRange}"`, () => {
-            expect(scale.getAttribute('data-is-range')).toBe(data.isRange);
+            expect(scale.getAttribute('data-is-range')).toBe(String(data.isRange));
           });
           it(`The first element item value must have text content ${data.minValue}`, () => {
             expect(Number(valuesItem[0].textContent)).toBe(Number(data.minValue));

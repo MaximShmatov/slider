@@ -28,16 +28,16 @@ class Model {
     };
   }
 
-  write(data: Record<string, unknown>): void {
+  write(data: TModelData): void {
     const {
       minValue, maxValue, valueTo, valueFrom, stepSize, isRange,
     } = data;
-    if (isRange !== undefined) this.isRange = (String(isRange) === 'true');
-    if (!Number.isNaN(Number(minValue))) this.minValue = Number(minValue);
-    if (!Number.isNaN(Number(maxValue))) this.maxValue = Number(maxValue);
-    if (!Number.isNaN(Number(stepSize))) this.stepSize = Number(stepSize);
-    if (!Number.isNaN(Number(valueTo))) this.valueTo = Number(valueTo);
-    if (!Number.isNaN(Number(valueFrom))) this.valueFrom = Number(valueFrom);
+    this.isRange = isRange;
+    if (!Number.isNaN(minValue)) this.minValue = minValue;
+    if (!Number.isNaN(maxValue)) this.maxValue = maxValue;
+    if (!Number.isNaN(stepSize)) this.stepSize = stepSize;
+    if (!Number.isNaN(valueTo)) this.valueTo = valueTo;
+    if (!Number.isNaN(valueFrom)) this.valueFrom = valueFrom;
   }
 
   private set minValue(minValue: number) {

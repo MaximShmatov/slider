@@ -16,7 +16,7 @@ describe('TESTING MODULE SRC/SLIDER/PRESENTER.TS', () => {
     presenter = new Presenter(view, model);
   });
 
-  run((title: string, data: TObject) => {
+  run((title: string, data: TPluginData) => {
     describe(title, () => {
       let newModel: TPluginData;
 

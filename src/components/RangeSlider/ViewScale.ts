@@ -3,14 +3,13 @@ import ViewAbstract from './ViewAbstract';
 class ViewScale extends ViewAbstract {
   callback: TViewCallback;
 
-  private readonly valueItems: NodeListOf<HTMLSpanElement>;
+  private readonly valueItems: HTMLSpanElement[] = [];
 
   constructor() {
     super();
     this.callback = () => ({});
     this.className = 'slider__scale';
     this.createScaleDOM();
-    this.valueItems = this.querySelectorAll('.slider__scale-values-item');
     this.setScaleValues();
     this.setEventHandlers();
   }
@@ -44,6 +43,7 @@ class ViewScale extends ViewAbstract {
     const scaleValues = Array(4).fill(null).reduce((acc) => {
       const valueItem = document.createElement('span');
       valueItem.className = 'slider__scale-values-item';
+      this.valueItems.push(valueItem);
       acc.appendChild(valueItem);
       return acc;
     }, document.createElement('div'));

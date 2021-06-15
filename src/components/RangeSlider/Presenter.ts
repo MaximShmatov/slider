@@ -17,14 +17,14 @@ class Presenter {
     this.model.callback = this.modelCallback.bind(this);
   }
 
-  setProp(obj: Record<string, unknown>): void {
-    this.model.write(obj);
+  setProp(data: TPluginData): void {
+    this.model.write(data);
     const {
       isVertical, hasTooltip, hasScale,
-    } = obj;
-    if (isVertical !== undefined) this.view.setAttribute('data-is-Vertical', String(isVertical));
-    if (hasTooltip !== undefined) this.view.setAttribute('data-has-tooltip', String(hasTooltip));
-    if (hasScale !== undefined) this.view.setAttribute('data-has-scale', String(hasScale));
+    } = data;
+    this.view.setAttribute('data-is-Vertical', String(isVertical));
+    this.view.setAttribute('data-has-tooltip', String(hasTooltip));
+    this.view.setAttribute('data-has-scale', String(hasScale));
   }
 
   getProp(): TPluginData {
@@ -41,7 +41,9 @@ class Presenter {
   }
 
   private viewCallback(prop: 'valueFrom' | 'valueTo', value: number): void {
-    this.model.write({ [prop]: value });
+    const sliderProps = this.model.read();
+    sliderProps[prop] = value;
+    this.model.write(sliderProps);
   }
 }
 
