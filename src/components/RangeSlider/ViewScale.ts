@@ -27,17 +27,30 @@ class ViewScale extends ViewAbstract {
   }
 
   private createScaleDOM() {
-    let subdivisions = '<span class="slider__scale-subdivision"></span>';
-    subdivisions += subdivisions + subdivisions + subdivisions + subdivisions;
-    let divisions = `<div class="slider__scale-division">${subdivisions}</div>`;
-    divisions += divisions + divisions;
-    const scale = `<div class="slider__scale-wrapper">${divisions}</div>`;
+    const division = Array(5).fill(null).reduce((acc) => {
+      const subdivision = document.createElement('span');
+      subdivision.className = 'slider__scale-subdivision';
+      acc.appendChild(subdivision);
+      return acc;
+    }, document.createElement('div'));
+    division.className = 'slider__scale-division';
 
-    let valueItems = '<span class="slider__scale-values-item"></span>';
-    valueItems += valueItems + valueItems + valueItems;
-    const values = `<div class="slider__scale-values">${valueItems}</div>`;
+    const scale = Array(3).fill(null).reduce((acc) => {
+      acc.appendChild(division.cloneNode(true));
+      return acc;
+    }, document.createElement('div'));
+    scale.className = 'slider__scale-wrapper';
 
-    this.innerHTML = scale + values;
+    const scaleValues = Array(4).fill(null).reduce((acc) => {
+      const valueItem = document.createElement('span');
+      valueItem.className = 'slider__scale-values-item';
+      acc.appendChild(valueItem);
+      return acc;
+    }, document.createElement('div'));
+    scaleValues.className = 'slider__scale-values';
+
+    this.appendChild(scale);
+    this.appendChild(scaleValues);
   }
 
   private handleScaleMousedown(evt: MouseEvent): void {
