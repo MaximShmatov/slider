@@ -13,8 +13,8 @@ class Presenter {
     this.id = Math.random().toString();
     this.view.className = 'range-slider';
     this.view.setAttribute('id', this.id);
-    this.view.setCallback(this.viewCallback.bind(this));
-    this.model.callback = this.modelCallback.bind(this);
+    this.view.setCallback(this.setFromToValue.bind(this));
+    this.model.setViewAttribute = this.setViewAttribute.bind(this);
   }
 
   setProp(data: TPluginData): void {
@@ -36,11 +36,11 @@ class Presenter {
     };
   }
 
-  private modelCallback(prop: TViewProps, value: number | boolean): void {
+  private setViewAttribute(prop: TViewProps, value: number | boolean): void {
     this.view.setAttribute(prop, value.toString());
   }
 
-  private viewCallback(prop: 'valueFrom' | 'valueTo', value: number): void {
+  private setFromToValue(prop: 'valueFrom' | 'valueTo', value: number): void {
     const sliderProps = this.model.read();
     sliderProps[prop] = value;
     this.model.write(sliderProps);

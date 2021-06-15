@@ -10,7 +10,7 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
     model = new Model();
     modelData = model.read();
     spyCallback = jasmine.createSpy('spyCallback');
-    model.callback = spyCallback;
+    model.setViewAttribute = spyCallback;
   });
 
   run((title: string, data: TModelData) => {

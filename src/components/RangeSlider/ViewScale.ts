@@ -1,13 +1,13 @@
 import ViewAbstract from './ViewAbstract';
 
 class ViewScale extends ViewAbstract {
-  callback: TViewCallback;
+  setFromToValue: TViewCallback;
 
   private readonly valueItems: HTMLSpanElement[] = [];
 
   constructor() {
     super();
-    this.callback = () => ({});
+    this.setFromToValue = () => ({});
     this.className = 'slider__scale';
     this.createScaleDOM();
     this.setScaleValues();
@@ -55,7 +55,7 @@ class ViewScale extends ViewAbstract {
 
   private handleScaleMousedown(evt: MouseEvent): void {
     this.setDirection(evt);
-    this.callback(this.valuePropName, this.calcValue(evt));
+    this.setFromToValue(this.valuePropName, this.calcValue(evt));
   }
 
   private setScaleValues(): void {

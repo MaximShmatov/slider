@@ -1,5 +1,5 @@
 class Model {
-  callback: TModelCallback;
+  setViewAttribute: TModelCallback;
 
   private min = 0;
 
@@ -14,7 +14,7 @@ class Model {
   private isTo = true;
 
   constructor() {
-    this.callback = () => ({});
+    this.setViewAttribute = () => ({});
   }
 
   read(): TModelData {
@@ -46,7 +46,7 @@ class Model {
       this.min = this.from - stepSize;
     } else this.min = this.from;
     if (this.min === this.max) this.min -= this.step;
-    this.callback('data-min-value', this.min);
+    this.setViewAttribute('data-min-value', this.min);
   }
 
   private set maxValue(maxValue: number) {
@@ -57,7 +57,7 @@ class Model {
       this.max = this.max * this.step + this.min;
     }
     if (this.max === this.min) this.max += this.step;
-    this.callback('data-max-value', this.max);
+    this.setViewAttribute('data-max-value', this.max);
   }
 
   private set valueFrom(valueFrom: number) {
@@ -68,7 +68,7 @@ class Model {
       this.from = Math.round((valueFrom - this.min) / this.step);
       this.from = this.from * this.step + this.min;
     }
-    this.callback('data-value-from', this.from);
+    this.setViewAttribute('data-value-from', this.from);
   }
 
   private set valueTo(valueTo: number) {
@@ -80,7 +80,7 @@ class Model {
         this.to = this.max;
       } else this.to = this.from;
     }
-    this.callback('data-value-to', this.to);
+    this.setViewAttribute('data-value-to', this.to);
   }
 
   private set stepSize(stepSize: number) {
@@ -108,7 +108,7 @@ class Model {
       else this.valueTo = this.from;
     }
 
-    this.callback('data-step-size', this.step);
+    this.setViewAttribute('data-step-size', this.step);
   }
 
   private set isRange(isRange: boolean) {
@@ -117,7 +117,7 @@ class Model {
       if (this.to > this.max) this.valueTo = this.max;
       if (this.to < this.from) this.valueTo = this.from;
     }
-    this.callback('data-is-range', this.isTo);
+    this.setViewAttribute('data-is-range', this.isTo);
   }
 }
 

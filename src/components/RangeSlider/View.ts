@@ -63,8 +63,8 @@ class View extends ViewAbstract {
   }
 
   setCallback(func: TViewCallback): void {
-    this.rail.callback = func;
-    this.scale.callback = func;
+    this.rail.setFromToValue = func;
+    this.scale.setFromToValue = func;
   }
 
   private setMoveAttribute(name: 'data-move-from' | 'data-move-to'): void {

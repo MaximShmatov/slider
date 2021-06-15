@@ -3,7 +3,7 @@ import ViewThumb from './ViewThumb';
 import ViewProgress from './ViewProgress';
 
 class ViewRail extends ViewAbstract {
-  callback: TViewCallback;
+  setFromToValue: TViewCallback;
 
   private readonly progress: HTMLElement;
 
@@ -17,7 +17,7 @@ class ViewRail extends ViewAbstract {
 
   constructor() {
     super();
-    this.callback = () => ({});
+    this.setFromToValue = () => ({});
     this.className = 'slider__rail';
     this.thumbFrom = new ViewThumb();
     this.thumbTo = new ViewThumb();
@@ -68,7 +68,7 @@ class ViewRail extends ViewAbstract {
 
   private handleMouseMove(evt: MouseEvent): void {
     evt.preventDefault();
-    this.callback(this.valuePropName, this.calcValue(evt));
+    this.setFromToValue(this.valuePropName, this.calcValue(evt));
   }
 
   private handleMouseUp(): void {
