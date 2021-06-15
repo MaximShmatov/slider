@@ -1,8 +1,8 @@
 import { resolve } from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import { ProvidePlugin } from 'webpack';
 
-module.exports = {
+export default {
   mode: 'development',
   context: resolve(__dirname, 'src'),
   entry: {

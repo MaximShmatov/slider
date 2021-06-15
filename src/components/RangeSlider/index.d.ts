@@ -45,12 +45,6 @@ interface JQuery {
     (prop: TPluginProps): number | boolean;
     (prop: 'all'): TModelData;
   }
-  // slider: {
-  //   (prop: TPluginProps, value: number | boolean | string | Record<string, unknown>): JQuery;
-  //   (prop: 'init', value?: number | boolean | string | Record<string, unknown>): JQuery;
-  //   (prop: TPluginProps): number | boolean;
-  //   (prop: 'all'): TModelData;
-  // }
 }
 
 interface Event {

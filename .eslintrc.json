@@ -29,7 +29,8 @@
     "fsd/jq-cache-dom-elements": "off",
     "fsd/jq-use-js-prefix-in-selector": "off",
     "fsd/no-heavy-constructor": "off",
-    "default-case": "off"
+    "default-case": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
   },
   "ignorePatterns": [
     "vendor"
