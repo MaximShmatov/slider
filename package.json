@@ -10,7 +10,7 @@
     "start": "webpack serve",
     "test": "karma start karma.conf.js",
     "build": "webpack --config=webpack.prod.config.js",
-    "lint": "eslint src --ext.ts",
+    "lint": "eslint src --ext .ts",
     "deploy": "gh-pages -d build"
   },
   "repository": {

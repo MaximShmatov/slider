@@ -4,12 +4,11 @@ import './View';
 import Model from './Model';
 import Presenter from './Presenter';
 
-(function ($: JQueryStatic): void {
+(function (): void {
   if (!$) return;
-  const jquery = $;
   const controls = new Map();
 
-  jquery.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: string | number | boolean | Record<string, unknown>): any {
+  $.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: string | number | boolean | Record<string, unknown>): any {
     if (this.length === 0 || prop === undefined) return this;
     let propValue = null;
 
@@ -34,4 +33,4 @@ import Presenter from './Presenter';
     });
     return (propValue ?? this);
   };
-}(window.$));
+}());

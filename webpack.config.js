@@ -1,10 +1,10 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
+import { resolve } from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { ProvidePlugin } from 'webpack';
 
 module.exports = {
   mode: 'development',
-  context: path.resolve(__dirname, 'src'),
+  context: resolve(__dirname, 'src'),
   entry: {
     index: './pages/index',
     slider: './components/RangeSlider/RangeSlider',
@@ -20,8 +20,8 @@ module.exports = {
       chunks: ['index'],
       inject: 'body',
     }),
-    new webpack.ProvidePlugin({
-      'window.$': 'jquery',
+    new ProvidePlugin({
+      $: 'jquery',
     }),
   ],
   module: {

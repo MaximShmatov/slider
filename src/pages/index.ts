@@ -141,7 +141,7 @@ class ControlPanel {
   }
 }
 
-(function ($) {
+(function () {
   const plugins: ControlPanel[] = [];
   $('.js-container').each(function () {
     plugins.push(new ControlPanel($(this)));
@@ -163,4 +163,4 @@ class ControlPanel {
   plugins[1].$plugin.slider('init');
   plugins[2].$plugin.slider('init');
   plugins[3].$plugin.slider('init', initObj);
-}(window.$));
+}());

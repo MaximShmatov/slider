@@ -28,7 +28,7 @@ class Model {
     };
   }
 
-  write(data: Record<string, unknown>) {
+  write(data: Record<string, unknown>): void {
     const {
       minValue, maxValue, valueTo, valueFrom, stepSize, isRange,
     } = data;
