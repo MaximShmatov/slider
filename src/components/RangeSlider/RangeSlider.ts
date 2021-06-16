@@ -8,20 +8,21 @@ import Presenter from './Presenter';
   if (!$) return;
   const controls = new Map();
 
-  $.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: string | number | boolean | TPluginData): any {
+  $.fn.slider = function (prop: TPluginProps | 'init' | 'all', value?: number | boolean | TPluginData) {
     if (this.length === 0 || prop === undefined) return this;
     let propValue = null;
 
     this.each(function () {
       const presenter = controls.get(this.id);
       if (prop === 'init') {
-        const view = document.createElement('range-slider');
-        const slider = new Presenter(view, new Model());
+        const rootElement = document.createElement('range-slider');
+        const slider = new Presenter(rootElement, new Model());
         controls.set(slider.id, slider);
         this.id = slider.id;
-        this.replaceWith(view);
+        this.replaceWith(rootElement);
         if (typeof value === 'object') {
-          slider.setProp(value);
+          const sliderProps = slider.getProp();
+          slider.setProp({ ...sliderProps, ...value });
         } else if (value === undefined) {
           const {
             minValue, maxValue, valueTo, valueFrom, stepSize,
@@ -45,7 +46,8 @@ import Presenter from './Presenter';
         } else if (value === undefined) {
           propValue = presenter.getProp()[prop];
         } else if (typeof value === 'object') {
-          presenter.setProp(value);
+          const sliderProps = presenter.getProp();
+          presenter.setProp({ ...sliderProps, ...value });
         } else {
           const sliderProps = presenter.getProp();
           sliderProps[prop] = value;

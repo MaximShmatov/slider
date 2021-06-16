@@ -39,12 +39,7 @@ interface HTMLElement {
 }
 
 interface JQuery {
-  slider: {
-    (prop: TPluginProps, value: number | boolean | string | TPluginData): JQuery;
-    (prop: 'init', value?: number | boolean | string | TPluginData): JQuery;
-    (prop: TPluginProps): number | boolean;
-    (prop: 'all'): TModelData;
-  }
+  slider: (prop: TPluginProps | 'all' | 'init', value?: TPluginData | number | boolean) => JQuery | number | boolean | TPluginData;
 }
 
 interface Event {

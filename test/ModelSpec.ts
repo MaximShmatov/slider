@@ -114,8 +114,9 @@ describe('TESTING MODULE SRC/SLIDER/MODEL.TS', () => {
         let isRange: boolean;
         beforeAll(() => {
           spyCallback.calls.reset();
-          modelData.isRange = (String(data.isRange) === 'true');
+          modelData.isRange = data.isRange;
           model.write(modelData);
+          isRange = model.read().isRange;
         });
         it('Should be execute callback', () => {
           expect(spyCallback).toHaveBeenCalledWith('data-is-range', isRange);

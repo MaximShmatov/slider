@@ -57,23 +57,23 @@ class ControlPanel {
   }
 
   private handleMinValueBlur(): void {
-    this.$plugin.slider('minValue', String(this.$minValue.val()));
+    this.$plugin.slider('minValue', Number(this.$minValue.val()));
   }
 
   private handleMaxValueBlur(): void {
-    this.$plugin.slider('maxValue', String(this.$maxValue.val()));
+    this.$plugin.slider('maxValue', Number(this.$maxValue.val()));
   }
 
   private handleValueFromBlur(): void {
-    this.$plugin.slider('valueFrom', String(this.$valueFrom.val()));
+    this.$plugin.slider('valueFrom', Number(this.$valueFrom.val()));
   }
 
   private handleValueToBlur(): void {
-    this.$plugin.slider('valueTo', String(this.$valueTo.val()));
+    this.$plugin.slider('valueTo', Number(this.$valueTo.val()));
   }
 
   private handleStepSizeBlur(): void {
-    this.$plugin.slider('stepSize', String(this.$stepSize.val()));
+    this.$plugin.slider('stepSize', Number(this.$stepSize.val()));
   }
 
   private handleHasScaleChange(): void {
