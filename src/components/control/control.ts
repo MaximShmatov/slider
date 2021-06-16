@@ -1,8 +1,6 @@
-import '../components/RangeSlider/RangeSlider';
-import '../assets/favicon/favicon';
-import './index.sass';
+import './constrol.sass';
 
-class ControlPanel {
+class Control {
   private readonly $container: JQuery;
 
   private readonly $minValue: JQuery;
@@ -25,10 +23,11 @@ class ControlPanel {
 
   private readonly $rangeValue: JQuery;
 
-  readonly $plugin: JQuery;
+  readonly $rangeSlider: JQuery;
 
-  constructor($container: JQuery) {
+  constructor($container: JQuery, $slider: JQuery) {
     this.$container = $container;
+    this.$rangeSlider = $slider;
     this.$minValue = $container.find('.js-control__min-value');
     this.$maxValue = $container.find('.js-control__max-value');
     this.$valueFrom = $container.find('.js-control__from-value');
@@ -39,7 +38,6 @@ class ControlPanel {
     this.$isVertical = $container.find('.js-control__is-vertical');
     this.$hasTooltip = $container.find('.js-control__has-tooltip');
     this.$rangeValue = $container.find('.js-control__range-value');
-    this.$plugin = $container.find('.js-range-slider');
     this.setEventHandlers();
   }
 
@@ -57,47 +55,47 @@ class ControlPanel {
   }
 
   private handleMinValueBlur(): void {
-    this.$plugin.slider('minValue', Number(this.$minValue.val()));
+    this.$rangeSlider.slider('minValue', Number(this.$minValue.val()));
   }
 
   private handleMaxValueBlur(): void {
-    this.$plugin.slider('maxValue', Number(this.$maxValue.val()));
+    this.$rangeSlider.slider('maxValue', Number(this.$maxValue.val()));
   }
 
   private handleValueFromBlur(): void {
-    this.$plugin.slider('valueFrom', Number(this.$valueFrom.val()));
+    this.$rangeSlider.slider('valueFrom', Number(this.$valueFrom.val()));
   }
 
   private handleValueToBlur(): void {
-    this.$plugin.slider('valueTo', Number(this.$valueTo.val()));
+    this.$rangeSlider.slider('valueTo', Number(this.$valueTo.val()));
   }
 
   private handleStepSizeBlur(): void {
-    this.$plugin.slider('stepSize', Number(this.$stepSize.val()));
+    this.$rangeSlider.slider('stepSize', Number(this.$stepSize.val()));
   }
 
   private handleHasScaleChange(): void {
     const hasScale = this.$hasScale.prop('checked');
-    this.$plugin.slider('hasScale', hasScale);
+    this.$rangeSlider.slider('hasScale', hasScale);
   }
 
   private handleHasTooltipChange(): void {
     const hasTooltip = this.$hasTooltip.prop('checked');
-    this.$plugin.slider('hasTooltip', hasTooltip);
+    this.$rangeSlider.slider('hasTooltip', hasTooltip);
   }
 
   private handleIsVerticalChange(): void {
     const isVertical = this.$isVertical.prop('checked');
-    this.$plugin.slider('isVertical', isVertical);
+    this.$rangeSlider.slider('isVertical', isVertical);
   }
 
   private handleIsRangeChange(): void {
     const isRange = this.$isRange.prop('checked');
-    this.$plugin.slider('isRange', isRange);
+    this.$rangeSlider.slider('isRange', isRange);
   }
 
   private setRangeValue() {
-    if (this.$plugin.slider('isRange')) {
+    if (this.$rangeSlider.slider('isRange')) {
       const valueFrom = Number(this.$valueFrom.val());
       const valueTo = Number(this.$valueTo.val());
       this.$rangeValue.val(valueTo - valueFrom);
@@ -141,26 +139,4 @@ class ControlPanel {
   }
 }
 
-(function () {
-  const plugins: ControlPanel[] = [];
-  $('.js-container').each(function () {
-    plugins.push(new ControlPanel($(this)));
-  });
-
-  const initObj = {
-    minValue: 0,
-    maxValue: 100,
-    valueFrom: 10,
-    valueTo: 90,
-    stepSize: 2,
-    isRange: true,
-    isVertical: false,
-    hasScale: true,
-    hasTooltip: true,
-  };
-
-  plugins[0].$plugin.slider('init');
-  plugins[1].$plugin.slider('init');
-  plugins[2].$plugin.slider('init');
-  plugins[3].$plugin.slider('init', initObj);
-}());
+export default Control;

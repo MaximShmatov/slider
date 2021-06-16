@@ -11,7 +11,6 @@ class Presenter {
     this.view = view;
     this.model = model;
     this.id = Math.random().toString();
-    this.view.className = 'range-slider';
     this.view.setAttribute('id', this.id);
     this.view.setCallback(this.setFromToValue.bind(this));
     this.model.setViewAttribute = this.setViewAttribute.bind(this);

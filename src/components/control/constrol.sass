@@ -1,0 +1,19 @@
+.control
+  display: flex
+  flex-direction: column
+
+  &__title
+    margin: 0
+
+  &__value
+    display: flex
+    flex-direction: row-reverse
+    justify-content: flex-end
+    margin-bottom: 5px
+
+  &__value > *
+    max-width: 60px
+    margin-right: 10px
+
+  &__value:last-of-type > *
+    margin-left: 20px

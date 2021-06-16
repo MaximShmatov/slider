@@ -1,29 +1,4 @@
-mixin control
-  form.control
-    fieldset.control__fieldset
-      legend.control__legend
-        h3.control__title Control panel
-      div.control__block
-        label.control__has Scale on/off
-          input.control__has-scale.js-control__has-scale(type="checkbox")
-        label.control__is Vertical on/off
-          input.control__is-vertical.js-control__is-vertical(type="checkbox")
-        label.control__has Tooltip on/off
-          input.control__has-tooltip.js-control__has-tooltip(type="checkbox")
-        label.control__is Range mode
-          input.control__is-range.js-control__is-range(type="checkbox")
-        label.control__min Minimum value
-          input.control__min-value.js-control__min-value(type="number")
-        label.control__max Maximum value
-          input.control__max-value.js-control__max-value(type="number")
-        label.control__step Step size value
-          input.control__step-size.js-control__step-size(type="number")
-        label.control__from Value from
-          input.control__from-value.js-control__from-value(type="number")
-        label.control__to Value to
-          input.control__to-value.js-control__to-value(type="number")
-        label.control__range Range value
-          output.control__range-value.js-control__range-value(type="number")
+include ../components/control/control
 
 doctype html
 html(lang="ru" dir="ltr")
@@ -47,8 +22,8 @@ html(lang="ru" dir="ltr")
       img.header__logo(src="apple-touch-icon.png" alt="logo")
       h1.header__title Range Slider Demo
     main.main
-      div.container.js-container
-        input.range-slider.js-range-slider(
+      div.main__container.js-main__container
+        input.main__slider.js-main__slider(
           data-min-value=`${Math.round(Math.random() * 100) * -1}`
           data-max-value=`${Math.round(Math.random() * 100)}`
           data-value-from=`${Math.round(Math.random() * 100) * -1}`
@@ -60,8 +35,8 @@ html(lang="ru" dir="ltr")
           data-has-tooltip="true"
         )
         +control
-      div.container.js-container
-        input.range-slider.js-range-slider(
+      div.main__container.js-main__container
+        input.main__slider.js-main__slider(
           data-min-value=`${Math.round(Math.random() * 100) * -1}`
           data-max-value=`${Math.round(Math.random() * 100)}`
           data-value-from=`${Math.round(Math.random() * 100) * -1}`
@@ -73,8 +48,8 @@ html(lang="ru" dir="ltr")
           data-has-tooltip="true"
         )
         +control
-      div.container.js-container
-        input.range-slider.js-range-slider(
+      div.main__container.js-main__container
+        input.main__slider.js-main__slider(
           data-min-value="0"
           data-max-value="1"
           data-value-from="0"
@@ -86,8 +61,8 @@ html(lang="ru" dir="ltr")
           data-has-tooltip="true"
         )
         +control
-      div.container.js-container
-        input.range-slider.js-range-slider
+      div.main__container.js-main__container
+        input.main__slider.js-main__slider
         +control
       footer.footer
         img.footer__logo(src="apple-touch-icon.png" alt="logo")

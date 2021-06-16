@@ -16,6 +16,7 @@ import Presenter from './Presenter';
       const presenter = controls.get(this.id);
       if (prop === 'init') {
         const rootElement = document.createElement('range-slider');
+        rootElement.className = this.className;
         const slider = new Presenter(rootElement, new Model());
         controls.set(slider.id, slider);
         this.id = slider.id;

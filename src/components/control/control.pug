@@ -1,0 +1,26 @@
+mixin control
+  form.control
+    fieldset.control__fieldset
+      legend.control__legend
+        h3.control__title Control panel
+      div.control__block
+        label.control__value Scale on/off
+          input.control__has-scale.js-control__has-scale(type="checkbox")
+        label.control__value Vertical on/off
+          input.control__is-vertical.js-control__is-vertical(type="checkbox")
+        label.control__value Tooltip on/off
+          input.control__has-tooltip.js-control__has-tooltip(type="checkbox")
+        label.control__value Range mode
+          input.control__is-range.js-control__is-range(type="checkbox")
+        label.control__value Minimum value
+          input.control__min-value.js-control__min-value(type="number")
+        label.control__value Maximum value
+          input.control__max-value.js-control__max-value(type="number")
+        label.control__value Step size value
+          input.control__step-size.js-control__step-size(type="number")
+        label.control__value Value from
+          input.control__from-value.js-control__from-value(type="number")
+        label.control__value Value to
+          input.control__to-value.js-control__to-value(type="number")
+        label.control__value Range value
+          output.control__range-value.js-control__range-value(type="number")

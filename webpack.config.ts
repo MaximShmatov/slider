@@ -6,8 +6,7 @@ export default {
   mode: 'development',
   context: resolve(__dirname, 'src'),
   entry: {
-    index: './pages/index',
-    slider: './components/RangeSlider/RangeSlider',
+    index: './index',
   },
   devtool: 'inline-source-map',
   resolve: {
@@ -35,7 +34,6 @@ export default {
               modules: 'global',
             },
           },
-          'postcss-loader',
           'sass-loader',
         ],
       },
@@ -45,7 +43,6 @@ export default {
         use: [
           'style-loader',
           'css-loader',
-          'postcss-loader',
           'sass-loader',
         ],
       },
