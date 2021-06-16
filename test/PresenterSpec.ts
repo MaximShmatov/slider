@@ -1,6 +1,6 @@
 import '../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-import '../src/components/RangeSlider/View';
+import '../src/components/RangeSlider/View/View';
 import Model from '../src/components/RangeSlider/Model';
 import Presenter from '../src/components/RangeSlider/Presenter';
 import run from './TestData';

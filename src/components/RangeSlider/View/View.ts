@@ -1,7 +1,7 @@
 import ViewAbstract from './ViewAbstract';
 import ViewRail from './ViewRail';
 import ViewScale from './ViewScale';
-import styles from './styles.module.sass';
+import styles from '../styles.module.sass';
 
 class View extends ViewAbstract {
   private readonly rail: ViewRail;

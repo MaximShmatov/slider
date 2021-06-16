@@ -1,6 +1,6 @@
 import '../../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import '../../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle';
-import './View';
+import './View/View';
 import Model from './Model';
 import Presenter from './Presenter';
 
